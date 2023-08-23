@@ -133,6 +133,18 @@ label {
     width: 170px; 
 }
 
+ .custom-select {
+    padding: 0; /* Убираем padding */
+    transform: scale(1.1);
+  }
+  .pick-label{
+  transform: scale(1.1);
+  }
+
+
+.modal-footer {
+  margin-top: 20px; /* Задать отступ сверху в 20 пикселей (или другое значение) */
+}
 
 </style>
 
@@ -140,31 +152,17 @@ label {
 
 
 
-
 </head>
-
-
-
-
-
 <body>
-	<!-- <h1>Tag Log List</h1>-->
-	<div id="forbg" class="bg-white"
-		style="background: url(img/Ming_bg.jpg) no-repeat center center fixed; background-size: cover;">
-
+<div id="forbg" class="bg-white" style="background: url(img/Ming_bg.jpg) no-repeat center center fixed; background-size: cover;">
 		<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
-
-		<div th:fragment="table" class="cell-border"
-			style="padding-bottom: 5%;">
-
+		<div th:fragment="table" class="cell-border">
 			<div id="main">
 				<h1 th:text="${pagename != null ? pagename : 'Default Page Name'}"
 					style="display: flex; justify-content: center;"></h1>
-
 				<div class="container" id="table-search">
 					<div class="row justify-content-md-center">
 						<div class="col col-12">
-
 							<table id="tagLogTable"
 								class="table display table-striped table-bordered compact bg-white cell-border">
 								<thead>
@@ -172,118 +170,83 @@ label {
 										<th>№</th>
 										<th>Kanal adı</th>
 										<th th:if="${measurement == 2}">Su səviyyasi(sm)</th>
-
 										<th><span th:if="${measurement == 1}">m<sup>3</sup></span>
-											<span th:if="${measurement == 2}">m<sup>3</sup>/san
-										</span> <span th:if="${measurement == 3}">sm</span></th>
-
+											<span th:if="${measurement == 2}">m<sup>3</sup>/san</span>
+											<span th:if="${measurement == 3}">sm</span>
+										</th>
 										<th>Ölçmə tarixi</th>
 										<th th:if="${measurement == 2}">Xəta faizi</th>
 										<th th:if="${measurement == 2}">Qədərləmə statusu</th>
 										<th th:if="${measurement == 2}">Açıqlama</th>
-
 									</tr>
 								</thead>
-								
 								<tbody>
-									<tr th:each="tagLog : ${tagLogPage?.content}">
-
+									<tr th:each="tagLog : ${tagLogPage?.content}" th:attr="data-tagname=${tagLog.tagName}"
+    onclick="openModal(this.getAttribute('data-tagname'))"
+										data-toggle="modal" data-target="#myModal">
 										<td th:text="${tagLogStat.index + 1}"></td>
-
 										<td th:text="${tagLog.tagName}"></td>
-
 										<td th:if="${measurement == 2}"
 											th:text="${tagLog.tagLevel != '' ? tagLog.tagLevel : 'offline'}"
 											th:class="${tagLog.tagLevel == '' ? 'text-danger fw-bold' : ''}"></td>
-
 										<td
 											th:text="${tagLog.data_value != null ? tagLog.data_value : 'offline'}"
 											th:class="${tagLog.data_value == null ? 'text-danger fw-bold' : ''}"></td>
-
-
 										<td th:text="${tagLog.getLogdate}"></td>
-
 										<td th:if="${measurement == 2}" th:text="${tagLog.tagText}"
 											th:class="${tagLog.tagText == 'Xəta 5 faizdən kiçik' ? 'text-success fw-bold' : 
                           tagLog.tagText == 'Xəta 5-10 faiz aralığında' ? 'text-warning fw-bold' : 
                           tagLog.tagText == 'Xəta 10 faizdən çox' ? 'text-danger fw-bold' : ''}"></td>
-
 										<td th:if="${measurement == 2}" th:text="${tagLog.tagStatus}"
 											th:class="${tagLog.tagStatus == 'Bəli' ? 'text-success fw-bold' : 
                           tagLog.tagStatus == 'Planlanır' ? 'text-warning fw-bold' : 
                           tagLog.tagStatus == 'Xeyr' ? 'text-danger fw-bold' : ''}"></td>
-
 										<td th:if="${measurement == 2}" th:text="${tagLog.tagReason}"></td>
-
-
-
-
-
 									</tr>
 								</tbody>
 							</table>
-
-
 						</div>
-
 					</div>
-
 				</div>
-
 			</div>
 		</div>
 	</div>
 
-
-
-
 	<div th:insert="~{parts/footer :: footer}"></div>
 
+	<div th:insert="~{parts/selectDate :: dateSelector}"></div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+
+<script>
 
 
-	<!--<script type="text/javascript" charset="utf8" src="/buttons.html5.min.js"></script>  -->
+$(document).ready(function() {
+    var table = $('#tagLogTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+        paging: false,
+        fixedHeader: true,
+        info: false,
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Axtarış"
+        }
+    });
 
-	<script type="text/javascript" charset="utf8"
-		src="https://code.jquery.com/jquery-3.7.0.js"></script>
-	<script type="text/javascript" charset="utf8"
-		src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-	<script type="text/javascript" charset="utf8"
-		src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-	<script type="text/javascript"
-		src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-	<script type="text/javascript"
-		src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-	<script type="text/javascript"
-		src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-	<script type="text/javascript"
-		src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-	<script type="text/javascript"
-		src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-	<script type="text/javascript"
-		src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-		<script
-    src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
-
-
-
-
-
-	<script type="text/javascript">
-		$(document).ready(function() {
-			var table = $('#tagLogTable').DataTable({
-				dom : 'Bfrtip',
-				buttons : [ 'copy', 'csv', 'excel', 'pdf', 'print' ],
-				paging : false,
-				 fixedHeader: true,
-				info: false, // Эта строка скроет информацию о количестве записей
-				language : {
-					search : "_INPUT_",
-					searchPlaceholder : "Axtarış"
-				}
-			});
-			
-
-		});
-	</script>
+    // Ваш код для обработки окна выбора даты и времени
+});
+</script>
 </body>
 </html>
