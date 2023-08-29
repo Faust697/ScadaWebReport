@@ -157,7 +157,13 @@ label {
 
 .modal-footer {
   margin-top: 20px; /* Задать отступ сверху в 20 пикселей (или другое значение) */
+  }
+  
+  .bg-white {
+    --bs-bg-opacity: 1;
+    background-color: rgba(0, 0, 0, 0);
 }
+
 
 
 /*Для статус контейнера*/
@@ -184,6 +190,9 @@ label {
     .offline {
         color: red;
     }
+    
+    
+
 
 </style>
 
@@ -193,8 +202,9 @@ label {
 
 </head>
 <body>
-<div id="forbg" class="bg-white" style="background: url(img/Ming_bg.jpg) no-repeat center center fixed; background-size: cover;">
-		<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
+	<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
+<div id="forbg" class="test" style="background: rgba(0, 0, 0, 0.5); background-color: rgba(0, 0, 0, 0); background-size: cover;">
+	
 		<div th:fragment="table" class="cell-border">
 			<div id="main">
 				<h1 th:text="${pagename != null ? pagename : 'Default Page Name'}"

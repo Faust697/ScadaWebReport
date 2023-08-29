@@ -7,6 +7,7 @@ html {
 body {
 	position: relative;
  	background: url(img/Ming_bg.jpg) no-repeat center center fixed;
+ 	background-size: cover;
 	margin: 0;
 	padding: 0;
 	min-height: 100vh;
@@ -240,9 +241,9 @@ h1
    text-decoration: none;
    font-size: 80%;
 }
-
+/* 
 *, ::after, ::before {
-    box-sizing: content-box;
+   box-sizing: content-box;
 }
 
 div.dt-buttons>.dt-button, div.dt-buttons>div.dt-button-split .dt-button {
@@ -252,6 +253,27 @@ background:white;
     border-radius: 10px;
     box-shadow: 5px 5px 5px #000000;
 }
+
+
+*/
+
+div.dt-buttons>.dt-button:hover:not(.disabled), div.dt-buttons>div.dt-button-split .dt-button:hover:not(.disabled) {
+
+  	 background-color: rgba(200, 200, 200); 
+    opacity:1;
+}
+
+div.dt-buttons > .dt-button,
+div.dt-buttons > div.dt-button-split .dt-button {
+    background-color: white;
+    border: 3px solid gray;
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px #000000;
+    transition: background-color 0.3s; /* Плавное изменение фона при наведении */
+}
+
+
+
 
 .navbarsExample07
 	{
