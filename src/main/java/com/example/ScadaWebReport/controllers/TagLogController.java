@@ -38,7 +38,7 @@ public class TagLogController {
 
 	// Онлайн данные
 
-	@GetMapping("/tag-logs")
+	@GetMapping("/")
 
 	public String getTagLogs(@RequestParam(defaultValue = "0") int page, Model model) {
 		List<TagLogWithName> tagLogsWithNames = dps.getTagLogsWithNames("tagLibrary.json", "", true);
@@ -98,15 +98,15 @@ public class TagLogController {
 
 	@GetMapping("/first-tag-log")
 	public String getFirstTagLog(Model model) {
-		Taglog firstTagLog = null;
-		try {
-			firstTagLog = taglogRepo.findFirstByOrderByTaglogIdAsc();
-		} catch (Exception e) {
+		//Taglog firstTagLog = null;
+		//try {
+		//	firstTagLog = taglogRepo.findFirstByOrderByTaglogIdAsc();
+		//} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//	e.printStackTrace();
+	//	}
 		// System.out.print(firstTagLog.getFormattedLogdate());
-		model.addAttribute("firstTagLog", firstTagLog);
+		//model.addAttribute("firstTagLog", firstTagLog);
 		return "first-tag-log";
 	}
 

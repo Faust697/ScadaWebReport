@@ -97,6 +97,7 @@ public class dataProcessingService {
 		Map<String, String> tagTextMap = null;
 		Map<String, String> tagCalibrationMap = null;
 		Map<String, String> tagReasonsMap = null;
+		Map<String, String> tagCameraMap = null;
 		
 		//Получаем данные из джейсона
 		List<String> tagIds = jsonParser.loadTagInfoFromJson(jsonFileName).stream().map(TagInfo::getId)
@@ -109,6 +110,7 @@ public class dataProcessingService {
 		tagTextMap = jsonParser.loadTagNamesFromJson("tagPercent.json");
 		tagCalibrationMap = jsonParser.loadTagNamesFromJson("tagCalibration.json");
 		tagReasonsMap = jsonParser.loadTagNamesFromJson("tagReasons.json");
+		tagCameraMap = jsonParser.loadTagNamesFromJson("tagCamera.json");
 		
 
 		String tagLevel=null;
@@ -126,6 +128,7 @@ public class dataProcessingService {
 			String tagText = tagTextMap.get(taglog.getTag_id().toString());
 			String tagStatus = tagCalibrationMap.get(taglog.getTag_id().toString());
 			String tagReason = tagReasonsMap.get(taglog.getTag_id().toString());
+			String tagCamera = tagCameraMap.get(taglog.getTag_id().toString());
 			
 			
 			if(Level) {
@@ -134,7 +137,7 @@ public class dataProcessingService {
 			
 		
 			
-			TagLogWithName tagLogWithName = new TagLogWithName(taglog, tagName, tagText, tagLevel, tagStatus, tagReason );
+			TagLogWithName tagLogWithName = new TagLogWithName(taglog, tagName, tagText, tagLevel, tagStatus, tagReason, tagCamera );
 			tagLogsWithNames.add(tagLogWithName);
 			
 		}

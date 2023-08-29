@@ -142,9 +142,48 @@ label {
   }
 
 
+     .camera-link {
+        color: #fff; /* Цвет текста */
+    }
+
+    .camera-link:hover {
+        color: #fff; /* Измененный цвет при наведении */
+    }
+
+    .camera-link:visited {
+        color: #fff; /* Цвет после посещения */
+    }
+
+
 .modal-footer {
   margin-top: 20px; /* Задать отступ сверху в 20 пикселей (или другое значение) */
 }
+
+
+/*Для статус контейнера*/
+  .status-container {
+        border: 1px solid #ccc;
+        border-radius: 5px; /* Закругляем края */
+        padding: 10px;
+        background-color: #fff;
+        width: 300px; /* Уменьшаем ширину */
+        margin-bottom: 20px; /* Добавляем отступ снизу */
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4); /* Добавляем серую рамку */
+    }
+
+    .status-label {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 2px;
+    }
+
+    .online {
+        color: green;
+    }
+
+    .offline {
+        color: red;
+    }
 
 </style>
 
@@ -160,6 +199,17 @@ label {
 			<div id="main">
 				<h1 th:text="${pagename != null ? pagename : 'Default Page Name'}"
 					style="display: flex; justify-content: center;"></h1>
+					
+	<div class="container">
+    <div class="row">
+        <div class="col-md-12 status-container">
+            <p class="status-label">Onlayn qurğuların sayı: <span th:text="${tagLogPage.content.?[data_value != null].size()}" class="online"></span></p>
+            <p class="status-label">Offlayn qurğuların sayı: <span th:text="${tagLogPage.content.?[data_value == null].size()}" class="offline"></span></p>
+            ___________________________________
+            <p class="status-label">Ümumi qurğuların sayı: <span th:text="${tagLogPage.content.size()}" ></span></p>
+        </div>
+    </div>
+</div>
 				<div class="container" id="table-search">
 					<div class="row justify-content-md-center">
 						<div class="col col-12">
@@ -178,11 +228,14 @@ label {
 										<th th:if="${measurement == 2}">Xəta faizi</th>
 										<th th:if="${measurement == 2}">Qədərləmə statusu</th>
 										<th th:if="${measurement == 2}">Açıqlama</th>
+										<th th:if="${measurement == 2}">Kamera</th>
 									</tr>
 								</thead>
 								<tbody>
+								  <!--  onclick="openModal(this.getAttribute('data-tagname'))"-->
+								
 									<tr th:each="tagLog : ${tagLogPage?.content}" th:attr="data-tagname=${tagLog.tagName}"
-    onclick="openModal(this.getAttribute('data-tagname'))"
+ 
 										data-toggle="modal" data-target="#myModal">
 										<td th:text="${tagLogStat.index + 1}"></td>
 										<td th:text="${tagLog.tagName}"></td>
@@ -202,6 +255,11 @@ label {
                           tagLog.tagStatus == 'Planlanır' ? 'text-warning fw-bold' : 
                           tagLog.tagStatus == 'Xeyr' ? 'text-danger fw-bold' : ''}"></td>
 										<td th:if="${measurement == 2}" th:text="${tagLog.tagReason}"></td>
+										<td th:if="${measurement == 2}" > <a th:href="'http://' + ${tagLog.tagCamera}" target="_blank" class="btn btn-primary camera-link">
+        <span class="bi bi-camera">►</span> 
+    </a></td>
+										
+										
 									</tr>
 								</tbody>
 							</table>
@@ -235,7 +293,28 @@ label {
 $(document).ready(function() {
     var table = $('#tagLogTable').DataTable({
         dom: 'Bfrtip',
-        buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
+        buttons: [
+            {
+                extend: 'copy',
+                title: '"SCADA" Anlıq sərfiyyat'
+            },
+            {
+                extend: 'csv',
+                title: '"SCADA" Anlıq sərfiyyat'
+            },
+            {
+                extend: 'excel',
+                title: '"SCADA" Anlıq sərfiyyat'
+            },
+            {
+                extend: 'pdf',
+                title: '"SCADA" Anlıq sərfiyyat'
+            },
+            {
+                extend: 'print',
+                title: '"SCADA" Anlıq sərfiyyat'
+            }
+        ],
         paging: false,
         fixedHeader: true,
         info: false,

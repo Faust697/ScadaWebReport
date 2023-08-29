@@ -12,7 +12,10 @@ import javax.persistence.Id;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.Table;
 
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+
 @Entity
+@ConditionalOnProperty(name = "spring.datasource.driver-class-name", havingValue = "org.postgresql.Driver") 
 @Table(name = "\"tag_log_2023-08\"")//, schema = "logs")
 @NamedNativeQuery(
 		name = "Taglog.findLatestLogForEachTag",
