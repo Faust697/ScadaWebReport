@@ -1,0 +1,32 @@
+{"properties": [
+  {
+    "name": "spring.second-datasource.url",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.second-datasource.url'"
+  },
+  {
+    "name": "spring.second-datasource.username",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.second-datasource.username'"
+  },
+  {
+    "name": "spring.second-datasource.password",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.second-datasource.password'"
+  },
+  {
+    "name": "spring.second-datasource.driver-class-name",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.second-datasource.driver-class-name'"
+  },
+  {
+    "name": "spring.second-datasource.jpa.hibernate.ddl-auto",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.second-datasource.jpa.hibernate.ddl-auto'"
+  },
+  {
+    "name": "spring.second-datasource.jpa.show-sql",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.second-datasource.jpa.show-sql'"
+  }
+]}

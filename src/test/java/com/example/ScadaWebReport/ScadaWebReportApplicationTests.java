@@ -1,10 +1,10 @@
-package com.example.AddressBook;
+package com.example.ScadaWebReport;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class AddressBookApplicationTests {
+class ScadaWebReportApplicationTests {
 
 	@Test
 	void contextLoads() {

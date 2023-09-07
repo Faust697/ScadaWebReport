@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 import org.springframework.stereotype.Component;
 
-import com.example.ScadaWebReport.domain.TagInfo;
+import com.example.ScadaWebReport.Model.TagInfo;
 
 @Component
 public class jsonParsers {

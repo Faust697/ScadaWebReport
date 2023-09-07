@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-import com.example.ScadaWebReport.domain.Taglog;
+import com.example.ScadaWebReport.Model.Taglog.Taglog;
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
 import com.example.ScadaWebReport.services.TagLogWithName;
@@ -25,6 +24,7 @@ import com.example.ScadaWebReport.services.dataProcessingService;
 @Controller
 public class TagLogController {
 
+	
 	private final TaglogRepo taglogRepo;
 
 	private final dataProcessingService dps;
@@ -41,7 +41,7 @@ public class TagLogController {
 	@GetMapping("/")
 
 	public String getTagLogs(@RequestParam(defaultValue = "0") int page, Model model) {
-		List<TagLogWithName> tagLogsWithNames = dps.getTagLogsWithNames("tagLibrary.json", "", true);
+		List<TagLogWithName> tagLogsWithNames = dps.getTagLogsWithNames("online", "", true);
 
 		dps.formatDataValues(tagLogsWithNames, true, true);
 		dps.setTagLogPageInModel(tagLogsWithNames, page, model, "Anlıq sərfiyyat", 2);
@@ -51,7 +51,7 @@ public class TagLogController {
 	// Суммарные данные
 	@GetMapping("/tag-logs-all")
 	public String getTagLogsSum(@RequestParam(defaultValue = "0") int page, Model model) {
-		List<TagLogWithName> tagLogsWithNames = dps.getTagLogsWithNames("tagLibrarySum.json",
+		List<TagLogWithName> tagLogsWithNames = dps.getTagLogsWithNames("total",
 				"AND data_value IS NOT NULL AND data_value > 0", false);
 		dps.setTagLogPageInModel(tagLogsWithNames, page, model, "Toplam sərfiyyat", 1);
 		return "tag-log-list";
@@ -60,7 +60,7 @@ public class TagLogController {
 	// Уровень воды
 	@GetMapping("/tag-logs-lvl")
 	public String getTagLogsLevel(@RequestParam(defaultValue = "0") int page, Model model) {
-		List<TagLogWithName> tagLogsWithNames = dps.getTagLogsWithNames("tagLibraryLevel.json", "", false);
+		List<TagLogWithName> tagLogsWithNames = dps.getTagLogsWithNames("level", "", false);
 		dps.formatDataValues(tagLogsWithNames, true, false);
 		dps.setTagLogPageInModel(tagLogsWithNames, page, model, "Kanalda su səviyyəsi", 3);
 		return "tag-log-list";
@@ -80,33 +80,12 @@ public class TagLogController {
 	
 		
 		
-		
-		@PostMapping("/greeting")
-		public String addPerson(@ModelAttribute("person") @Valid TagLogWithName o, BindingResult bindingResult, Model model) {
-
-			if (bindingResult.hasErrors()) {
-				return "greeting";
-			}
-
-			
-
-			return "greeting";
-		}
-
-		
+	
 	
 
 	@GetMapping("/first-tag-log")
 	public String getFirstTagLog(Model model) {
-		//Taglog firstTagLog = null;
-		//try {
-		//	firstTagLog = taglogRepo.findFirstByOrderByTaglogIdAsc();
-		//} catch (Exception e) {
-			// TODO Auto-generated catch block
-		//	e.printStackTrace();
-	//	}
-		// System.out.print(firstTagLog.getFormattedLogdate());
-		//model.addAttribute("firstTagLog", firstTagLog);
+	
 		return "first-tag-log";
 	}
 

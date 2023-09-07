@@ -1,4 +1,4 @@
-package com.example.ScadaWebReport.domain;
+package com.example.ScadaWebReport.Model;
 
 public class TagInfo {
     private String id;

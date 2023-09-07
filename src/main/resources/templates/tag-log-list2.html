@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Tag Log List</title>
+<title>Scada Monitoring</title>
 
 <link rel="stylesheet"
 	href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
@@ -230,7 +230,7 @@ label {
 									<tr>
 										<th>№</th>
 										<th>Kanal adı</th>
-										<th th:if="${measurement == 2}">Su səviyyasi(sm)</th>
+										<th th:if="${measurement == 2}">Su səviyyəsi(sm)</th>
 										<th><span th:if="${measurement == 1}">m<sup>3</sup></span>
 											<span th:if="${measurement == 2}">m<sup>3</sup>/san</span>
 											<span th:if="${measurement == 3}">sm</span>
@@ -250,9 +250,9 @@ label {
 										data-toggle="modal" data-target="#myModal">
 										<td th:text="${tagLogStat.index + 1}"></td>
 										<td th:text="${tagLog.tagName}"></td>
-										<td th:if="${measurement == 2}"
-											th:text="${tagLog.tagLevel != '' ? tagLog.tagLevel : 'offline'}"
-											th:class="${tagLog.tagLevel == '' ? 'text-danger fw-bold' : ''}"></td>
+										<td th:text="${measurement == 2 ? (tagLog.tagLevel != null && tagLog.tagLevel != '' ? tagLog.tagLevel : 'offline') : tagLog.tagLevel}"
+  										 th:class="${measurement == 2 && (tagLog.tagLevel == null || tagLog.tagLevel == '') ? 'text-danger fw-bold' : ''}">
+											</td>
 										<td
 											th:text="${tagLog.data_value != null ? tagLog.data_value : 'offline'}"
 											th:class="${tagLog.data_value == null ? 'text-danger fw-bold' : ''}"></td>

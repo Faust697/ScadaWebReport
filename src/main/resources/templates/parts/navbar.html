@@ -89,23 +89,23 @@ a {
 
 
 
-					<ul class="navbar-nav mr-auto" style="margin-bottom: 90px">
-						<li class="nav-item" sec:authorize="isAnonymous()"
-							style="position: absolute; right: 0; margin-right: 30px;"><a
-							class="nav-link" th:action="@{/logout}" style="font-size: 115%;"
-							href="/">Admin Panel</a></li>
+				<ul class="navbar-nav mr-auto" style="margin-bottom: 90px">
+    <li class="nav-item" sec:authorize="isAnonymous()"
+        style="position: absolute; right: 0; margin-right: 30px;">
+        <a class="nav-link" style="font-size: 115%;" href="/login">Admin Panel</a>
+    </li>
 
-						<li class="nav-item" sec:authorize="isAuthenticated()"
-							style="position: absolute; right: 0; margin-right: 120px;"><a
-							class="nav-link" th:action="@{/logout}" style="font-size: 115%;"
-							href="/">Admin Panel</a></li>
+    <li class="nav-item" sec:authorize="isAuthenticated()"
+        style="position: absolute; right: 0; margin-right: 120px;">
+        <a class="nav-link" style="font-size: 115%;" href="/get-upload">Admin Panel</a>
+    </li>
 
+   <li class="nav-item" sec:authorize="isAuthenticated()"
+    style="position: absolute; right: 0; margin-right: 30px;">
+    <a class="nav-link" th:href="@{/logout}" style="font-size: 115%;">Logout</a>
+</li>
+</ul>
 
-						<li class="nav-item" sec:authorize="isAuthenticated()"
-							style="position: absolute; right: 0; margin-right: 30px;"><a
-							class="nav-link" th:action="@{/logout}" style="font-size: 115%;"
-							href="/">Logout</a></li>
-					</ul>
 
 
 

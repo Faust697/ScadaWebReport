@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<title>Tag Log List</title>
+<title>Scada Monitoring</title>
 
 <link rel="stylesheet"
 	href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
@@ -134,6 +134,34 @@ label {
 }
 
 
+/*Для статус контейнера*/
+  .status-container {
+        border: 1px solid #ccc;
+        border-radius: 5px; /* Закругляем края */
+        padding: 10px;
+        background-color: #fff;
+        width: 300px; /* Уменьшаем ширину */
+        margin-bottom: 20px; /* Добавляем отступ снизу */
+        margin-left: 1%;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4); /* Добавляем серую рамку */
+    }
+
+    .status-label {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 2px;
+    }
+
+    .online {
+        color: green;
+    }
+
+    .offline {
+        color: red;
+    }
+    
+
+
 </style>
 
 
@@ -160,6 +188,19 @@ label {
 			<div id="main">
 				<h1 th:text="${pagename != null ? pagename : 'Default Page Name'}"
 					style="display: flex; justify-content: center;"></h1>
+					
+					<div class="container">
+    <div class="row">
+        <div class="col-md-12 status-container">
+            <p class="status-label">Onlayn qurğuların sayı: <span th:text="${tagLogPage.content.?[data_value != null].size()}" class="online"></span></p>
+            <p class="status-label">Offlayn qurğuların sayı: <span th:text="${tagLogPage.content.?[data_value == null].size()}" class="offline"></span></p>
+            ___________________________________
+            <p class="status-label">Ümumi qurğuların sayı: <span th:text="${tagLogPage.content.size()}" ></span></p>
+        </div>
+    </div>
+</div>
+		
+					
 
 				<div class="container" id="table-search">
 					<div class="row justify-content-md-center">
@@ -171,7 +212,7 @@ label {
 									<tr>
 										<th>№</th>
 										<th>Kanal adı</th>
-										<th th:if="${measurement == 2}">Su səviyyasi(sm)</th>
+										<th th:if="${measurement == 2}">Su səviyyəsi(sm)</th>
 
 										<th><span th:if="${measurement == 1}">m<sup>3</sup></span>
 											<span th:if="${measurement == 2}">m<sup>3</sup>/san

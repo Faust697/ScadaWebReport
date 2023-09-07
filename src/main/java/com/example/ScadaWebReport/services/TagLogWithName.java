@@ -1,6 +1,8 @@
 package com.example.ScadaWebReport.services;
 
-import com.example.ScadaWebReport.domain.Taglog;
+import org.springframework.lang.Nullable;
+
+import com.example.ScadaWebReport.Model.Taglog.Taglog;
 
 public class TagLogWithName extends Taglog {
 
@@ -11,7 +13,7 @@ public class TagLogWithName extends Taglog {
     private String tagReason;
     private String tagCamera;
 
-    public TagLogWithName(Taglog taglog, String tagName, String tagText ) {
+    public TagLogWithName(@Nullable Taglog taglog, String tagName, String tagText ) {
         super(taglog.getTaglog_id(), taglog.getTag_id(), taglog.getData_value(), (int) taglog.getLogtime(),
                 taglog.getLogdate(), taglog.getTimesource(), taglog.getQualifier());
         this.tagName = tagName;
