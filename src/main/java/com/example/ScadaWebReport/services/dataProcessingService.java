@@ -38,6 +38,11 @@ public class dataProcessingService {
 		this.staticInfoRepo = staticInfoRepo;
 	}
 
+	//Вызов актуальной таблицы 
+	public String actualTable()
+	{
+		return "log."+"\"tag_log_" + formatCurrentMonth() + "\"";
+	}
 	//Получение данных из базы
 	public List<Taglog> getLatestLogsForTags(String typeOfSearch, String additionalFilter) {
 
@@ -122,6 +127,8 @@ public class dataProcessingService {
 			String tagStatus = filteredTag.getCalibrationStatus();
 			String tagReason = filteredTag.getExplanation();
 			String tagCamera = filteredTag.getCameraIp();
+			String tagLevelId = filteredTag.getLevelId();
+			String tagTotalId = filteredTag.getTotalId();
 
 			//Из полученных данных берём результаты
 			Taglog taglog = null;
@@ -166,7 +173,7 @@ public class dataProcessingService {
 			//Ещё раз проверяем есть ли у нас объект
 			if (taglog == null)
 				continue;
-			TagLogWithName tagLogWithName = new TagLogWithName(taglog, tagName, tagText, LevelValue, tagStatus,
+			TagLogWithName tagLogWithName = new TagLogWithName(taglog, tagName, tagText, LevelValue,tagLevelId, tagTotalId, tagStatus,
 					tagReason, tagCamera);
 			tagLogsWithNames.add(tagLogWithName);
 

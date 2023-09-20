@@ -1,14 +1,20 @@
 package com.example.ScadaWebReport.repos;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties.Servlet;
 import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -18,6 +24,7 @@ import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuer
 import org.springframework.stereotype.Repository;
 
 import com.example.ScadaWebReport.Model.Taglog.Taglog;
+import com.example.ScadaWebReport.services.dataProcessingService;
 
 @ConditionalOnProperty(name = "spring.datasource.driver-class-name", havingValue = "org.postgresql.Driver") 
 @Repository
@@ -27,7 +34,10 @@ public class TaglogRepositoryImpl implements TaglogRepo {
     private EntityManager entityManager;
     @Autowired
     private Environment env;
+  
     
+
+    /*
     @Override
     @SuppressWarnings("unchecked")
     public List<Taglog> findLatestLogForEachTag(String tableName, String tagIdString, String notNull) {
@@ -45,9 +55,112 @@ public class TaglogRepositoryImpl implements TaglogRepo {
         return entityManager.createNativeQuery(query, Taglog.class).getResultList();
         }
 		return null;
+    }*/
+    
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Taglog> findLatestLogForEachTag(String tableName, String tagIdString, String notNull) {
+        // Проверяем текущий диалект базы данных
+        String currentDialect = env.getProperty("spring.jpa.properties.hibernate.dialect");
+
+        if (currentDialect != null && currentDialect.contains("org.hibernate.dialect.PostgreSQLDialect")) {
+            LocalDateTime fifteenMinutesAgo = LocalDateTime.now().minus(15, ChronoUnit.MINUTES);
+
+            String query = "SELECT DISTINCT ON (tag_id) tag_id, taglog_id, data_value, logtime, logdate, timesource, qualifier "
+                    + "FROM logs." + tableName
+                    + " WHERE tag_id IN (" + tagIdString + ") "
+                    + notNull
+                    + " AND logdate >= :fifteenMinutesAgo " // Измененный фильтр
+                    + " ORDER BY tag_id, logdate DESC";
+            System.out.println(query);
+            
+            List<Taglog> result = entityManager.createNativeQuery(query, Taglog.class)
+                    .setParameter("fifteenMinutesAgo", fifteenMinutesAgo)
+                    .getResultList();
+
+            entityManager.close();
+
+            return result;
+        }
+        return null;
     }
     
+    //Вынести это отсюда
+	public String actualTable(int month, int year)
+	{
+		String monthIns=null;
+		LocalDate currentDate=null;
+		if(month==0 && year==0)
+		{
+		currentDate = LocalDate.now();
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");	 
+		String formatCurrentMonth = currentDate.format(formatter);
+		return "logs."+"\"tag_log_" + formatCurrentMonth + "\"";
+		}
+		//Если вдруг дата начала и дата конца в разных месяцах
+		else
+			if(month<10)
+				monthIns="0"+month;
+			else 
+				monthIns=String.valueOf(month);
+		
+		
+			return	"logs."+"\"tag_log_"+year+"-"+monthIns+ "\"";
+	}
+
+	//Метод для фильтра по датам.
+	@Override
+	public Taglog findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(
+			String tagId,
+			String type,
+			LocalDateTime startDate,
+			LocalDateTime endDate) {
+		
+		String table = actualTable(0,0);
+		//Если вдруг дата начала и дата конца в разных месяцах
+		if(startDate.getMonthValue() < endDate.getMonthValue() || startDate.getYear() < endDate.getYear() )
+		{
+			if(type=="DESC")
+			table = actualTable(startDate.getMonthValue(),startDate.getYear());
+			
+			if(type=="ASC")
+			table = actualTable(endDate.getMonthValue(),endDate.getYear());
+				
+			
+		}
+		
+		
+		 String query = "SELECT * FROM "
+				 +table 
+                 +" WHERE tag_id =  " + tagId.toString()
+                 +" AND logdate BETWEEN "
+                 + "\'"+startDate+"\'"
+                 + " AND "
+                 + "\'"+endDate +"\'"
+                 + " AND data_value>0"
+                 +" ORDER BY logdate "
+                 + type 
+                 +" LIMIT 1";
+		 System.out.println(query);
+  try {
+      return (Taglog) entityManager.createNativeQuery(query, Taglog.class)
+              .getSingleResult();
+  } catch (NoResultException e) {
+      return null;
+  }
+	
+	}
+
+
     
+    
+	/*
+	 * @Override public Taglog
+	 * findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(String tagId,
+	 * LocalDateTime startDate, LocalDateTime endDate) { // TODO Auto-generated
+	 * method stub return null; }
+	 */
+
 
 	/*
 	 * @Override
@@ -269,6 +382,20 @@ public class TaglogRepositoryImpl implements TaglogRepo {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
 
 	
 }

@@ -9,6 +9,8 @@ public class TagLogWithName extends Taglog {
     private String tagName;
     private String tagText;
     private String tagLevel;
+    private String tagLevelId;
+    private String tagTotalId;
     private String tagStatus;
     private String tagReason;
     private String tagCamera;
@@ -21,12 +23,14 @@ public class TagLogWithName extends Taglog {
         
     }
     
-    public TagLogWithName(Taglog taglog, String tagName, String tagText, String tagLevel, String tagStatus, String tagReason, String tagCamera) {
+    public TagLogWithName(Taglog taglog, String tagName, String tagText, String tagLevel, String tagLevelId, String tagTotalId, String tagStatus, String tagReason, String tagCamera) {
         super(taglog.getTaglog_id(), taglog.getTag_id(), taglog.getData_value(), (int) taglog.getLogtime(),
                 taglog.getLogdate(), taglog.getTimesource(), taglog.getQualifier());
         this.tagName = tagName;
         this.tagText = tagText;
         this.tagLevel = tagLevel;
+        this.tagLevelId = tagLevelId;
+        this.tagTotalId = tagTotalId;
         this.tagStatus = tagStatus;
         this.tagReason = tagReason;
         this.tagCamera = tagCamera;
@@ -78,6 +82,22 @@ public class TagLogWithName extends Taglog {
 
 	public void setTagCamera(String tagCamera) {
 		this.tagCamera = tagCamera;
+	}
+
+	public String getTagLevelId() {
+		return tagLevelId;
+	}
+
+	public void setTagLevelId(String tagLevelId) {
+		this.tagLevelId = tagLevelId;
+	}
+
+	public String getTagTotalId() {
+		return tagTotalId;
+	}
+
+	public void setTagTotalId(String tagTotalId) {
+		this.tagTotalId = tagTotalId;
 	}
 
 

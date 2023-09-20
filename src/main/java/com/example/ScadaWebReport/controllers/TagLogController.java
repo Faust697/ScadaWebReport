@@ -1,18 +1,26 @@
 package com.example.ScadaWebReport.controllers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 
 import com.example.ScadaWebReport.Model.Taglog.Taglog;
 import com.example.ScadaWebReport.repos.TaglogRepo;
@@ -83,11 +91,59 @@ public class TagLogController {
 	
 	
 
-	@GetMapping("/first-tag-log")
+	@GetMapping("/first")
 	public String getFirstTagLog(Model model) {
 	
-		return "first-tag-log";
+		return "dateTest";
 	}
 
+	
+	  @PostMapping("/your-endpoint")
+	    public ResponseEntity<String> handlePostRequest(
+	    		@RequestParam("dateRangePicker") String dateRangePicker,
+	            @RequestParam("tagLogId") String tagLogId
+	    		) {
+		  
+		    String[] parts = dateRangePicker.split(" - ");
+	        
+	        if (parts.length == 2) {
+	            String startDateString = parts[0];
+	            String endDateString = parts[1];
+	            
+	            // Создайте объекты SimpleDateFormat для парсинга даты и времени
+	            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
+	            
+	            try {
+	                // Парсинг начальной и конечной даты
+	                Date startDate = dateFormat.parse(startDateString);
+	                Date endDate = dateFormat.parse(endDateString);
+	                 
+	                Float lastValue =taglogRepo.findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(tagLogId,"DESC",
+	                		startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), 
+	                		endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()).getData_value();
+	                     
+	               // System.out.println("---" );
+	                Float firstValue =  taglogRepo.findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(tagLogId,"ASC",
+	                		startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), 
+	                		endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()).getData_value() ;
+	                
+	               // System.out.println("Начальная дата: " + startDate+" "+firstValue);
+	              // System.out.println("Конечная дата: " + endDate+" "+lastValue);
+	              //  System.out.println(lastValue-firstValue);
+	               // Вместо использования model.addAttribute, создайте строку с результатом
+					Float result = lastValue - firstValue;
+					String resultString = String.valueOf(result);
+					
+					return ResponseEntity.ok(resultString);
+	            } catch (ParseException e) {
+	                e.printStackTrace();
+	                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка обработки запроса");
+	            }
+	        }
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка обработки запроса");
+	       
+	   
+	       
+	    }
 
 }

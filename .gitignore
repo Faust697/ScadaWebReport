@@ -37,3 +37,5 @@ application.properties
 /src/main/resources/application.properties
 
 /src/main/resources/mst_gov_az.p12
+.pdf
+*.pdf

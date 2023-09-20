@@ -1,5 +1,6 @@
 package com.example.ScadaWebReport.repos;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -21,6 +22,10 @@ Taglog findFirstByOrderByTaglogIdAsc();
 List<Taglog> findLatestLogForEachTag(@Param("tableName") String tableName);
 
 List<Taglog> findLatestLogForEachTag(String tableName, String tagIdString, String notNull);
+Taglog findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(String tagId, String type, LocalDateTime startDate, LocalDateTime endDate);
+
+
+
 
 
 
