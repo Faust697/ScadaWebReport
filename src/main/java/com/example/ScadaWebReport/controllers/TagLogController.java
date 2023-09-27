@@ -2,31 +2,27 @@ package com.example.ScadaWebReport.controllers;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-import com.example.ScadaWebReport.Model.Taglog.Taglog;
+
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
 import com.example.ScadaWebReport.services.TagLogWithName;
-import com.example.ScadaWebReport.services.jsonParsers;
+
 import com.example.ScadaWebReport.services.dataProcessingService;
 
 @Controller
@@ -38,7 +34,7 @@ public class TagLogController {
 	private final dataProcessingService dps;
 
 	@Autowired
-	public TagLogController(TaglogRepo taglogRepo, TaglogRepositoryImpl taglogRepositoryImpl, jsonParsers jsonParser,
+	public TagLogController(TaglogRepo taglogRepo, TaglogRepositoryImpl taglogRepositoryImpl,
 			dataProcessingService dataProcessingService) {
 		this.taglogRepo = taglogRepo;
 		this.dps = dataProcessingService;
@@ -48,29 +44,41 @@ public class TagLogController {
 
 	@GetMapping("/")
 
-	public String getTagLogs(@RequestParam(defaultValue = "0") int page, Model model) {
+	public String getTagLogs(@RequestParam(defaultValue = "0") int page, Model model, HttpServletRequest request) {
 		List<TagLogWithName> tagLogsWithNames = dps.getTagLogsWithNames("online", "", true);
 
 		dps.formatDataValues(tagLogsWithNames, true, true);
 		dps.setTagLogPageInModel(tagLogsWithNames, page, model, "Anlıq sərfiyyat", 2);
-		return "tag-log-list2";
+		
+		dps.UpdateVisitors(request.getRemoteAddr().toString());
+		model.addAttribute("totalVisitors", dps.totalVisitors());
+		model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+		return "taglog-list-main";
 	}
 
 	// Суммарные данные
 	@GetMapping("/tag-logs-all")
-	public String getTagLogsSum(@RequestParam(defaultValue = "0") int page, Model model) {
+	public String getTagLogsSum(@RequestParam(defaultValue = "0") int page, Model model, HttpServletRequest request) {
 		List<TagLogWithName> tagLogsWithNames = dps.getTagLogsWithNames("total",
 				"AND data_value IS NOT NULL AND data_value > 0", false);
 		dps.setTagLogPageInModel(tagLogsWithNames, page, model, "Toplam sərfiyyat", 1);
+		
+		dps.UpdateVisitors(request.getRemoteAddr().toString());
+		model.addAttribute("totalVisitors", dps.totalVisitors());
+		model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
 		return "tag-log-list";
 	}
 
 	// Уровень воды
 	@GetMapping("/tag-logs-lvl")
-	public String getTagLogsLevel(@RequestParam(defaultValue = "0") int page, Model model) {
+	public String getTagLogsLevel(@RequestParam(defaultValue = "0") int page, Model model, HttpServletRequest request) {
 		List<TagLogWithName> tagLogsWithNames = dps.getTagLogsWithNames("level", "", false);
 		dps.formatDataValues(tagLogsWithNames, true, false);
 		dps.setTagLogPageInModel(tagLogsWithNames, page, model, "Kanalda su səviyyəsi", 3);
+		
+		dps.UpdateVisitors(request.getRemoteAddr().toString());
+		model.addAttribute("totalVisitors", dps.totalVisitors());
+		model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
 		return "tag-log-list";
 	}
 	
@@ -83,6 +91,9 @@ public class TagLogController {
 			List<TagLogWithName> tagLogsWithNames = dps.getTagLogsWithNames("tagLibraryLevel.json", "", false);
 			dps.formatDataValues(tagLogsWithNames, true, false);
 			dps.setTagLogPageInModel(tagLogsWithNames, page, model, "Kanalda su səviyyəsi", 3);
+			
+			model.addAttribute("totalVisitors", dps.totalVisitors());
+			model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
 			return "tag-log-list";
 		}
 	
@@ -91,14 +102,10 @@ public class TagLogController {
 	
 	
 
-	@GetMapping("/first")
-	public String getFirstTagLog(Model model) {
-	
-		return "dateTest";
-	}
+
 
 	
-	  @PostMapping("/your-endpoint")
+	  @PostMapping("/extra-info")
 	    public ResponseEntity<String> handlePostRequest(
 	    		@RequestParam("dateRangePicker") String dateRangePicker,
 	            @RequestParam("tagLogId") String tagLogId
@@ -110,7 +117,7 @@ public class TagLogController {
 	            String startDateString = parts[0];
 	            String endDateString = parts[1];
 	            
-	            // Создайте объекты SimpleDateFormat для парсинга даты и времени
+	            // Создаём объекты SimpleDateFormat для парсинга даты и времени
 	            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm");
 	            
 	            try {
@@ -118,19 +125,16 @@ public class TagLogController {
 	                Date startDate = dateFormat.parse(startDateString);
 	                Date endDate = dateFormat.parse(endDateString);
 	                 
+	                //Для стартовой даты
 	                Float lastValue =taglogRepo.findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(tagLogId,"DESC",
 	                		startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), 
 	                		endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()).getData_value();
 	                     
-	               // System.out.println("---" );
+	              //Для конечной даты
 	                Float firstValue =  taglogRepo.findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(tagLogId,"ASC",
 	                		startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), 
 	                		endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()).getData_value() ;
-	                
-	               // System.out.println("Начальная дата: " + startDate+" "+firstValue);
-	              // System.out.println("Конечная дата: " + endDate+" "+lastValue);
-	              //  System.out.println(lastValue-firstValue);
-	               // Вместо использования model.addAttribute, создайте строку с результатом
+	           
 					Float result = lastValue - firstValue;
 					String resultString = String.valueOf(result);
 					

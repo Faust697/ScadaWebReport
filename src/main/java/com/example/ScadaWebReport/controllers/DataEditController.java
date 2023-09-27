@@ -1,23 +1,20 @@
 package com.example.ScadaWebReport.controllers;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
-import java.util.Objects;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.compress.utils.IOUtils;
-import org.jboss.jandex.Main;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -31,12 +28,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.ScadaWebReport.Model.staticInfo.StaticInfoModel;
+import com.example.ScadaWebReport.Model.MongoModels.StaticInfoModel;
 import com.example.ScadaWebReport.repos.StaticInfoRepo;
 import com.example.ScadaWebReport.services.ExcelService;
+import com.example.ScadaWebReport.services.dataProcessingService;
 
 
 @Controller
@@ -45,11 +42,13 @@ public class DataEditController {
 
     private final ExcelService excelService;
     private final StaticInfoRepo staticInfoRepository;
+    private final dataProcessingService dps;
 
     @Autowired
-    public DataEditController( ExcelService excelService, StaticInfoRepo staticInfoRepository) {
+    public DataEditController( ExcelService excelService, StaticInfoRepo staticInfoRepository, dataProcessingService dataProcessingService) {
         this.excelService = excelService;
         this.staticInfoRepository = staticInfoRepository;
+        this.dps = dataProcessingService;
     }
     
  
@@ -88,14 +87,19 @@ public class DataEditController {
     }
 
     
-    
+    //Получаем страницу загрузки данных
     @GetMapping("/get-upload")
-    public String getUpload(Model model) {
+    public String getUpload(Model model, HttpServletRequest request) {
     	
+      	dps.UpdateVisitors(request.getRemoteAddr().toString());
+    		model.addAttribute("totalVisitors", dps.totalVisitors());
+    		model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+    		
         return "data-upload.html"; 
     }
     
     
+    //Скачиваем файл с графиком калибровки
     @GetMapping(
     		  value = "/get-pdf/{id}",
     		  produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
@@ -142,7 +146,12 @@ public class DataEditController {
     
     //Логининг
     @GetMapping("/login")
-    public String login() {
+    public String login(Model model, HttpServletRequest request) {
+    	
+    	dps.UpdateVisitors(request.getRemoteAddr().toString());
+		model.addAttribute("totalVisitors", dps.totalVisitors());
+		model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+    	
         return "login.html"; 
     }
     

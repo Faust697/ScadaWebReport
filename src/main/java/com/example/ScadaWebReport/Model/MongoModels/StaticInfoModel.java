@@ -1,4 +1,4 @@
-package com.example.ScadaWebReport.Model.staticInfo;
+package com.example.ScadaWebReport.Model.MongoModels;
 
 
 
@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "static_info") // Указываем имя коллекции в MongoDB
 public class StaticInfoModel {
 	
-
+	@javax.persistence.Id
 	private int Id;
 	
 	private String onlineId;
@@ -19,11 +19,12 @@ public class StaticInfoModel {
 	private String calibrationStatus;
 	private String explanation;
 	private String cameraIp;
+	private String region;
 	
 	
 	
 	public StaticInfoModel(int id, String onlineId, String totalId, String levelId, String name, String persent,
-			String calibrationStatus, String explanation, String cameraIp) {
+			String calibrationStatus, String explanation, String cameraIp, String region) {
 		super();
 		Id = id;
 		this.onlineId = onlineId;
@@ -34,6 +35,7 @@ public class StaticInfoModel {
 		this.calibrationStatus = calibrationStatus;
 		this.explanation = explanation;
 		this.cameraIp = cameraIp;
+		this.region = region;
 	}
 	
 	
@@ -97,6 +99,16 @@ public class StaticInfoModel {
 	}
 	public void setCameraIp(String cameraIp) {
 		this.cameraIp = cameraIp;
+	}
+
+
+	public String getRegion() {
+		return region;
+	}
+
+
+	public void setRegion(String region) {
+		this.region = region;
 	}
 	
 

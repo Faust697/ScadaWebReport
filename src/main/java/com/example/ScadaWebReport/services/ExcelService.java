@@ -1,7 +1,6 @@
 package com.example.ScadaWebReport.services;
 
-import java.io.File;
-import java.io.FileInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import com.example.ScadaWebReport.Model.staticInfo.StaticInfoModel;
+import com.example.ScadaWebReport.Model.MongoModels.StaticInfoModel;
 
 @Service
 public class ExcelService {
@@ -69,11 +68,12 @@ public class ExcelService {
 	                String explanation = getCellValue(cellIterator.next());
 	                String persent = getCellValue(cellIterator.next());
 	                String cameraIp = getCellValue(cellIterator.next());
+	                String region = getCellValue(cellIterator.next());
 	                
 	              
 
 	                StaticInfoModel staticInfoModel = new StaticInfoModel(id, onlineId, totalId, levelId, name,
-	                        persent, calibrationStatus, explanation, cameraIp);
+	                        persent, calibrationStatus, explanation, cameraIp, region);
 
 	                staticInfoList.add(staticInfoModel);
 	            	}

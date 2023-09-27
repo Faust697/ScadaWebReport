@@ -1,8 +1,11 @@
 package com.example.ScadaWebReport.services;
 
 import java.math.BigInteger;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -14,30 +17,59 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.example.ScadaWebReport.Model.TagInfo;
+import com.example.ScadaWebReport.Model.MongoModels.StaticInfoModel;
 import com.example.ScadaWebReport.Model.Taglog.Taglog;
-import com.example.ScadaWebReport.Model.staticInfo.StaticInfoModel;
 import com.example.ScadaWebReport.repos.StaticInfoRepo;
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
+import com.example.ScadaWebReport.repos.VisitorRepo;
+
 
 @Service
 public class dataProcessingService {
 
 	private TaglogRepositoryImpl taglogRepositoryImpl;
 	private final StaticInfoRepo staticInfoRepo;
+	private final VisitorRepo visitorRepo;
+	
+	@Autowired
+	private MongoTemplate mongoTemplate;
+	
 
 	@Autowired
 	public dataProcessingService(TaglogRepo taglogRepo, TaglogRepositoryImpl taglogRepositoryImpl,
-			StaticInfoRepo staticInfoRepo) {
+			StaticInfoRepo staticInfoRepo, VisitorRepo visitorRepo) {
 		this.taglogRepositoryImpl = taglogRepositoryImpl;
-
 		this.staticInfoRepo = staticInfoRepo;
+		this.visitorRepo = visitorRepo;
+
 	}
 
+	
+	public void UpdateVisitors(String ip)
+	{
+		visitorRepo.saveOrUpdateVisitor(ip);
+	}
+	
+	//Total number of visitors 
+	public Long totalVisitors()
+	{return visitorRepo.countAll(); }
+	
+	public int totalWeekVisitors()
+	{
+		Instant sevenDaysAgo = Instant.now().minus(7, ChronoUnit.DAYS);
+		
+			Instant currentTime = Instant.now();
+
+			return visitorRepo.countRecentVisitors(sevenDaysAgo, currentTime);//, currentTime); 
+
+		
+	}
+	
 	//Вызов актуальной таблицы 
 	public String actualTable()
 	{
@@ -129,6 +161,7 @@ public class dataProcessingService {
 			String tagCamera = filteredTag.getCameraIp();
 			String tagLevelId = filteredTag.getLevelId();
 			String tagTotalId = filteredTag.getTotalId();
+			String tagRegion = filteredTag.getRegion();
 
 			//Из полученных данных берём результаты
 			Taglog taglog = null;
@@ -173,8 +206,9 @@ public class dataProcessingService {
 			//Ещё раз проверяем есть ли у нас объект
 			if (taglog == null)
 				continue;
+
 			TagLogWithName tagLogWithName = new TagLogWithName(taglog, tagName, tagText, LevelValue,tagLevelId, tagTotalId, tagStatus,
-					tagReason, tagCamera);
+					tagReason, tagCamera, tagRegion);
 			tagLogsWithNames.add(tagLogWithName);
 
 		}
@@ -227,6 +261,30 @@ public class dataProcessingService {
 		return Level;
 
 	}
+	
+	
+	  //Вынести это отсюда
+		public String actualTable(int month, int year)
+		{
+			String monthIns=null;
+			LocalDate currentDate=null;
+			if(month==0 && year==0)
+			{
+			currentDate = LocalDate.now();
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");	 
+			String formatCurrentMonth = currentDate.format(formatter);
+			return "logs."+"\"tag_log_" + formatCurrentMonth + "\"";
+			}
+			//Если вдруг дата начала и дата конца в разных месяцах
+			else
+				if(month<10)
+					monthIns="0"+month;
+				else 
+					monthIns=String.valueOf(month);
+			
+			
+				return	"logs."+"\"tag_log_"+year+"-"+monthIns+ "\"";
+		}
 
 	public String formatCurrentMonth() {
 		LocalDate currentDate = LocalDate.now();

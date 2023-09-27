@@ -3,180 +3,21 @@
 <head>
 <title>Scada Monitoring</title>
 
-<link rel="stylesheet"
-	href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-<link rel="stylesheet" type="text/css"
-	href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css">
-<link rel="stylesheet"
-	href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-<link rel="stylesheet" type="text/css"
-	href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
-
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
-	crossorigin="anonymous">
-
-<style>
-.text-danger {
-	color: red;
-}
-
-.fw-bold {
-	font-weight: bold;
-}
-</style>
-
-<style>
-#tagLogTable_paginate {
-	text-align: center;
-}
-</style>
-
+<link rel="stylesheet" type="text/css" th:href="@{/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_1.13.6_css_jquery.dataTables.min.css}">	
+<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_buttons_2.4.1_css_buttons.dataTables.min.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/style.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/headers.css}">
-
-
-
-<link rel="canonical"
-	href="https://getbootstrap.com/docs/4.0/examples/navbars/">
-
-
-<link
-	href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css"
-	rel="stylesheet">
-
-
-
-<link
-	href="https://cdn.datatables.net/rowreorder/1.3.1/css/rowReorder.dataTables.min.css"
-	rel="stylesheet">
-
-<link
-    href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.dataTables.min.css"
-    rel="stylesheet">
-    
-    
-    
-    
-    
-
-<style>
-.dropdown-menu a:visited, a:visited {
-	color: #D3D3D3;
-	text-decoration: none;
-}
-
-h1 {
-	text-align: center;
-}
-
-#test {
-	width: 450px;
-	clear: both;
-	padding-top: 30px;
-	padding-bottom: 60px;
-}
-
-.form-control {
-	width: 250%;
-}
-
-label {
-	display: inline-flex;
-	width: 100%;
-}
-
-
-#tagLogTable td {
-    height: 40px;
-    width: 50px;
-    text-align: center; 
-    vertical-align: middle;
-}
-
-/* Стили для заголовков */
-#tagLogTable th {
-    height: 40px;
-    width: 50px;
-    text-align: center;
-    vertical-align: middle;
-}
-
-/* Стили для фиксированных заголовков */
-.table display table-striped table-bordered compact bg-white cell-border dataTable no-footer fixedHeader-floating th {
-    height: 40px;
-    width: 50px;
-    text-align: center;
-    vertical-align: middle;
-}
-
-.dataTables_scrollBody td {
-    height: 40px;
-    width: 50px;
-    text-align: center;
-    vertical-align: middle;
-}
-
-
-
-
-#tagLogTable td:nth-child(2) {
-    width: 170px; 
-}
-#tagLogTable td:nth-child(5) {
-    width: 170px; 
-}
-
-#tagLogTable td:nth-child(6) {
-    width: 170px; 
-}
-
-
-/*Для статус контейнера*/
-  .status-container {
-        border: 1px solid #ccc;
-        border-radius: 5px; /* Закругляем края */
-        padding: 10px;
-        background-color: #fff;
-        width: 300px; /* Уменьшаем ширину */
-        margin-bottom: 20px; /* Добавляем отступ снизу */
-        margin-left: 1%;
-        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4); /* Добавляем серую рамку */
-    }
-
-    .status-label {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 2px;
-    }
-
-    .online {
-        color: green;
-    }
-
-    .offline {
-        color: red;
-    }
-    
-
-
-</style>
-
-
-
-
-
+<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_1.13.1_css_jquery.dataTables.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_1.13.6_css_dataTables.bootstrap5.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_buttons_2.4.1_css_buttons.bootstrap5.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_fixedheader_3.4.0_css_fixedHeader.dataTables.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_rowreorder_1.3.1_css_rowReorder.dataTables.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.css}">
 
 </head>
 
-
-
-
-
 <body>
-	<!-- <h1>Tag Log List</h1>-->
 	<div id="forbg" class="bg-white"
 		style="background: url(img/Ming_bg.jpg) no-repeat center center fixed; background-size: cover;">
 
@@ -206,7 +47,7 @@ label {
 					<div class="row justify-content-md-center">
 						<div class="col col-12">
 
-							<table id="tagLogTable"
+							<table id="tagLogTable-second"
 								class="table display table-striped table-bordered compact bg-white cell-border">
 								<thead>
 									<tr>
@@ -233,9 +74,7 @@ label {
 
 										<td th:text="${tagLog.tagName}"></td>
 
-										<td th:if="${measurement == 2}"
-											th:text="${tagLog.tagLevel != '' ? tagLog.tagLevel : 'offline'}"
-											th:class="${tagLog.tagLevel == '' ? 'text-danger fw-bold' : ''}"></td>
+									
 
 										<td
 											th:text="${tagLog.data_value != null ? tagLog.data_value : 'offline'}"
@@ -244,18 +83,7 @@ label {
 
 										<td th:text="${tagLog.getLogdate}"></td>
 
-										<td th:if="${measurement == 2}" th:text="${tagLog.tagText}"
-											th:class="${tagLog.tagText == 'Xəta 5 faizdən kiçik' ? 'text-success fw-bold' : 
-                          tagLog.tagText == 'Xəta 5-10 faiz aralığında' ? 'text-warning fw-bold' : 
-                          tagLog.tagText == 'Xəta 10 faizdən çox' ? 'text-danger fw-bold' : ''}"></td>
-
-										<td th:if="${measurement == 2}" th:text="${tagLog.tagStatus}"
-											th:class="${tagLog.tagStatus == 'Bəli' ? 'text-success fw-bold' : 
-                          tagLog.tagStatus == 'Planlanır' ? 'text-warning fw-bold' : 
-                          tagLog.tagStatus == 'Xeyr' ? 'text-danger fw-bold' : ''}"></td>
-
-										<td th:if="${measurement == 2}" th:text="${tagLog.tagReason}"></td>
-
+							
 
 
 
@@ -280,51 +108,20 @@ label {
 
 	<div th:insert="~{parts/footer :: footer}"></div>
 
+<script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
+<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_moment.js_2.29.1_moment.min.js}"></script>
+<script th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
+<script th:src="@{/scripts/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_js_bootstrap.bundle.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_dataTables.bootstrap5.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js}"></script>
+<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_jszip_3.10.1_jszip.min.js}"></script>
+<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_pdfmake.min.js}"></script>
+<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_vfs_fonts.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_dataTables.buttons.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.html5.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.print.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_fixedheader_3.4.0_js_dataTables.fixedHeader.min.js}"></script>
+<script th:src="@{/scripts/scada.script.js}"></script>
 
-
-	<!--<script type="text/javascript" charset="utf8" src="/buttons.html5.min.js"></script>  -->
-
-	<script type="text/javascript" charset="utf8"
-		src="https://code.jquery.com/jquery-3.7.0.js"></script>
-	<script type="text/javascript" charset="utf8"
-		src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-	<script type="text/javascript" charset="utf8"
-		src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-	<script type="text/javascript"
-		src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-	<script type="text/javascript"
-		src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-	<script type="text/javascript"
-		src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-	<script type="text/javascript"
-		src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
-	<script type="text/javascript"
-		src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
-	<script type="text/javascript"
-		src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
-		<script
-    src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
-
-
-
-
-
-	<script type="text/javascript">
-		$(document).ready(function() {
-			var table = $('#tagLogTable').DataTable({
-				dom : 'Bfrtip',
-				buttons : [ 'copy', 'csv', 'excel', 'pdf', 'print' ],
-				paging : false,
-				 fixedHeader: true,
-				info: false, // Эта строка скроет информацию о количестве записей
-				language : {
-					search : "_INPUT_",
-					searchPlaceholder : "Axtarış"
-				}
-			});
-			
-
-		});
-	</script>
 </body>
 </html>

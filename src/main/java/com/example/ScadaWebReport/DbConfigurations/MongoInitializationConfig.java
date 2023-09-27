@@ -1,4 +1,4 @@
-package com.example.ScadaWebReport.repos;
+package com.example.ScadaWebReport.DbConfigurations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

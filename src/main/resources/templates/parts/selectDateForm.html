@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+<title> Scada Web Project</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, initial-scale=1">
+
+</head>
+<body>
+
+	<div th:fragment="dateSelector">
+	
+ <form name="myForm"  
+th:action="@{/extra-info}"
+id="myForm"
+  method="post">
+    <!-- CSRF-токен вставлен в форму вручную -->
+    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+    
+		 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+			aria-labelledby="myModalLabel" aria-hidden="true"> 
+			
+		 	<div class="modal-dialog modal-lg"> 
+			
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title" id="myModalLabel"></h4>
+						<label style="display: none;" class="modal-title" id="tagLogId"></label>
+					</div>
+					<div class="modal-body">
+		
+<div class="row border-div">
+<a target="_blank" class="btn btn-outline-dark btn-pdf" id="buttonLinkPdf" href="#">Qədərləmə cədvəl PDF</a>
+<a target="_blank" class="btn btn-outline-dark btn-camera" id="buttonLinkCamera" href="#">Kamera</a>
+</div>
+
+          <div class="row ">
+          
+							<div class="col-sm-4">
+							 <div class="form-group">
+                    <label for="dateRangePicker">Vaxt aralığını seçin və təsdiqləyin:</label>
+                    <input type="text" id="dateRangePicker" name="dateRangePicker" class="form-control" autocomplete="off" />
+					
+					
+                </div>
+            
+</div>
+</div>
+
+<p id="statusLabel">
+<div id="loadingAnimation" style="display: none;">
+
+    <img th:src="@{/img/Fading%20lines.gif}" alt="Loading..." />
+</div>
+ <span th:text="${result}" id="statusText"></span><span style="font-weight: bold;" th:text="${result}" id="statusInfo"></span>
+
+
+						<div class="modal-footer">
+
+							<button type="button" class="btn btn-secondary"
+								data-dismiss="modal"  onclick="closeModal()">Bağlamaq</button>
+							<button type="submit" class="btn btn-primary" >Təsdiq et</button>
+						
+						</div>
+	 		
+					</div>
+					
+				</div>
+			</div>
+			
+		
+<script th:src="@{/scripts/scada.script.js}"></script>
+	
+			
+			
+
+
+		 </div> 
+		 </form>
+		 
+		</div>
+</body>

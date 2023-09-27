@@ -60,7 +60,6 @@ public class TagLogDao {
 	}
 
 	@Primary
-
 	@Bean
 	public PlatformTransactionManager tagLogTransactionManager() {
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -68,8 +67,9 @@ public class TagLogDao {
 		return transactionManager;
 	}
 
+	
+	
 	@Primary
-
 	@Bean
 	public TaglogRepo TagLogRepository() {
 		return new TaglogRepositoryImpl(); // Реализация UserRepository

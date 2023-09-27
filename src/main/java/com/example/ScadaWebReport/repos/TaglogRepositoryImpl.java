@@ -34,28 +34,7 @@ public class TaglogRepositoryImpl implements TaglogRepo {
     private EntityManager entityManager;
     @Autowired
     private Environment env;
-  
-    
 
-    /*
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<Taglog> findLatestLogForEachTag(String tableName, String tagIdString, String notNull) {
-    	
-    	// Проверяем текущий диалект базы данных
-        String currentDialect = env.getProperty("spring.jpa.properties.hibernate.dialect");
-        
-        if (currentDialect != null && currentDialect.contains("org.hibernate.dialect.PostgreSQLDialect")) {
-        String query = "SELECT DISTINCT ON (tag_id) tag_id, taglog_id, data_value, logtime, logdate, timesource, qualifier "
-                + "FROM logs." + tableName
-                + " where tag_id in (" + tagIdString + ") "
-                + notNull
-                + " ORDER BY tag_id, logdate DESC";
-       
-        return entityManager.createNativeQuery(query, Taglog.class).getResultList();
-        }
-		return null;
-    }*/
     
     @Override
     @SuppressWarnings("unchecked")
@@ -72,7 +51,7 @@ public class TaglogRepositoryImpl implements TaglogRepo {
                     + notNull
                     + " AND logdate >= :fifteenMinutesAgo " // Измененный фильтр
                     + " ORDER BY tag_id, logdate DESC";
-            System.out.println(query);
+      
             
             List<Taglog> result = entityManager.createNativeQuery(query, Taglog.class)
                     .setParameter("fifteenMinutesAgo", fifteenMinutesAgo)

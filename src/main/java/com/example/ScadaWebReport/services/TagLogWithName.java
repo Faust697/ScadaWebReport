@@ -14,6 +14,7 @@ public class TagLogWithName extends Taglog {
     private String tagStatus;
     private String tagReason;
     private String tagCamera;
+    private String tagRegion;
 
     public TagLogWithName(@Nullable Taglog taglog, String tagName, String tagText ) {
         super(taglog.getTaglog_id(), taglog.getTag_id(), taglog.getData_value(), (int) taglog.getLogtime(),
@@ -23,7 +24,12 @@ public class TagLogWithName extends Taglog {
         
     }
     
-    public TagLogWithName(Taglog taglog, String tagName, String tagText, String tagLevel, String tagLevelId, String tagTotalId, String tagStatus, String tagReason, String tagCamera) {
+    public TagLogWithName(Taglog taglog,
+    					String tagName, String tagText,
+    					String tagLevel, String tagLevelId,
+    					String tagTotalId, String tagStatus,
+    					String tagReason, String tagCamera,
+    					String tagRegion) {
         super(taglog.getTaglog_id(), taglog.getTag_id(), taglog.getData_value(), (int) taglog.getLogtime(),
                 taglog.getLogdate(), taglog.getTimesource(), taglog.getQualifier());
         this.tagName = tagName;
@@ -34,6 +40,7 @@ public class TagLogWithName extends Taglog {
         this.tagStatus = tagStatus;
         this.tagReason = tagReason;
         this.tagCamera = tagCamera;
+        this.tagRegion = tagRegion;
     }
 
     public String getTagName() {
@@ -98,6 +105,14 @@ public class TagLogWithName extends Taglog {
 
 	public void setTagTotalId(String tagTotalId) {
 		this.tagTotalId = tagTotalId;
+	}
+
+	public String getTagRegion() {
+		return tagRegion;
+	}
+
+	public void setTagRegion(String tagRegion) {
+		this.tagRegion = tagRegion;
 	}
 
 

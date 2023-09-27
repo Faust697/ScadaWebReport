@@ -84,7 +84,7 @@ h1 {
 	padding-top:2%;
 	padding-bottom:5%;
 }
-#tagLogTable
+#tagLogTable, #tagLogTable-second
 {
   border: 3px solid gray;
   box-shadow: 5px 5px 5px #000000;
@@ -121,14 +121,14 @@ label > input[type="search"] {
     margin-left: 10px; /* Добавьте отступ между лейблом и инпутом, если необходимо */
 }
 
-#tagLogTable_filter
+#tagLogTable_filter, #tagLogTable-second_filter
 {
 	border: 3px solid gray;
 	border-radius:10px;
   	box-shadow: 5px 5px 5px #000000;
   	margin-bottom:1%;
 }
-#tagLogTable_filter.label
+#tagLogTable_filter.label, #tagLogTable-second_filter.label
 {
 display: block; width: 100px;
 }
@@ -205,7 +205,7 @@ h1
 }
 
 
-#tagLogTable
+#tagLogTable, #tagLogTable-second
 {
 	background: white;
 	margin-top: 3%;
@@ -324,3 +324,201 @@ li:active{ background-color: #212529}
 
 }	
 /* ============ small devices .end// ============ */
+
+
+h1 {
+	text-align: center;
+}
+
+#test {
+	width: 450px;
+	clear: both;
+	padding-top: 30px;
+	padding-bottom: 60px;
+}
+
+.form-control {
+	width: 250%;
+}
+
+label {
+	display: inline-flex;
+	width: 100%;
+}
+
+
+#tagLogTable td , #tagLogTable-second td{
+    height: 40px;
+    width: 50px;
+    text-align: center; 
+    vertical-align: middle;
+}
+
+/* Стили для заголовков */
+#tagLogTable th , #tagLogTable-second th{
+    height: 40px;
+    width: 50px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Стили для фиксированных заголовков */
+.table display table-striped table-bordered compact bg-white cell-border dataTable no-footer fixedHeader-floating th {
+    height: 40px;
+    width: 50px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.dataTables_scrollBody td {
+    height: 40px;
+    width: 50px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+
+
+
+#tagLogTable td:nth-child(2) , #tagLogTable-second td:nth-child(2){
+    width: 170px; 
+}
+#tagLogTable td:nth-child(5) , #tagLogTable-second td:nth-child(5){
+    width: 170px; 
+}
+
+#tagLogTable td:nth-child(6) , #tagLogTable-second td:nth-child(6){
+    width: 170px; 
+}
+
+ .custom-select {
+    padding: 0; /* Убираем padding */
+    transform: scale(1.1);
+  }
+  .pick-label{
+  transform: scale(1.1);
+  }
+
+
+     .camera-link {
+        color: #fff; /* Цвет текста */
+    }
+
+    .camera-link:hover {
+        color: #fff; /* Измененный цвет при наведении */
+    }
+
+    .camera-link:visited {
+        color: #fff; /* Цвет после посещения */
+    }
+
+
+.modal-footer {
+  margin-top: 20px; /* Задать отступ сверху в 20 пикселей (или другое значение) */
+  }
+  
+  .bg-white {
+    --bs-bg-opacity: 1;
+    background-color: rgba(0, 0, 0, 0);
+}
+
+
+
+/*Для статус контейнера*/
+  .status-container {
+        border: 1px solid #ccc;
+        border-radius: 5px; /* Закругляем края */
+        padding: 10px;
+        background-color: #fff;
+        width: 300px; /* Уменьшаем ширину */
+        margin-bottom: 20px; /* Добавляем отступ снизу */
+        margin-left: 1%;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4); /* Добавляем серую рамку */
+    }
+
+    .status-label {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 2px;
+    }
+
+    .online {
+        color: green;
+    }
+
+    .offline {
+        color: red;
+    }
+    
+    
+/* Изменение цвета кнопки "Apply" */
+.daterangepicker .applyBtn {
+    background-color: #000; /* Черный цвет фона */
+    color: #fff; /* Белый цвет текста */
+}
+
+/* Изменение цвета выбранной даты */
+.daterangepicker td.active, .daterangepicker td.active:hover, .daterangepicker td.active.hovered {
+    background-color: #000; /* Черный цвет фона */
+    color: #fff; /* Белый цвет текста */
+}
+
+/* Изменение шрифта на Gill Sans */
+.daterangepicker {
+    font-family: 'Gill Sans', sans-serif; /* Шрифт Gill Sans */
+}
+
+
+
+.btn-pdf, .btn-camera {
+    /* Установка явного размера кнопки */
+    width: 200px;
+    height: 40px;
+    font-size: 16px;
+    /* Отключение изменения размера при наведении */
+    resize: none;
+    /* Устанавливаем цвет текста по умолчанию (чёрный) */
+    color: black !important; 
+    /* Устанавливаем фоновый цвет по умолчанию (если необходимо) */
+    background-color: transparent; /* Прозрачный фон */
+  margin-left:10px;
+  margin-bottom:10px;
+}
+
+.btn-pdf:hover, .btn-camera:hover {
+    font-size: 16px !important;
+    color: white !important; /* Устанавливаем цвет текста при наведении на кнопку */
+}
+.dropdown-menu a:visited, a:visited {
+  
+    text-decoration: none;
+    font-size: 80%;
+}
+
+#tagLogTable_paginate, #tagLogTable-second_paginate {
+	text-align: center;
+}
+
+.text-danger {
+	color: red;
+}
+
+.fw-bold {
+	font-weight: bold;
+}
+
+.border-div {
+    border: 2px solid transparent; /* Устанавливаем ширину и стиль рамки, а также цвет прозрачный */
+    border-radius: 10px; /* Устанавливаем радиус закругления углов */
+}
+
+.btn-pdf {
+    /* Установка явного размера кнопки */
+    width: 200px;
+    height: 40px;
+    
+    /* Отключение изменения размера при наведении */
+    resize: none;
+}
+
+
