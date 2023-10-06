@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +30,7 @@ import com.example.ScadaWebReport.services.dataProcessingService;
 @Controller
 public class TagLogController {
 
-	
+	private static final Logger log = LoggerFactory.getLogger(TagLogController.class);
 	private final TaglogRepo taglogRepo;
 
 	private final dataProcessingService dps;
@@ -53,6 +55,7 @@ public class TagLogController {
 		dps.UpdateVisitors(request.getRemoteAddr().toString());
 		model.addAttribute("totalVisitors", dps.totalVisitors());
 		model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+	
 		return "taglog-list-main";
 	}
 
@@ -138,9 +141,16 @@ public class TagLogController {
 					Float result = lastValue - firstValue;
 					String resultString = String.valueOf(result);
 					
+					
+					 log.info("Start date to count sum: "+startDate+" and data for that moment: "+firstValue+" .");
+					 log.info("End date to count sum: "+endDate+" and data for that moment: "+lastValue+" .");
+					 log.info("Result: "+resultString+" .");
+					 
+					
 					return ResponseEntity.ok(resultString);
 	            } catch (ParseException e) {
 	                e.printStackTrace();
+	                log.error("Error: "+e.getMessage());
 	                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка обработки запроса");
 	            }
 	        }

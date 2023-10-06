@@ -1,4 +1,4 @@
-package com.example.ScadaWebReport.Model.MongoModels;
+package com.example.ScadaWebReport.Document.MongoDocument;
 
 import java.time.Instant;
 

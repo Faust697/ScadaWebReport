@@ -6,6 +6,15 @@
     
     $(document).ready(function() {
 	if (!$.fn.DataTable.isDataTable('#tagLogTable')) {
+if (!$.fn.DataTable.isDataTable('#tagLogTable')) {
+        $.fn.dataTable.ext.order['custom'] = function(settings, col) {
+            return this.api().column(col, {order: 'index'}).nodes().map(function(td, i) {
+                var cellValue = $(td).text();
+                cellValue = (cellValue === 'offline') ? 'ZZZZZZZZZ' : cellValue; // Присваиваем значение переменной cellValue в соответствии с условием
+                return cellValue;
+            });
+        };
+
     var table_main = $('#tagLogTable').DataTable({
         dom: 'Bfrtip',
         buttons: [
@@ -43,15 +52,30 @@
             searchPlaceholder: "Axtarış"
         },
          columnDefs: [
-            { targets: [4, 5], type: 'num' } // Задаем тип данных 'num' для столбцов 4 и 5
+            {
+	 
+	targets: [3, 4], 
+	type: 'num' ,
+	render: function (data, type, row) {
+
+            if (type === 'sort') {
+                // Удалите все символы, кроме цифр и точек (для десятичных чисел)
+                var numericData = data.replace(/[^0-9.]/g, '');         
+                var parsedData = parseFloat(numericData);
+
+                return parsedData;
+            }
+            return data;
+        }
+	} 
         ]
     });
     };
     
     
+        };
     
-    
-    	/*if (!$.fn.DataTable.isDataTable('#tagLogTable-second')) {
+    	if (!$.fn.DataTable.isDataTable('#tagLogTable-second')) {
     var table_extra = $('#tagLogTable-second').DataTable({
         dom: 'Bfrtip',
         buttons: [
@@ -89,61 +113,31 @@
             searchPlaceholder: "Axtarış"
         },
          columnDefs: [
-                { targets: [2], type: 'num' }, // Указываем, что третий столбец (с индексом 2) должен сортироваться как числовой
-                { targets: [0, 3], orderData: [0, 3, 2] } // Указываем порядок сортировки для второго и пятого столбцов, где может быть "offline"
-            ]
+            {
+	 
+	targets: [2], 
+	type: 'num' ,
+	render: function (data, type, row) {
+            if (type === 'sort') {
+                // Удалите все символы, кроме цифр и точек (для десятичных чисел)
+                var numericData = data.replace(/[^0-9.]/g, '');
+                var parsedData = parseFloat(numericData);
+                return parsedData;
+            }
+            return data;
+        }
+	} 
+        ]
+        
     });
-    };*/
-    
-    
-    
-    
-    
-  $(document).ready(function() {
-    if (!$.fn.DataTable.isDataTable('#tagLogTable-second')) {
-        var table_extra = $('#tagLogTable-second').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                {
-                    extend: 'copy',
-                    title: '"SCADA" Anlıq sərfiyyat'
-                },
-                {
-                    extend: 'csv',
-                    title: '"SCADA" Anlıq sərfiyyat'
-                },
-                {
-                    extend: 'excel',
-                    title: '"SCADA" Anlıq sərfiyyat'
-                },
-                {
-                    extend: 'pdf',
-                    title: '"SCADA" Anlıq sərfiyyat',
-                    customize: function (doc) {
-                        doc.defaultStyle.fontSize = 8;
-                        doc.pageMargins = [20, 30, 20, 30];
-                        doc.pageSize = 'A4';
-                    }
-                },
-                {
-                    extend: 'print',
-                    title: '"SCADA" Anlıq sərfiyyat'
-                }
-            ],
-            paging: false,
-            fixedHeader: true,
-            info: false,
-            language: {
-                search: "_INPUT_",
-                searchPlaceholder: "Axtarış"
-            },
-            columnDefs: [
-                { targets: [2], type: 'num' },
-                { orderData: [2], type: 'num' } // Указываем порядок сортировки для второго и пятого столбцов
-            ]
-        });
     };
-});
+  
+    
+    
+    
+
+
+
 
 
     
@@ -245,4 +239,58 @@ $(document).ready(function () {
         endDate: moment(), // Конечная дата (по умолчанию текущая дата и время)
         opens: 'left' // Открывать календарь с левой стороны
     });
+});
+
+
+// Функция для прокрутки страницы наверх
+
+function scrollToTop() {
+	
+	var i =0;
+	
+    const currentY = window.scrollY;
+    const step = Math.max(currentY / 25, 20); // Настройте скорость прокрутки по вашему усмотрению
+
+   function scrollStep() {
+        if (window.scrollY > 0) {
+
+	 
+            window.scrollTo(0, window.scrollY - step);
+          
+            if(i===window.scrollY){
+
+	 window.scrollTo({
+        top: 0,
+        behavior: "smooth" // Плавная прокрутка
+    });
+	
+}
+    else
+    {
+			i=window.scrollY;
+			
+	     requestAnimationFrame(scrollStep);}
+            
+        } 
+    }
+    requestAnimationFrame(scrollStep);
+    
+    
+    
+}
+
+
+
+// Отслеживаем прокрутку страницы
+window.addEventListener("scroll", function () {
+    var scrollToTopButton = document.getElementById("scrollToTopButton");
+
+    // Показываем или скрываем кнопку "Наверх" в зависимости от положения прокрутки
+    if (window.pageYOffset > 200) {
+        scrollToTopButton.style.display = "block";
+
+    } else {
+        scrollToTopButton.style.display = "none";
+
+    }
 });

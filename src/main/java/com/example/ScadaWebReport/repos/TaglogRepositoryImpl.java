@@ -23,7 +23,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 import org.springframework.stereotype.Repository;
 
-import com.example.ScadaWebReport.Model.Taglog.Taglog;
+import com.example.ScadaWebReport.Entity.Taglog.Taglog;
 import com.example.ScadaWebReport.services.dataProcessingService;
 
 @ConditionalOnProperty(name = "spring.datasource.driver-class-name", havingValue = "org.postgresql.Driver") 

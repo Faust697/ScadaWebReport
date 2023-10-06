@@ -2,7 +2,7 @@ package com.example.ScadaWebReport.services;
 
 import org.springframework.lang.Nullable;
 
-import com.example.ScadaWebReport.Model.Taglog.Taglog;
+import com.example.ScadaWebReport.Entity.Taglog.Taglog;
 
 public class TagLogWithName extends Taglog {
 

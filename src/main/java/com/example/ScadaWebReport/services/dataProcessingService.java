@@ -3,7 +3,6 @@ package com.example.ScadaWebReport.services;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -21,8 +20,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
-import com.example.ScadaWebReport.Model.MongoModels.StaticInfoModel;
-import com.example.ScadaWebReport.Model.Taglog.Taglog;
+import com.example.ScadaWebReport.Entity.Taglog.Taglog;
+import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoModel;
 import com.example.ScadaWebReport.repos.StaticInfoRepo;
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;

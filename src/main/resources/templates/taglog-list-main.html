@@ -17,12 +17,15 @@
 <link rel="stylesheet" type="text/css" th:href="@{/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.css}">
 
 
+
+
+
 <script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_dataTables.bootstrap5.min.js}"></script>
 <script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_moment.js_2.29.1_moment.min.js}"></script>
 <script th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
 <script th:src="@{/scripts/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_js_bootstrap.bundle.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_dataTables.bootstrap5.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js}"></script>
 <script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_jszip_3.10.1_jszip.min.js}"></script>
 <script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_pdfmake.min.js}"></script>
 <script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_vfs_fonts.js}"></script>
@@ -34,10 +37,15 @@
 
 
 
-
-
 </head>
 <body>
+
+
+
+
+
+
+
 	<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
 <div id="forbg" class="test" style="background: rgba(0, 0, 0, 0.5); background-color: rgba(0, 0, 0, 0); background-size: cover;">
 	
@@ -126,6 +134,7 @@
 				</div>
 			</div>
 		</div>
+		 <button id="scrollToTopButton" onclick="scrollToTop()">↑</button>
 	</div>
 
 	<div th:insert="~{parts/footer :: footer}"></div>

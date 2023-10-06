@@ -9,12 +9,11 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
-import org.springframework.core.io.Resource;
-
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -30,16 +29,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.ScadaWebReport.Model.MongoModels.StaticInfoModel;
+import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoModel;
 import com.example.ScadaWebReport.repos.StaticInfoRepo;
 import com.example.ScadaWebReport.services.ExcelService;
 import com.example.ScadaWebReport.services.dataProcessingService;
 
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Controller
 public class DataEditController {
 	
-
+	private static final Logger log = LoggerFactory.getLogger(DataEditController.class);
     private final ExcelService excelService;
     private final StaticInfoRepo staticInfoRepository;
     private final dataProcessingService dps;
@@ -78,10 +79,12 @@ public class DataEditController {
             staticInfoRepository.saveAll(staticInfoList);
 
             model.addAttribute("message", "Данные успешно импортированы в MongoDB.");
+            log.info("Data recording was successful.");
             return "upload-result"; // Вернуть страницу результатов с успешным сообщением
         } catch (IOException e) {
             e.printStackTrace();
             model.addAttribute("message", "Произошла ошибка при импорте данных.");
+           log.error("Error: "+e.getMessage());
             return "upload-result"; // Вернуть страницу результатов с сообщением об ошибке
         }
     }
@@ -104,7 +107,7 @@ public class DataEditController {
     		  value = "/get-pdf/{id}",
     		  produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
     		)
-    		public ResponseEntity<Resource> getFile(@PathVariable("id") String id) throws IOException {
+    		public ResponseEntity getFile(@PathVariable("id") String id, Model model) throws IOException {
     	
     	
     	// Путь к файлу в папке ресурсов
@@ -129,7 +132,7 @@ public class DataEditController {
 
     	        // Возвращаем ResponseEntity с файлом
     	        headers.setContentDisposition(ContentDisposition.builder("inline").filename(id + ".pdf").build());
-
+    	        model.addAttribute("fileExists", true);
     	        return ResponseEntity.ok()
     	                .headers(headers)
     	                .contentLength(classPathResource.contentLength())
@@ -137,7 +140,10 @@ public class DataEditController {
     	                .body(resource);
     	    } else {
     	        // Возвращаем сообщение о том, что файл не найден
-    	        return ResponseEntity.notFound().build();
+    	    	 model.addAttribute("fileExists", false);
+    	    	 log.error("Error: File not found.");
+    	        return ResponseEntity.badRequest().body("Üzr istəyirik, lakin seçilmiş fayl hələ sistemə əlavə olunmayıb.");
+    	        		//notFound().build();
     	    }
     		   
     		}

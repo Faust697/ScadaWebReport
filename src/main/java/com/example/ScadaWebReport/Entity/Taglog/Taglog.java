@@ -1,4 +1,4 @@
-package com.example.ScadaWebReport.Model.Taglog;
+package com.example.ScadaWebReport.Entity.Taglog;
 
 import java.math.BigInteger;
 import java.time.OffsetDateTime;

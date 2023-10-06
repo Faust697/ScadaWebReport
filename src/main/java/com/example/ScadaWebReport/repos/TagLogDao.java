@@ -21,7 +21,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
 @PropertySource({ "classpath:application.properties" })
-@EnableJpaRepositories(basePackages = "com.example.ScadaWebReport.dao", entityManagerFactoryRef = "TagLogEntityManager", transactionManagerRef = "TagLogTransactionManager")
+@EnableJpaRepositories(basePackages = "com.example.ScadaWebReport.Entity.Taglog", entityManagerFactoryRef = "TagLogEntityManager", transactionManagerRef = "TagLogTransactionManager")
 public class TagLogDao {
 
 
@@ -34,7 +34,8 @@ public class TagLogDao {
 	public LocalContainerEntityManagerFactoryBean TagLogEntityManager() {
 		LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 		em.setDataSource(tagLogDataSource());
-		em.setPackagesToScan(new String[] { "com.example.ScadaWebReport.Model.Taglog" });
+		em.setPackagesToScan(new String[] { "com.example.ScadaWebReport.Entity.Taglog" });
+
 
 		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		em.setJpaVendorAdapter(vendorAdapter);

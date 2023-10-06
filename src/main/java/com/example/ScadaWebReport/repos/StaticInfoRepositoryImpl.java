@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.ScadaWebReport.Model.MongoModels.StaticInfoModel;
+import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoModel;
 
 @Service
 public class StaticInfoRepositoryImpl {

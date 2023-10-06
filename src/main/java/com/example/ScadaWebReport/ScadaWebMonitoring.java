@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 
-@SpringBootApplication
-@EntityScan("com.example.ScadaWebReport.dao")
+@SpringBootApplication(scanBasePackages = "com.example.ScadaWebReport")
+@EntityScan("com.example.ScadaWebReport")
 public class ScadaWebMonitoring {
     public static void main(String[] args) {
         SpringApplication.run(ScadaWebMonitoring.class, args);

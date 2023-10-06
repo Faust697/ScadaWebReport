@@ -15,6 +15,22 @@
 <link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_rowreorder_1.3.1_css_rowReorder.dataTables.min.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.css}">
 
+
+
+<script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_dataTables.bootstrap5.min.js}"></script>
+<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_moment.js_2.29.1_moment.min.js}"></script>
+<script th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
+<script th:src="@{/scripts/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_js_bootstrap.bundle.min.js}"></script>
+<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_jszip_3.10.1_jszip.min.js}"></script>
+<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_pdfmake.min.js}"></script>
+<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_vfs_fonts.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_dataTables.buttons.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.html5.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.print.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_fixedheader_3.4.0_js_dataTables.fixedHeader.min.js}"></script>
+<script th:src="@{/scripts/scada.script.js}"></script>
 </head>
 
 <body>
@@ -101,6 +117,7 @@
 
 			</div>
 		</div>
+		  <button id="scrollToTopButton" onclick="scrollToTop()">↑</button>
 	</div>
 
 
@@ -108,20 +125,7 @@
 
 	<div th:insert="~{parts/footer :: footer}"></div>
 
-<script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
-<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_moment.js_2.29.1_moment.min.js}"></script>
-<script th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
-<script th:src="@{/scripts/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_js_bootstrap.bundle.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_dataTables.bootstrap5.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js}"></script>
-<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_jszip_3.10.1_jszip.min.js}"></script>
-<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_pdfmake.min.js}"></script>
-<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_vfs_fonts.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_dataTables.buttons.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.html5.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.print.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_fixedheader_3.4.0_js_dataTables.fixedHeader.min.js}"></script>
-<script th:src="@{/scripts/scada.script.js}"></script>
+
 
 </body>
 </html>
