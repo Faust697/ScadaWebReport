@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+ xmlns:sec="http://www.thymeleaf.org">
+<head> 
+    <title>Address Book</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+
+<link rel="stylesheet" type="text/css" th:href="@{/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/headers.css}">
+
+
+
+<style>
+h1 {text-align: center;}
+
+#test {
+
+	
+    width: 450px;
+    clear: both;
+    padding-top: 30px;
+    padding-bottom: 60px;
+    
+   }
+   
+.form-control
+{
+width:250%;
+
+}
+
+label {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: flex-end;
+  text-align: center;
+  width: 400px !important;
+  line-height: 26px;
+  margin-bottom: 10px;
+  margin-left:-35%;
+
+}
+
+#button_login {
+
+
+  text-align: center;
+  line-height: 26px;
+  margin-bottom: 10px;
+  margin-left: 0;
+  text-align: center;
+  justify-content: center;
+}
+
+form { 
+margin: 0 auto; 
+justify-content: center;
+width:350px;
+height:150%;
+text-align: center;
+ border-radius: 25px;
+
+}
+
+#login_div
+{
+ padding-top:10%;
+ text-align: center;
+justify-content: center;
+ border-radius: 25px;
+ 
+ border: 3px solid gray;
+  border-radius: 25px;
+  box-shadow: 5px 5px 5px #000000;
+
+}
+
+
+html,body{min-height:100%;}
+html,body{height:100%;}
+
+
+
+#main {
+    margin: 100px;
+   
+}
+
+</style>
+ <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body >
+
+<div id="forbg" class="bg-white"
+		style="background: url(img/Ming_bg.jpg) no-repeat center center fixed; background-size: cover;">
+
+
+
+<!-- Тут можно писать код! -->
+
+
+
+
+
+
+
+<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
+        
+     
+   </div>       
+
+   
+
+
+<div th:insert="~{parts/footer :: footer}"></div>
+            
+            
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
+    <script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
+   	<script th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
+	<script th:src="@{/scripts/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_js_bootstrap.bundle.min.js}"></script>
+            
+</body>

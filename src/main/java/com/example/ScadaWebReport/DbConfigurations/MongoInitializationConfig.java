@@ -21,8 +21,8 @@ public class MongoInitializationConfig {
 
     public void initializeMongoDB() {
       //  Resource scriptResource = "";
-        String scriptContent =  "";
-        NamedMongoScript initScript = new NamedMongoScript("initScript", new ExecutableMongoScript(scriptContent));
+       // String scriptContent =  "";
+       // NamedMongoScript initScript = new NamedMongoScript("initScript", new ExecutableMongoScript(scriptContent));
       //  mongoTemplate.scriptOps().execute(initScript, Collections.emptyList());
     }
 }

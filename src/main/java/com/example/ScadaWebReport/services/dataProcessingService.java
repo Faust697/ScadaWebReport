@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,8 +23,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
 import com.example.ScadaWebReport.Entity.Taglog.Taglog;
+import com.example.ScadaWebReport.controllers.TagLogController;
 import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoModel;
+import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoWellModel;
 import com.example.ScadaWebReport.repos.StaticInfoRepo;
+import com.example.ScadaWebReport.repos.StaticInfoWellRepo;
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
 import com.example.ScadaWebReport.repos.VisitorRepo;
@@ -30,9 +35,11 @@ import com.example.ScadaWebReport.repos.VisitorRepo;
 
 @Service
 public class dataProcessingService {
-
+	
+	private static final Logger log = LoggerFactory.getLogger(TagLogController.class);
 	private TaglogRepositoryImpl taglogRepositoryImpl;
 	private final StaticInfoRepo staticInfoRepo;
+	private final StaticInfoWellRepo staticInfoWellRepository;
 	private final VisitorRepo visitorRepo;
 	
 	@Autowired
@@ -40,10 +47,15 @@ public class dataProcessingService {
 	
 
 	@Autowired
-	public dataProcessingService(TaglogRepo taglogRepo, TaglogRepositoryImpl taglogRepositoryImpl,
-			StaticInfoRepo staticInfoRepo, VisitorRepo visitorRepo) {
+	public dataProcessingService(
+			TaglogRepo taglogRepo,
+			TaglogRepositoryImpl taglogRepositoryImpl,
+			StaticInfoRepo staticInfoRepo,
+			StaticInfoWellRepo staticInfoWellRepository,
+			VisitorRepo visitorRepo) {
 		this.taglogRepositoryImpl = taglogRepositoryImpl;
 		this.staticInfoRepo = staticInfoRepo;
+		this.staticInfoWellRepository = staticInfoWellRepository;
 		this.visitorRepo = visitorRepo;
 
 	}
@@ -132,10 +144,80 @@ public class dataProcessingService {
 		return latestLogs;
 	}
 
+	
+	//Временный метод для подбора данных из базы
+	public List<Taglog> getLatestLogsForWells(String typeOfSearch, String additionalFilter) {
+
+		List<String> filteredTagIds = null;
+		List<StaticInfoWellModel> filteredTags = staticInfoWellRepository.findAll();
+
+		//Смотрим, какие данные мы ищем
+		switch (typeOfSearch) {
+		case "1":
+			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getMotorStatusId).collect(Collectors.toList());
+			break;
+		case "2":
+			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getLastRunId).collect(Collectors.toList());
+			break;
+		case "3":
+			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getCurrentFlowId).collect(Collectors.toList());
+			break;
+		case "4":
+			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getTotalFlowId).collect(Collectors.toList());
+			break;
+		case "5":
+			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getPowerUsageTotalId).collect(Collectors.toList());
+			break;
+		default:
+			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getMotorStatusId).collect(Collectors.toList());
+		}
+
+		// Преобразуйте список ID тегов в строку с разделителями
+		String tagIdString1 = String.join(",", filteredTagIds);
+
+		// Получите последние записи логов для каждого тега(за последний месяц)
+		List<Taglog> latestLogs = taglogRepositoryImpl
+				.findLatestLogForEachTag("\"tag_log_" + formatCurrentMonth() + "\"", tagIdString1, additionalFilter);
+
+		// Если в latestLogs меньше строк данных, чем в staticInfoRepo.findAll();,
+		// просто заполняем пустыми полям
+		if (latestLogs.size() < staticInfoWellRepository.count()) {
+
+			List<String> missingTagIds = filteredTagIds.stream().filter(
+					tagId -> !latestLogs.stream().anyMatch(taglog -> taglog.getTag_id().toString().equals(tagId)))
+					.collect(Collectors.toList());
+
+			for (String id : missingTagIds) {
+				Taglog emptyLog = new Taglog();
+				emptyLog.setTag_id(new BigInteger(id));
+				latestLogs.add(emptyLog);
+
+			}
+
+		}
+
+	
+		return latestLogs;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// Работа с джейсонами, составление списков и прочее
 
 	public List<TagLogWithName> getTagLogsWithNames(String requestType, String additionalFilter, boolean Level) {
-
+	
 		List<StaticInfoModel> filteredTags = staticInfoRepo.findAll();// get date from DB
 		Taglog LevelObj = null;
 		String LevelValue = null;
@@ -176,28 +258,31 @@ public class dataProcessingService {
 				RequestColumn = filteredTag.getOnlineId();
 			}
 			//Нужна именно финальная переменная
-			final String finalRequestColumn = RequestColumn;
+			 String finalRequestColumn = RequestColumn;
 
 			try {
+
+				
 				taglog = latestLogs.stream()
 						.filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(finalRequestColumn)).findFirst()
 						.orElse(null);
 				//Если нам в этом же месте был нужен ещё и уровень воды
 				if (Level) {
+	
 					LevelObj = latestLogsLevel.stream()
-							.filter(g -> String.valueOf(g.getTag_id()).equals(filteredTag.getLevelId())).findFirst()
+							.filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(filteredTag.getLevelId())).findFirst()
 							.orElse(null);
-
 					if (LevelObj != null && LevelObj.getData_value() != null) {
 						LevelValue = LevelObj.getData_value().toString();
 					} else {
 						LevelValue = null;
 					}
-
+					
+					
 				}
 
 			} catch (Exception e) {
-				//СЮДА ВСТАВИТЬ ЛОГИРОВАНИЕ
+				 log.error("Error: "+e.getMessage());
 				e.printStackTrace();
 				continue;
 			}
@@ -211,7 +296,7 @@ public class dataProcessingService {
 			tagLogsWithNames.add(tagLogWithName);
 
 		}
-
+	
 		return tagLogsWithNames;
 	}
 

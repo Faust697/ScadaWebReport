@@ -19,7 +19,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,8 +32,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoModel;
+import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoWellModel;
 import com.example.ScadaWebReport.repos.StaticInfoRepo;
+import com.example.ScadaWebReport.repos.StaticInfoWellRepo;
 import com.example.ScadaWebReport.services.ExcelService;
+import com.example.ScadaWebReport.services.RoleChecker;
+import com.example.ScadaWebReport.services.UserDetailsServiceImpl;
 import com.example.ScadaWebReport.services.dataProcessingService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -43,13 +49,25 @@ public class DataEditController {
 	private static final Logger log = LoggerFactory.getLogger(DataEditController.class);
     private final ExcelService excelService;
     private final StaticInfoRepo staticInfoRepository;
+    private final StaticInfoWellRepo staticInfoWellRepository;
     private final dataProcessingService dps;
+    private final RoleChecker roleChecker;//ввести это в эксплуотацию
+    
+    private final UserDetailsServiceImpl uds;
 
     @Autowired
-    public DataEditController( ExcelService excelService, StaticInfoRepo staticInfoRepository, dataProcessingService dataProcessingService) {
+    public DataEditController( ExcelService excelService, 
+    		StaticInfoRepo staticInfoRepository, 
+    		StaticInfoWellRepo staticInfoWellRepository,
+    		dataProcessingService dataProcessingService,
+    		RoleChecker roleChecker,
+    		UserDetailsServiceImpl userDetailsService) {
         this.excelService = excelService;
         this.staticInfoRepository = staticInfoRepository;
+        this.staticInfoWellRepository = staticInfoWellRepository;
         this.dps = dataProcessingService;
+        this.roleChecker = roleChecker;
+        this.uds = userDetailsService;
     }
     
  
@@ -79,7 +97,7 @@ public class DataEditController {
             staticInfoRepository.saveAll(staticInfoList);
 
             model.addAttribute("message", "Данные успешно импортированы в MongoDB.");
-            log.info("Data recording was successful.");
+            log.info("Data was successfuly imported to MongoDB.");
             return "upload-result"; // Вернуть страницу результатов с успешным сообщением
         } catch (IOException e) {
             e.printStackTrace();
@@ -90,16 +108,105 @@ public class DataEditController {
     }
 
     
+    
+    @PostMapping("/upload-well")
+    public String uploadWellFile(@RequestParam("file") MultipartFile file, Model model) {
+    
+        try {
+            if (file.isEmpty()) {
+                model.addAttribute("message", "Выберите файл для загрузки.");
+                return "upload-result-well"; // Вернуть страницу результатов с сообщением об ошибке
+            }
+
+            List<StaticInfoWellModel> staticInfoWellList = excelService.readExcelFileWell(file.getInputStream());
+
+            staticInfoWellRepository.deleteAll();
+
+            if (staticInfoWellList.isEmpty()) {
+                model.addAttribute("message", "Список данных пустой. Нет данных для импорта.");
+                return "upload-result-well"; // Вернуть страницу результатов с сообщением об ошибке
+            }
+
+            // Сохраните данные в MongoDB
+            staticInfoWellRepository.saveAll(staticInfoWellList);
+
+            model.addAttribute("message", "Данные успешно импортированы в MongoDB.");
+            log.info("Data was successfuly imported to MongoDB.");
+            return "upload-result-well"; // Вернуть страницу результатов с успешным сообщением
+        } catch (IOException e) {
+            e.printStackTrace();
+            model.addAttribute("message", "Произошла ошибка при импорте данных.");
+           log.error("Error: "+e.getMessage());
+            return "upload-result"; // Вернуть страницу результатов с сообщением об ошибке
+        }
+    }
+    
+    
     //Получаем страницу загрузки данных
     @GetMapping("/get-upload")
     public String getUpload(Model model, HttpServletRequest request) {
     	
+    	
+
+    	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    	 if (authentication != null) {
+             System.out.println("Роли пользователя:");
+
+             for (GrantedAuthority authority : authentication.getAuthorities()) {
+                 System.out.println(authority.getAuthority());
+             }
+         } else {
+             System.out.println("Пользователь не аутентифицирован");
+         }
+    	
+    	 
+
+         UserDetails userDetails = uds.loadUserByUsername(authentication.getName());
+
+         // Передаем роли в модель
+         model.addAttribute("userRoles", userDetails.getAuthorities());
       	dps.UpdateVisitors(request.getRemoteAddr().toString());
     		model.addAttribute("totalVisitors", dps.totalVisitors());
     		model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
     		
         return "data-upload.html"; 
     }
+    
+    
+    
+    //Получаем страницу загрузки данных
+    @GetMapping("/get-upload-well")
+    public String getUploadWell(Model model, HttpServletRequest request) {
+    	
+    	
+
+    	 Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+    	 if (authentication != null) {
+             System.out.println("Роли пользователя:");
+
+             for (GrantedAuthority authority : authentication.getAuthorities()) {
+                 System.out.println(authority.getAuthority());
+             }
+         } else {
+             System.out.println("Пользователь не аутентифицирован");
+         }
+    	
+    	 
+
+         UserDetails userDetails = uds.loadUserByUsername(authentication.getName());
+
+         // Передаем роли в модель
+         model.addAttribute("userRoles", userDetails.getAuthorities());
+      	dps.UpdateVisitors(request.getRemoteAddr().toString());
+    		model.addAttribute("totalVisitors", dps.totalVisitors());
+    		model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+    		
+        return "data-upload-well.html"; 
+    }
+    
+    
     
     
     //Скачиваем файл с графиком калибровки

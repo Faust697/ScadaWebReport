@@ -15,6 +15,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
 import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoModel;
+import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoWellModel;
 
 @Service
 public class ExcelService {
@@ -87,6 +88,67 @@ public class ExcelService {
 	    return staticInfoList;
 	}
 
+	
+	
+	public List<StaticInfoWellModel> readExcelFileWell(InputStream filePath) throws IOException {
+	    List<StaticInfoWellModel> staticInfoWellList = new ArrayList<>();
+
+	    try (Workbook workbook = new XSSFWorkbook(filePath)) {
+
+	        Sheet sheet = workbook.getSheetAt(0); // Предполагается, что данные находятся на первом листе
+	        Iterator<Row> iterator = sheet.iterator();
+
+	        
+	        
+	        while (iterator.hasNext()) {
+	            Row currentRow = iterator.next();
+
+	            // Пропустите первую строку (заголовки)
+	            if (currentRow.getRowNum() < 3 ) {
+	                continue;
+	            }
+
+	            Iterator<Cell> cellIterator = currentRow.iterator();
+	            // Ходим по ячейкам и собираем данные из них
+	            try {
+	            	if(cellIterator.hasNext()) {
+	                int id = parseCellValueToInt(getCellValue(cellIterator.next()));
+	                System.out.print(id+" ");
+	                if(id==0)
+	                continue;
+	                String name = getCellValue(cellIterator.next()).toString();
+	                System.out.println(name);
+	                String coordinates = getCellValue(cellIterator.next());
+	                if(coordinates.equals(""))
+	                	continue;
+	                
+	                String region = getCellValue(cellIterator.next());
+	                String scadaStatus = getCellValue(cellIterator.next());
+	                String motorStatusId = getCellValue(cellIterator.next());
+	                
+	                String lastRunId = getCellValue(cellIterator.next());
+	                String currentFlowId = getCellValue(cellIterator.next());
+	                String totalFlowId = getCellValue(cellIterator.next());
+	                String powerUsageTotalId = getCellValue(cellIterator.next());
+	                String cameraIp = getCellValue(cellIterator.next());
+	                String explanation = getCellValue(cellIterator.next());
+	               
+
+	                StaticInfoWellModel staticInfoWellModel = new StaticInfoWellModel( id, motorStatusId, lastRunId, currentFlowId,
+	            			totalFlowId, powerUsageTotalId, name, scadaStatus, explanation,
+	            			cameraIp, region, coordinates);
+
+	                staticInfoWellList.add(staticInfoWellModel);
+	            	}
+	            } catch (Exception e) {
+	                // Логгирование ошибки
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+
+	    return staticInfoWellList;
+	}
 
 
 	private int parseCellValueToInt(String cellValue) {

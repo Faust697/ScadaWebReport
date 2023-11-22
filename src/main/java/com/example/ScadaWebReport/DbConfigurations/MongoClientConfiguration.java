@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 
@@ -23,12 +24,20 @@ public class MongoClientConfiguration extends AbstractMongoClientConfiguration {
 	@Value("${spring.second-datasource.url}")
 	private String connectionLink;
 	
+	@Value("${spring.data.mongodb.username}")
+	private String mongoUser;
+	
+	@Value("${spring.data.mongodb.password}")
+	private String mongoPass;
+	
+
+	
     @Override
     protected String getDatabaseName() {
         return databaseName; // Название базы данных
     }
 
-    @Override
+    /*@Override
     public MongoClient mongoClient() {
     	
     	 ConnectionString connectionString = new ConnectionString(connectionLink);
@@ -41,6 +50,20 @@ public class MongoClientConfiguration extends AbstractMongoClientConfiguration {
          
          return MongoClients.create(builder.build());
      
+    }*/
+    
+    @Override
+    public MongoClient mongoClient() {
+        ConnectionString connectionString = new ConnectionString(connectionLink);
+        
+        MongoClientSettings.Builder builder = MongoClientSettings.builder()
+            .applyConnectionString(connectionString)
+            .credential(MongoCredential.createCredential(mongoUser, databaseName, mongoPass.toCharArray()));
+        
+        // Добавить настройки Change Streams, если необходимо
+        builder.readPreference(com.mongodb.ReadPreference.primaryPreferred());
+        
+        return MongoClients.create(builder.build());
     }
     
     

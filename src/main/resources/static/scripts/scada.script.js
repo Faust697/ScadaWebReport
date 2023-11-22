@@ -3,77 +3,111 @@
     });
     
     
-    
-    $(document).ready(function() {
+
+$(document).ready(function() {
 	if (!$.fn.DataTable.isDataTable('#tagLogTable')) {
-if (!$.fn.DataTable.isDataTable('#tagLogTable')) {
-        $.fn.dataTable.ext.order['custom'] = function(settings, col) {
-            return this.api().column(col, {order: 'index'}).nodes().map(function(td, i) {
-                var cellValue = $(td).text();
-                cellValue = (cellValue === 'offline') ? 'ZZZZZZZZZ' : cellValue; // Присваиваем значение переменной cellValue в соответствии с условием
-                return cellValue;
+		if (!$.fn.DataTable.isDataTable('#tagLogTable')) {
+			$.fn.dataTable.ext.order['custom'] = function(settings, col) {
+				return this.api().column(col, { order: 'index' }).nodes().map(function(td, i) {
+					var cellValue = $(td).text();
+					cellValue = (cellValue === 'offline') ? 'ZZZZZZZZZ' : cellValue; // Присваиваем значение переменной cellValue в соответствии с условием
+					return cellValue;
+				});
+			};
+
+			var table_main = $('#tagLogTable').DataTable({
+
+				dom: 'Bfrtip',
+				buttons: [
+					{
+						extend: 'copy',
+						title: '"SCADA" Anlıq sərfiyyat'
+					},
+					{
+						extend: 'csv',
+						title: '"SCADA" Anlıq sərfiyyat'
+					},
+					{
+						extend: 'excel',
+						title: '"SCADA" Anlıq sərfiyyat'
+					},
+					{
+						extend: 'pdf',
+						title: '"SCADA" Anlıq sərfiyyat',
+						customize: function(doc) {
+							doc.defaultStyle.fontSize = 8;
+							doc.pageMargins = [20, 30, 20, 30]; // Установите отступы страницы по вашему выбору
+							doc.pageSize = 'A4'; // Установите размер страницы (A4 или другой)
+						}
+					},
+					{
+						extend: 'print',
+						title: '"SCADA" Anlıq sərfiyyat'
+					}
+				],
+				paging: false,
+				fixedHeader: true,
+				info: false,
+				language: {
+					search: "_INPUT_",
+					searchPlaceholder: "Axtarış..."
+				},
+				columnDefs: [
+					{
+
+						targets: [3, 4],
+						type: 'num',
+						render: function(data, type, row) {
+
+							if (type === 'sort') {
+								// Удалите все символы, кроме цифр и точек (для десятичных чисел)
+								var numericData = data.replace(/[^0-9.]/g, '');
+								var parsedData = parseFloat(numericData);
+
+								return parsedData;
+							}
+							return data;
+						}
+					}
+				],
+				order: [[0, 'asc']], // Нумерация будет в порядке возрастания
+            orderSequence: ['asc'], // Управляет порядком сортировки
+select: true, // Включаем плагин Select
+
+initComplete: function () {
+    this.api().columns([2, 7]).every(function (colIdx) {
+        var column = this;
+        var defaultValue = colIdx === 2 ? 'Bütün rayonal' : 'Bütün statuslar';
+        var select = $('<select><option value="" selected>' + defaultValue + '</option></select>')
+            .appendTo($(column.header()))
+            .on('change', function () {
+                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                column.search(val ? '^' + val + '$' : '', true, false).draw();
             });
-        };
-
-    var table_main = $('#tagLogTable').DataTable({
-        dom: 'Bfrtip',
-        buttons: [
-            {
-                extend: 'copy',
-                title: '"SCADA" Anlıq sərfiyyat'
-            },
-            {
-                extend: 'csv',
-                title: '"SCADA" Anlıq sərfiyyat'
-            },
-            {
-                extend: 'excel',
-                title: '"SCADA" Anlıq sərfiyyat'
-            },
-            {
-                extend: 'pdf',
-                title: '"SCADA" Anlıq sərfiyyat',
-                customize: function (doc) {
-					doc.defaultStyle.fontSize = 8;
-                    doc.pageMargins = [20, 30, 20, 30]; // Установите отступы страницы по вашему выбору
-                    doc.pageSize = 'A4'; // Установите размер страницы (A4 или другой)
-                }
-            },
-            {
-                extend: 'print',
-                title: '"SCADA" Anlıq sərfiyyat'
+        column.data().unique().sort().each(function (d, j) {
+            select.append('<option value="' + d + '">' + d + '</option>');
+        });
+                });
             }
-        ],
-        paging: false,
-        fixedHeader: true,
-        info: false,
-        language: {
-            search: "_INPUT_",
-            searchPlaceholder: "Axtarış"
-        },
-         columnDefs: [
-            {
-	 
-	targets: [3, 4], 
-	type: 'num' ,
-	render: function (data, type, row) {
-
-            if (type === 'sort') {
-                // Удалите все символы, кроме цифр и точек (для десятичных чисел)
-                var numericData = data.replace(/[^0-9.]/g, '');         
-                var parsedData = parseFloat(numericData);
-
-                return parsedData;
-            }
-            return data;
-        }
-	} 
-        ]
-    });
-    };
+        });
+        
+        // Добавляем колонку с нумерацией строк
+        table_main.on('order.dt search.dt', function() {
+            table_main.column(0, {search: 'applied', order: 'applied'}).nodes().each(function(cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+        
+    }
+    
+};
     
     
-        };
+    
+    
+    
+    //-------------------------------
+    
     
     	if (!$.fn.DataTable.isDataTable('#tagLogTable-second')) {
     var table_extra = $('#tagLogTable-second').DataTable({
@@ -132,17 +166,11 @@ if (!$.fn.DataTable.isDataTable('#tagLogTable')) {
     });
     };
   
+  
     
-    
-    
+})
 
 
-
-
-
-    
-    
-});
 // -----
 function openModal(tagName, tagTotalId, tagId, camLink) {
 	$('#myModal').modal('show'); 

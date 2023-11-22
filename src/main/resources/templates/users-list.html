@@ -1,0 +1,204 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+ xmlns:sec="http://www.thymeleaf.org">
+<head> 
+    <title>Address Book</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+
+<link rel="stylesheet" type="text/css" th:href="@{/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/headers.css}">
+
+
+
+<style>
+h1 {text-align: center;}
+
+#test {
+
+	
+    width: 450px;
+    clear: both;
+    padding-top: 30px;
+    padding-bottom: 60px;
+    
+   }
+   
+.form-control
+{
+width:250%;
+
+}
+
+label {
+  display: flex !important;
+  flex-direction: row;
+  justify-content: flex-end;
+  text-align: center;
+  width: 400px !important;
+  line-height: 26px;
+  margin-bottom: 10px;
+  margin-left:-35%;
+
+}
+
+#button_login {
+
+
+  text-align: center;
+  line-height: 26px;
+  margin-bottom: 10px;
+  margin-left: 0;
+  text-align: center;
+  justify-content: center;
+}
+
+form { 
+margin: 0 auto; 
+justify-content: center;
+width:350px;
+height:150%;
+text-align: center;
+ border-radius: 25px;
+
+}
+
+#login_div
+{
+ padding-top:10%;
+ text-align: center;
+justify-content: center;
+ border-radius: 25px;
+ 
+ border: 3px solid gray;
+  border-radius: 25px;
+  box-shadow: 5px 5px 5px #000000;
+
+}
+
+
+html,body{min-height:100%;}
+html,body{height:100%;}
+
+
+
+#main {
+    margin: 100px;
+   
+}
+
+</style>
+ <link rel="stylesheet" type="text/css" href="style.css">
+
+</head>
+<body >
+
+<div id="forbg" class="bg-white"
+		style="background: url(img/Ming_bg.jpg) no-repeat center center fixed; background-size: cover;">
+
+
+
+
+<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
+        <div th:fragment="table" class="cell-border"
+			style="padding-bottom: 5%;">
+
+			<div id="main">
+			
+				<h1 th:text="${pagename}"
+					style="display: flex; justify-content: center;"></h1>
+					
+				<div class="container" id="table-search">
+					<div class="row justify-content-md-center">
+						<div class="col col-12">
+						
+							<table
+								class="table display table-striped table-bordered compact bg-white cell-border"
+								id="userTable">
+								<thead class="thead">
+									<tr>
+										<th scope="col">Login</th>
+										<th scope="col">Email</th>
+										<th scope="col">IsAdmin</th>
+										<th scope="col">Can see canals</th>
+										<th scope="col">Cans see subartezians</th>
+										<th scope="col">Can change data</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr th:each="user : ${users}">
+										<td><span th:text="${user.getUsername()}">user</span></td>
+										<td><span th:text="${user.getEmail()}">email</span></td>
+										<td>
+    <span th:if="${#strings.contains(user.getRoles(), 'ADMIN')}" style="color: green;">&#10004;</span>
+    <span th:unless="${#strings.contains(user.getRoles(), 'ADMIN')}" style="color: red;">&#10008;</span>
+</td>
+										<td>
+    <span th:if="${#strings.contains(user.getRoles(), 'CANALS')}" style="color: green;">&#10004;</span>
+    <span th:unless="${#strings.contains(user.getRoles(), 'CANALS')}" style="color: red;">&#10008;</span>
+</td>
+										<td>
+    <span th:if="${#strings.contains(user.getRoles(), 'SUBARTEZIAN')}" style="color: green;">&#10004;</span>
+    <span th:unless="${#strings.contains(user.getRoles(), 'SUBARTEZIAN')}" style="color: red;">&#10008;</span>
+</td>
+									<td>
+    <span th:if="${#strings.contains(user.getRoles(), 'DATA_EDITOR')}" style="color: green;">&#10004;</span>
+    <span th:unless="${#strings.contains(user.getRoles(), 'DATA_EDITOR')}" style="color: red;">&#10008;</span>
+</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				
+
+
+		</div>
+		</div>	
+
+</div>
+      
+     
+   </div>       
+
+   
+
+
+<div th:insert="~{parts/footer :: footer}"></div>
+            
+            
+           <script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_dataTables.bootstrap5.min.js}"></script>
+<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_moment.js_2.29.1_moment.min.js}"></script>
+<script th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
+<script th:src="@{/scripts/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_js_bootstrap.bundle.min.js}"></script>
+<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_jszip_3.10.1_jszip.min.js}"></script>
+<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_pdfmake.min.js}"></script>
+<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_vfs_fonts.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_dataTables.buttons.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.html5.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.print.min.js}"></script>
+<script th:src="@{/scripts/cdn.datatables.net_fixedheader_3.4.0_js_dataTables.fixedHeader.min.js}"></script>
+        <script>
+    $(document).ready(function() {
+        $('#userTable').DataTable({
+            initComplete: function() {
+                $("#userTable").detach().appendTo('#table-search');
+            },
+            order: [sortCol, 'asc'],
+            dom: '<"top">rt<"bottom"lp><"clear">',
+            paging: false,
+            info: false,
+            rowReorder: true,
+            language: {
+                search: "_INPUT_",
+                searchPlaceholder: "Axtarış"
+            }
+        });
+    });
+</script>
+</body>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>File upload</title>
+
+<script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
+<script th:src="@{/scripts/scada.script.js}"></script>
+
+
+
+<link rel="stylesheet" type="text/css" th:href="@{/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/style.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/headers.css}">
+
+
+
+<link rel="canonical"
+	href="https://getbootstrap.com/docs/4.0/examples/navbars/">
+
+
+   
+
+<style>
+
+h1 {
+	text-align: center;
+}
+
+
+
+label {
+	display: inline-flex;
+	width: 100%;
+}
+
+
+
+</style>
+
+
+
+</head>
+
+
+
+
+<body>
+	
+	<div id="forbg" class="bg-white"
+		style="background: url(img/Ming_bg.jpg) no-repeat center center fixed; background-size: cover;">
+
+		<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
+
+		<div th:fragment="table" class="cell-border"
+			style="padding-bottom: 5%;">
+    <h1>Verilənlər bazasını yeniləmək üçün fayl yükləsi(Subartezian)</h1>
+    
+    
+<div class="text-center">
+    <div class="container w-25">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form th:action="@{/upload-well}" method="post" enctype="multipart/form-data" >
+                    <div class="mb-3" style = "margin-right:35%">
+                        <input class="form-control" type="file" name="file" id="file" accept=".xlsx">
+              
+                    </div>
+                    <div class="mb-3">
+                        <button class="btn btn-primary" type="submit">Upload Wells List</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+		</div>
+
+
+	<div th:insert="~{parts/footer :: footer}"></div>
+
+
+	
+</body>
+</html>
