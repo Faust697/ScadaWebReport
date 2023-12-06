@@ -8,9 +8,9 @@
 
     <!-- Bootstrap CSS -->
 
-<link rel="stylesheet" type="text/css" th:href="@{/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/headers.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/headers.css}">
 
 
 
@@ -112,21 +112,33 @@ html,body{height:100%;}
 
     
         <div class="row">
-            <div class="col-md-4 mx-auto mb-4" th:if="${#strings.contains(userRoles, 'ADMIN')}" >
-                <button class="btn btn-dark btn-lg btn-block shadow btn-hover">
+       
+            <div class="col-md-4 mx-auto mb-4" th:if="${user != null and#strings.contains(userRoles, 'ADMIN')}" >
+             <form method="get" action="/users">
+                <button  class="btn btn-dark btn-lg btn-block shadow btn-hover">
                     İstifadəçilər
                 </button>
+                </form>
             </div>
+            
+            
             <div class="col-md-4 mx-auto mb-4">
+            <form method="get" action="/get-upload">
                 <button class="btn btn-dark btn-lg btn-block shadow btn-hover">
                     Kanal cədvəlinin yüklənməsi
                 </button>
+                </form>
             </div>
+            
+            
             <div class="col-md-4 mx-auto mb-4">
+            <form method="get" action="/get-upload-well">
                 <button class="btn btn-dark btn-lg btn-block shadow btn-hover">
                     Quyular cədvəlinin yüklənməsi
                 </button>
+                </form>
             </div>
+            
         </div>
 
     </div> 

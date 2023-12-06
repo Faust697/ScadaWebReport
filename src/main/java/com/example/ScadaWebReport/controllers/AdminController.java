@@ -40,7 +40,6 @@ public class AdminController {
 	
 	
 	@GetMapping("/users")
-
 	public String getUsersList(@RequestParam(defaultValue = "0") int page, Model model, HttpServletRequest request) {
 	
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

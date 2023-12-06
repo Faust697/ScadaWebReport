@@ -115,7 +115,7 @@ public class DataEditController {
         try {
             if (file.isEmpty()) {
                 model.addAttribute("message", "Выберите файл для загрузки.");
-                return "upload-result-well"; // Вернуть страницу результатов с сообщением об ошибке
+                return "upload-result"; // Вернуть страницу результатов с сообщением об ошибке
             }
 
             List<StaticInfoWellModel> staticInfoWellList = excelService.readExcelFileWell(file.getInputStream());
@@ -124,7 +124,7 @@ public class DataEditController {
 
             if (staticInfoWellList.isEmpty()) {
                 model.addAttribute("message", "Список данных пустой. Нет данных для импорта.");
-                return "upload-result-well"; // Вернуть страницу результатов с сообщением об ошибке
+                return "upload-result"; // Вернуть страницу результатов с сообщением об ошибке
             }
 
             // Сохраните данные в MongoDB
@@ -132,7 +132,7 @@ public class DataEditController {
 
             model.addAttribute("message", "Данные успешно импортированы в MongoDB.");
             log.info("Data was successfuly imported to MongoDB.");
-            return "upload-result-well"; // Вернуть страницу результатов с успешным сообщением
+            return "upload-result"; // Вернуть страницу результатов с успешным сообщением
         } catch (IOException e) {
             e.printStackTrace();
             model.addAttribute("message", "Произошла ошибка при импорте данных.");

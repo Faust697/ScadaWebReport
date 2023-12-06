@@ -2,7 +2,7 @@ package com.example.ScadaWebReport.services;
 
 public class Well{
 
-	private String Id;
+	private int Id;
 	
 	private String name;
 	private String coordinates;
@@ -17,7 +17,7 @@ public class Well{
 	private String info;
 	
 	
-	public Well(String id, String name, String coordinates, String region, String scadaStatus, String motorStatus,
+	public Well(int id, String name, String coordinates, String region, String scadaStatus, String motorStatus,
 			String lastRun, String currentFlow, String totalFlow, String powerUsageTotal, String camera, String info) {
 		super();
 		Id = id;
@@ -35,12 +35,12 @@ public class Well{
 	}
 
 
-	public String getId() {
+	public int getId() {
 		return Id;
 	}
 
 
-	public void setId(String id) {
+	public void setId(int id) {
 		Id = id;
 	}
 

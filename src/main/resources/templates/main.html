@@ -8,9 +8,9 @@
 
     <!-- Bootstrap CSS -->
 
-<link rel="stylesheet" type="text/css" th:href="@{/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/headers.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/headers.css}">
 
 
 
@@ -69,6 +69,11 @@
     transform: scale(1.05);
 }
         
+        
+  
+
+        
+        
       .text-overlay {
         position: absolute;
         top: 50%;
@@ -92,20 +97,20 @@
         transform: translate(-50%, -50%);
         color: white;
         text-align: center;
-      
+       user-select: none;
         font-size: 40px; /* Размер более крупного текста */
 	
 }
 
 
     </style>
- <link rel="stylesheet" type="text/css" href="style.css">
+ <link rel="stylesheet" type="text/css" href="/styles/style.css">
 
 </head>
 <body >
 
 <div id="forbg" class="bg-white"
-		style="background: url(img/Ming_bg.jpg) no-repeat center center fixed; background-size: cover;">
+		style="background: url('../img/Ming_bg.jpg') no-repeat center center fixed; background-size: cover;">
 
 <div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
       
@@ -115,20 +120,18 @@
       <div class="images-main-container">
       
       <div class="image-container left-image">
-      <a href="/">
-    <img src="https://www.azernews.az/media/2020/08/18/15977362703350854741_1000x669.jpg" alt="Left Image" class="image">
-    </a>  
-    <h1 class="text-h1">Artezian və Subartezian quyuları</h1>  
+      <a href="/wells">
+    <img src="img/well.jpg" alt="Left Image" class="image">
+      
+    <h1 class="text-h1">Subartezian quyuları</h1>  
+    </a>
   </div>
 
  <div class="image-container right-image">
-    <a href="/">
-        <img src="img/kanal.png" alt="Right Image" class="image">
-       
-           
-      
-    </a>
+    <a href="/main-list">
+    <img src="img/kanal.jpg" alt="Right Image" class="image">
      <h1 class="text-h1">Su kanalları</h1>
+     </a>
 </div>
   
     </div>    

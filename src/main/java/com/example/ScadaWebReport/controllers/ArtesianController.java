@@ -1,5 +1,6 @@
 package com.example.ScadaWebReport.controllers;
 
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -7,23 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import com.example.ScadaWebReport.Document.MongoDocument.Role;
 import com.example.ScadaWebReport.Document.MongoDocument.UserModel;
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
 import com.example.ScadaWebReport.repos.UserRepo;
-import com.example.ScadaWebReport.services.TagLogWithName;
 import com.example.ScadaWebReport.services.UserDetailsServiceImpl;
+import com.example.ScadaWebReport.services.Well;
 import com.example.ScadaWebReport.services.dataProcessingService;
 
 @Controller
@@ -46,27 +42,50 @@ public class ArtesianController {
 	
 	
 
-	@GetMapping("/test")
+	@GetMapping("/admin-panel")
 
 	public String getMainPage(@RequestParam(defaultValue = "0") int page, Model model, HttpServletRequest request) {
 	
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 	    UserModel user = userRepo.findByUsername(authentication.getName());
-
-	    if(user.getRoles().contains(Role.ADMIN))
+	    
+	    if(user!=null) {
+	 if(user.getRoles().contains(Role.ADMIN) )
 	    {
-	    	   System.out.println("gfsdaef");
+		  System.out.println("User Roles: " + user.getRoles());
+		    model.addAttribute("user", user);
+		    model.addAttribute("userRoles", user.getRoles());
+	    	return "admin-panel";
 	    }
 	    
 	    
 	    // Добавим следующую строку для вывода ролей в консоль
-	    System.out.println("User Roles: " + user.getRoles());
-	    model.addAttribute("user", user);
-	    model.addAttribute("userRoles", user.getRoles());
+	  
+	    }
 	    model.addAttribute("totalVisitors", dps.totalVisitors());
 	    model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
 
-	    return "admin-panel";
+	    return "main";
 	}
+	
+	
+	@GetMapping("/wells")
+	public String getWellList(@RequestParam(defaultValue = "0") int page, Model model, HttpServletRequest request) {
+	
+		List<Well> wells = dps.getWells(null);
+		
+		
+	    model.addAttribute("totalVisitors", dps.totalVisitors());
+	    model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+	    model.addAttribute("pagename", "Subartezian quyuları");
+	    model.addAttribute("wells", wells);
+
+	    return "taglog-list-well";
+	 
+	    
+	}
+	
+	
+	
 	
 }

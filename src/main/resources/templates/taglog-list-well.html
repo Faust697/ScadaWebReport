@@ -4,20 +4,28 @@
 <title>Scada Monitoring</title>
     
     
-<link rel="stylesheet" type="text/css" th:href="@{/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_1.13.6_css_jquery.dataTables.min.css}">	
-<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_buttons_2.4.1_css_buttons.dataTables.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/style.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/headers.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_1.13.1_css_jquery.dataTables.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_1.13.6_css_dataTables.bootstrap5.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_buttons_2.4.1_css_buttons.bootstrap5.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_fixedheader_3.4.0_css_fixedHeader.dataTables.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/cdn.datatables.net_rowreorder_1.3.1_css_rowReorder.dataTables.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_1.13.6_css_jquery.dataTables.min.css}">	
+<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_buttons_2.4.1_css_buttons.dataTables.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/headers.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_1.13.1_css_jquery.dataTables.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_1.13.6_css_dataTables.bootstrap5.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_buttons_2.4.1_css_buttons.bootstrap5.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_fixedheader_3.4.0_css_fixedHeader.dataTables.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_rowreorder_1.3.1_css_rowReorder.dataTables.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.css}">
 
 
+<style>
+.offline-status {
+    color: red !important; /* Используйте желаемый цвет для статуса "оффлайн" */
+}
 
+.online-status {
+    color: green !important; /* Используйте желаемый цвет для статуса "онлайн" */
+}
+</style>
 
 
 <script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
@@ -55,7 +63,7 @@
 					style="display: flex; justify-content: center;"></h1>
 					
 
-				<div class="container" id="table-search">
+				<div class="container" id="table-search-well">
 					<div class="row justify-content-md-center">
 						<div class="col col-12">
 							<table id="WellTable"
@@ -64,45 +72,46 @@
 									<tr>
 										<th>№</th>
 										<th>Quyu adı</th>
-										
-										<th >Koordinat</th>
-										<th >Rayon</th>
+										<th>Koordinat</th>
+										<th>Rayon</th>
 										<th>SCADA status</th>
 										<th>MotorStatus</th>
 										<th>LastRun</th>
-										<th >CurrentFlow</th>
-										<th >TotalFlow</th>
-										<th >PowerUsageTotal</th>
-										<th >Kamera</th>
-										<th >Açıqlama</th>
+										<th>CurrentFlow</th>
+										<th>TotalFlow</th>
+										<th>PowerUsageTotal</th>
+										<th>Kamera</th>
+										<th>Açıqlama</th>
 										
 									</tr>
 								</thead>
 								<tbody>
 								  <!--  onclick="openModal(this.getAttribute('data-tagname'),this.getAttribute('data-tagid'))"-->
 								
-									<tr>
-										<td th:text="${tagLogStat.index + 1}"></td>
-										<td th:text="${tagLog.tagName}"></td>
-										<th th:if="${measurement == 2}"th:text="${tagLog.tagRegion}"></th>
-										<td th:text="${measurement == 2 ? (tagLog.tagLevel != null && tagLog.tagLevel != '' ? tagLog.tagLevel : 'offline') : tagLog.tagLevel}"
-  										 th:class="${measurement == 2 && (tagLog.tagLevel == null || tagLog.tagLevel == '') ? 'text-danger fw-bold' : ''}">
-											</td>
-										<td
-											th:text="${tagLog.data_value != null ? tagLog.data_value : 'offline'}"
-											th:class="${tagLog.data_value == null ? 'text-danger fw-bold' : ''}"></td>
-										<td th:text="${tagLog.getLogdate}"></td>
-										<td th:if="${measurement == 2}" th:text="${tagLog.tagText}"
-											th:class="${tagLog.tagText == 'Xəta 5 faizdən kiçik' ? 'text-success fw-bold' : 
-                          tagLog.tagText == 'Xəta 5-10 faiz aralığında' ? 'text-warning fw-bold' : 
-                          tagLog.tagText == 'Xəta 10 faizdən çox' ? 'text-danger fw-bold' : ''}"></td>
-										<td th:if="${measurement == 2}" th:text="${tagLog.tagStatus}"
-											th:class="${tagLog.tagStatus == 'Bəli' ? 'text-success fw-bold' : 
-                          tagLog.tagStatus == 'Planlanır' ? 'text-warning fw-bold' : 
-                          tagLog.tagStatus == 'Xeyr' ? 'text-danger fw-bold' : ''}"></td>
-										<td th:if="${measurement == 2}" th:text="${tagLog.tagReason}"></td>
-										
-									
+									  <tr th:each="well, iterStat : ${wells}">
+        								<td th:text="${iterStat.index + 1}"></td>
+
+										<td th:text="${well.getName()}"></td>
+										<th>
+					<a th:href="'https://www.google.com/maps?q=' + ${well.getCoordinates().replaceAll(' ', '')}" target="_blank" class="btn btn-primary">
+    			<span class="map-button" aria-hidden="true"></span> Map
+			</a>
+										</th>
+										<th th:text="${well.getRegion()}"></th>
+			<th th:class="${well.getTotalFlow() == null or well.getTotalFlow().isEmpty()} ? 'offline-status' : 'online-status'"
+th:text="${well.getTotalFlow() == null or well.getTotalFlow().isEmpty()} ? 'offline' : 'online'">
+</th>
+										<th th:text="${well.getMotorStatus()}"></th>
+										<th th:text="${well.getLastRun()}"></th>
+										<th th:text="${well.getCurrentFlow()}"></th>
+										<th th:text="${well.getTotalFlow()}"></th>
+										<th th:text="${well.getPowerUsageTotal}"></th>
+										<th >
+										<a th:href="${well.getCamera()}" target="_blank" class="btn btn-primary">
+										 <span class="cam-button" aria-hidden="true"></span>Cam</a>
+										</th>
+										<th th:text="${well.getInfo()}"></th>
+
 										
 									</tr>
 								</tbody>
@@ -117,65 +126,6 @@
 
 	<div th:insert="~{parts/footer :: footer}"></div>
 
-	<div th:insert="~{parts/selectDateForm :: dateSelector}"></div>
-	
-	<script type="text/javascript">
-    $(document).ready(function () {
-        if (!$.fn.DataTable.isDataTable('#WellTable')) {
-            var table_extra = $('#WellTable').DataTable({
-                dom: 'Bfrtip',
-                buttons: [
-                    {
-                        extend: 'copy',
-                        title: '"SCADA" Anlıq sərfiyyat'
-                    },
-                    {
-                        extend: 'csv',
-                        title: '"SCADA" Anlıq sərfiyyat'
-                    },
-                    {
-                        extend: 'excel',
-                        title: '"SCADA" Anlıq sərfiyyat'
-                    },
-                    {
-                        extend: 'pdf',
-                        title: '"SCADA" Anlıq sərfiyyat',
-                        customize: function (doc) {
-                            doc.defaultStyle.fontSize = 8;
-                            doc.pageMargins = [20, 30, 20, 30];
-                            doc.pageSize = 'A4';
-                        }
-                    },
-                    {
-                        extend: 'print',
-                        title: '"SCADA" Anlıq sərfiyyat'
-                    }
-                ],
-                paging: false,
-                fixedHeader: true,
-                info: false,
-                language: {
-                    search: "_INPUT_",
-                    searchPlaceholder: "Axtarış"
-                },
-                columnDefs: [
-                    {
-                        targets: [2],
-                        type: 'num',
-                        render: function (data, type, row) {
-                            if (type === 'sort') {
-                                var numericData = data.replace(/[^0-9.]/g, '');
-                                var parsedData = parseFloat(numericData);
-                                return parsedData;
-                            }
-                            return data;
-                        }
-                    }
-                ]
-            });
-        }
-    });
-</script>
 
 
 </body>

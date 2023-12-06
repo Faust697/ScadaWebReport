@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
@@ -44,13 +45,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	            .passwordEncoder(passwordEncoder());
 	    }
 
+	    
+	    /*@Override
+	    public void configure(WebSecurity web) throws Exception {
+	        web
+	            .ignoring()
+	            .antMatchers("/", "/login", "/img/**", "/scripts/**", "/**");
+	    }
 	    @Override
 	    protected void configure(HttpSecurity http) throws Exception {
 	        http
 	            .csrf().disable() // Отключаем CSRF защиту
 	            .authorizeRequests()
-	                .antMatchers("/get-upload", "/upload").authenticated()
-	                .anyRequest().permitAll()
+	            .antMatchers("/", "/login", "*.css", "*.js", "*.jpg", "*.png").permitAll()
+	            .anyRequest().authenticated()
 	            .and()
 	            .formLogin()
 	                .loginPage("/login")
@@ -63,7 +71,30 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	                .invalidateHttpSession(true)
 	                .deleteCookies("JSESSIONID"); // Удалить куки (если используются)
 	    }
+	    
+*/
+	    @Override
+	    protected void configure(HttpSecurity http) throws Exception {
+	        http
+	        	.csrf().disable() // Отключаем CSRF защиту
+	            .authorizeRequests()
+	                .antMatchers("/get-upload","/upload", "/wells","/get-upload-well", "/users").authenticated()
+	                .anyRequest().permitAll()
+	                .and()
+	            .formLogin()
+	                .loginPage("/login")
+	                .defaultSuccessUrl("/get-upload", true)
+	                .permitAll()
+	                .and()
+	                .logout()
+	                .logoutUrl("/logout") // URL, по которому будет выполняться выход
+	                .logoutSuccessUrl("/")
+	                .invalidateHttpSession(true)
+	                .deleteCookies("JSESSIONID");// Удалить куки (если используются)
+	    }
 
+	    
+	    
   /*  @Bean
     @Override
     public UserDetailsService userDetailsService() {

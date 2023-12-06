@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
-
+import com.example.ScadaWebReport.Entity.Taglog.Taglog;
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
 import com.example.ScadaWebReport.services.TagLogWithName;
@@ -44,7 +43,7 @@ public class TagLogController {
 
 	// Онлайн данные
 
-	@GetMapping("/")
+	@GetMapping("/main-list")
 
 	public String getTagLogs(@RequestParam(defaultValue = "0") int page, Model model, HttpServletRequest request) {
 		List<TagLogWithName> tagLogsWithNames = dps.getTagLogsWithNames("online", "", true);
@@ -102,10 +101,6 @@ public class TagLogController {
 	
 		
 		
-	
-	
-
-
 
 	
 	  @PostMapping("/extra-info")
@@ -129,18 +124,28 @@ public class TagLogController {
 	                Date endDate = dateFormat.parse(endDateString);
 	                 
 	                //Для стартовой даты
-	                Float lastValue =taglogRepo.findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(tagLogId,"DESC",
-	                		startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), 
-	                		endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()).getData_value();
-	                     
 	              //Для конечной даты
-	                Float firstValue =  taglogRepo.findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(tagLogId,"ASC",
+	                Taglog lastTaglog =  taglogRepo.findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(tagLogId,"DESC",
 	                		startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), 
-	                		endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()).getData_value() ;
+	                		endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+	                
+	                
+	                
+	                Taglog firstTaglog =taglogRepo.findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(tagLogId,"ASC",
+	                		startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), 
+	                		endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());
+	                     
+	              
+	                Float firstValue = firstTaglog.getData_value();
+	                Float lastValue= lastTaglog.getData_value();
+	                
 	           
 					Float result = lastValue - firstValue;
 					String resultString = String.valueOf(result);
 					
+					System.out.println("Start date to count sum: "+firstTaglog.getLogdate()+" and data for that moment: "+firstValue+" .");
+					System.out.println("End date to count sum: "+lastTaglog.getLogdate()+" and data for that moment: "+lastValue+" .");
+					System.out.println("Result: "+resultString+" .");
 					
 					 log.info("Start date to count sum: "+startDate+" and data for that moment: "+firstValue+" .");
 					 log.info("End date to count sum: "+endDate+" and data for that moment: "+lastValue+" .");

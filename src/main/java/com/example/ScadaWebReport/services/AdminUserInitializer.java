@@ -31,7 +31,7 @@ public class AdminUserInitializer implements ApplicationListener<ContextRefreshe
          UserModel admin = new UserModel();
          admin.setUsername("admin");
          // Здесь вы хешировуем пароль
-         admin.setPass(passwordEncoder.encode("ad"));
+         admin.setPass(passwordEncoder.encode("david2023!"));
          
          //Раздаём роли
          Set<Role> roles = new HashSet<>();

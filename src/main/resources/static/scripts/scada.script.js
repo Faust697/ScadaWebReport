@@ -171,6 +171,108 @@ initComplete: function () {
 })
 
 
+
+
+
+
+$(document).ready(function () {
+        if (!$.fn.DataTable.isDataTable('#WellTable')) {
+            var table_well = $('#WellTable').DataTable({
+            	
+                dom: 'Bfrtip',
+              
+                buttons: [
+                    {
+                        extend: 'copy',
+                        title: '"SCADA" Anlıq sərfiyyat'
+                    },
+                    {
+                        extend: 'csv',
+                        title: '"SCADA" Anlıq sərfiyyat'
+                    },
+                    {
+                        extend: 'excel',
+                        title: '"SCADA" Anlıq sərfiyyat'
+                    },
+                    {
+                        extend: 'pdf',
+                        title: '"SCADA" Anlıq sərfiyyat',
+                        customize: function (doc) {
+                            doc.defaultStyle.fontSize = 8;
+                            doc.pageMargins = [20, 30, 20, 30];
+                            doc.pageSize = 'A4';
+                        }
+                    },
+                    {
+                        extend: 'print',
+                        title: '"SCADA" Anlıq sərfiyyat'
+                    }
+                ],
+                paging: false,
+                fixedHeader: true,
+                info: false,
+                language: {
+                    search: "_INPUT_",
+                    searchPlaceholder: "Axtarış"
+                },
+                
+         
+
+              
+                columnDefs: [
+                    {
+                        targets: [2],
+                        type: 'string',
+                        render: function (data, type, row) {
+                            if (type === 'sort') {
+                                var numericData = data.replace(/[^0-9.]/g, '');
+                                var parsedData = parseFloat(numericData);
+                                return parsedData;
+                            }
+                            return data;
+                        }
+                    }
+                ],
+                
+
+                
+          
+		select: true, 
+   
+    
+    initComplete: function () {
+        this.api().columns([3, 4]).every(function (colIdx) {
+            var column = this;
+            var defaultValue = colIdx === 3 ? 'Bütün rayonal' : 'Bütün statuslar';
+            var select = $('<select><option value="" selected>' + defaultValue + '</option></select>')
+                .appendTo($(column.header()))
+                .on('change', function () {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                    column.search(val ? '^' + val + '$' : '', true, false).draw();
+                });
+            column.data().unique().sort().each(function (d, j) {
+                select.append('<option value="' + d + '">' + d + '</option>');
+            });
+                    });
+                },
+                
+   
+                
+            });
+            // Добавляем колонку с нумерацией строк
+            table_well.on('order.dt search.dt', function() {
+                table_well.column(0, {search: 'applied', order: 'applied'}).nodes().each(function(cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+        }
+    });
+
+
+
+
+
+
 // -----
 function openModal(tagName, tagTotalId, tagId, camLink) {
 	$('#myModal').modal('show'); 

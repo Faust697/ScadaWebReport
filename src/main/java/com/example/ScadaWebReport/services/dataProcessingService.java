@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -172,12 +173,16 @@ public class dataProcessingService {
 			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getMotorStatusId).collect(Collectors.toList());
 		}
 
+		if(filteredTagIds.equals(null))
+			System.out.println("PLOHO");
+		
+		
 		// Преобразуйте список ID тегов в строку с разделителями
 		String tagIdString1 = String.join(",", filteredTagIds);
 
 		// Получите последние записи логов для каждого тега(за последний месяц)
 		List<Taglog> latestLogs = taglogRepositoryImpl
-				.findLatestLogForEachTag("\"tag_log_" + formatCurrentMonth() + "\"", tagIdString1, additionalFilter);
+				.findLatestLogForEachTag("\"tag_log_" + formatCurrentMonth() + "\"", tagIdString1, "");
 
 		// Если в latestLogs меньше строк данных, чем в staticInfoRepo.findAll();,
 		// просто заполняем пустыми полям
@@ -204,13 +209,7 @@ public class dataProcessingService {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 	
@@ -278,7 +277,6 @@ public class dataProcessingService {
 						LevelValue = null;
 					}
 					
-					
 				}
 
 			} catch (Exception e) {
@@ -299,6 +297,105 @@ public class dataProcessingService {
 	
 		return tagLogsWithNames;
 	}
+	
+	
+	
+	
+	
+	// Тут мы готовим табилцу для колодцев
+
+		public List<Well> getWells( String additionalFilter) {
+		
+			List<StaticInfoWellModel> filteredTags = staticInfoWellRepository.findAll();// get date from DB
+	
+
+			List<Taglog> MotorStatusTagLogs = getLatestLogsForWells("1", additionalFilter);
+			List<Taglog> LastRunTagLogs = getLatestLogsForWells("2", additionalFilter);
+			List<Taglog> CurrentFlowTagLogs = getLatestLogsForWells("3", additionalFilter);
+			List<Taglog> TotalFlowTagLogs = getLatestLogsForWells("4", additionalFilter);
+			List<Taglog> PowerUsageTotalTagLogs = getLatestLogsForWells("5", additionalFilter);
+		
+			//Строим список для отправления в модель
+			List<Well> Wells = new ArrayList<>();
+			for (StaticInfoWellModel filteredTag : filteredTags) {
+				//Если нулл то ничего не делаем и идём к следующему
+				if (filteredTag.getTotalFlowId() == null)
+					continue;
+				
+				//Задаём параметры, которые уже под рукой
+				 int Id=filteredTag.getId();
+				
+				String name = filteredTag.getName();
+				String coordinates = filteredTag.getCoordinates();
+				String region= filteredTag.getRegion();
+				String scadaStatus= filteredTag.getScadaStatus();
+				String camera = filteredTag.getCameraIp();
+				String info = filteredTag.getExplanation();
+				
+				String motorStatus = Optional.ofNullable(MotorStatusTagLogs.stream()
+				        .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(filteredTag.getMotorStatusId()))
+				        .findFirst()
+				        .orElse(null))
+				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
+				        .orElse("");
+
+				String lastRun = Optional.ofNullable(LastRunTagLogs.stream()
+				        .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(filteredTag.getLastRunId()))
+				        .findFirst()
+				        .orElse(null))
+				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
+				        .orElse("");
+
+				
+				String currentFlow = Optional.ofNullable(CurrentFlowTagLogs.stream()
+				        .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(filteredTag.getCurrentFlowId()))
+				        .findFirst()
+				        .orElse(null))
+				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
+				        .orElse("");
+
+				String totalFlow = Optional.ofNullable(TotalFlowTagLogs.stream()
+				        .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(filteredTag.getTotalFlowId()))
+				        .findFirst()
+				        .orElse(null))
+				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
+				        .orElse("");
+
+				String powerUsageTotal = Optional.ofNullable(PowerUsageTotalTagLogs.stream()
+				        .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(filteredTag.getPowerUsageTotalId()))
+				        .findFirst()
+				        .orElse(null))
+				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
+				        .orElse("");
+
+			
+		
+				Well newWll = new Well(
+						Id,
+						name, 
+						coordinates,
+						region,
+						scadaStatus,
+						motorStatus,
+						lastRun, 
+						currentFlow,
+						totalFlow,
+						powerUsageTotal, 
+						camera,
+						info
+	
+						
+						);
+				Wells.add(newWll);
+
+			}
+		
+			return Wells;
+		}
+	
+	
+	
+	
 
 	// Отправка всего нужного на модель
 	public void setTagLogPageInModel(List<TagLogWithName> tagLogsWithNames, int page, Model model, String pagename,
@@ -306,6 +403,8 @@ public class dataProcessingService {
 		int size = 1000;
 		Pageable pageable = PageRequest.of(page, size);
 		Page<TagLogWithName> tagLogPage = new PageImpl<>(tagLogsWithNames, pageable, tagLogsWithNames.size());
+		
+		
 		model.addAttribute("tagLogPage", tagLogPage);
 		model.addAttribute("pagename", pagename);
 		model.addAttribute("measurement", measurement);
@@ -327,8 +426,11 @@ public class dataProcessingService {
 		}
 	}
 
+	
+	
+	//НЕ АКТУАЛЕН
 	// Проклятый метод, для приравнивания айдишников по проходимости и уровню воды
-	public String getLevelTagValue(String mainId, List<TagLogWithName> tagLogsLevel,
+	/*public String getLevelTagValue(String mainId, List<TagLogWithName> tagLogsLevel,
 			Map<String, Integer> tagToLevelMap) {
 
 		String levelTagId = String.valueOf(mainId);
@@ -344,7 +446,7 @@ public class dataProcessingService {
 
 		return Level;
 
-	}
+	}*/
 	
 	
 	  //Вынести это отсюда

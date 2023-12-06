@@ -95,19 +95,22 @@ public class TaglogRepositoryImpl implements TaglogRepo {
 			LocalDateTime startDate,
 			LocalDateTime endDate) {
 		
-		String table = actualTable(0,0);
+		String table=actualTable(0,0);;
 		//Если вдруг дата начала и дата конца в разных месяцах
 		if(startDate.getMonthValue() < endDate.getMonthValue() || startDate.getYear() < endDate.getYear() )
 		{
-			if(type=="DESC")
+			if(type=="ASC")
 			table = actualTable(startDate.getMonthValue(),startDate.getYear());
 			
-			if(type=="ASC")
+			if(type=="DESC")
 			table = actualTable(endDate.getMonthValue(),endDate.getYear());
 				
 			
 		}
-		
+		else {
+		System.out.print(startDate.getMonthValue());
+		table = actualTable(startDate.getMonthValue(),startDate.getYear());
+		}
 		
 		 String query = "SELECT * FROM "
 				 +table 

@@ -24,12 +24,12 @@ public class MongoClientConfiguration extends AbstractMongoClientConfiguration {
 	@Value("${spring.second-datasource.url}")
 	private String connectionLink;
 	
-	@Value("${spring.data.mongodb.username}")
+	/*@Value("${spring.data.mongodb.username}")
 	private String mongoUser;
 	
 	@Value("${spring.data.mongodb.password}")
 	private String mongoPass;
-	
+	*/
 
 	
     @Override
@@ -37,7 +37,7 @@ public class MongoClientConfiguration extends AbstractMongoClientConfiguration {
         return databaseName; // Название базы данных
     }
 
-    /*@Override
+    @Override
     public MongoClient mongoClient() {
     	
     	 ConnectionString connectionString = new ConnectionString(connectionLink);
@@ -50,9 +50,9 @@ public class MongoClientConfiguration extends AbstractMongoClientConfiguration {
          
          return MongoClients.create(builder.build());
      
-    }*/
+    }
     
-    @Override
+    /*@Override
     public MongoClient mongoClient() {
         ConnectionString connectionString = new ConnectionString(connectionLink);
         
@@ -64,7 +64,7 @@ public class MongoClientConfiguration extends AbstractMongoClientConfiguration {
         builder.readPreference(com.mongodb.ReadPreference.primaryPreferred());
         
         return MongoClients.create(builder.build());
-    }
+    }*/
     
     
  
