@@ -31,8 +31,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoModel;
-import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoWellModel;
+import com.example.ScadaWebReport.Entity.Mongo.StaticInfoModel;
+import com.example.ScadaWebReport.Entity.Mongo.StaticInfoWellModel;
 import com.example.ScadaWebReport.repos.StaticInfoRepo;
 import com.example.ScadaWebReport.repos.StaticInfoWellRepo;
 import com.example.ScadaWebReport.services.ExcelService;

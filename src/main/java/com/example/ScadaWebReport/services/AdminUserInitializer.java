@@ -5,8 +5,8 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import com.example.ScadaWebReport.Document.MongoDocument.Role;
-import com.example.ScadaWebReport.Document.MongoDocument.UserModel;
+import com.example.ScadaWebReport.Entity.Mongo.Role;
+import com.example.ScadaWebReport.Entity.Mongo.UserModel;
 import com.example.ScadaWebReport.repos.UserRepo;
 
 import java.util.Collections;

@@ -14,8 +14,8 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoModel;
-import com.example.ScadaWebReport.Document.MongoDocument.StaticInfoWellModel;
+import com.example.ScadaWebReport.Entity.Mongo.StaticInfoModel;
+import com.example.ScadaWebReport.Entity.Mongo.StaticInfoWellModel;
 
 @Service
 public class ExcelService {

@@ -1,15 +1,15 @@
-package com.example.ScadaWebReport.services;
+package com.example.ScadaWebReport.components;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import com.example.ScadaWebReport.services.Well;
+import com.example.ScadaWebReport.services.WellsLoggingService;
+import com.example.ScadaWebReport.services.dataProcessingService;
 
 
 @Service
@@ -17,36 +17,36 @@ public class WellMonitoringService {
 	private volatile boolean stopLoop = false;
 
 	    private final dataProcessingService dps;
-
 	    private final ExecutorService executorService;
+	    private WellsLoggingService wellsLoggingService;
 
 
 	    @Autowired
-	    public WellMonitoringService(dataProcessingService dataProcessingService) {
+	    public WellMonitoringService(dataProcessingService dataProcessingService,
+	    		WellsLoggingService wellsLoggingService) {
 	        this.dps = dataProcessingService;
 	        this.executorService = Executors.newSingleThreadExecutor();
+	        this.wellsLoggingService = wellsLoggingService;
 	    }
 
 	    public void startAsyncLoop() {
 	        executorService.submit(() -> {
 	            while (!stopLoop) {
-	               /* try {
+	              try {
 	                    List<Well> wells = dps.getWells(null);
-
-	                    // Создайте экземпляр сервиса
-	                    WellsLoggingService loggingService = new WellsLoggingService((ArrayList<Well>) wells);
-
+	                    wellsLoggingService.setWells(wells);
+	              
 	                    // Запустите процесс логирования
-	                    loggingService.Logg();
+	                    wellsLoggingService.Logg();
 
-	                    Thread.sleep(300000); // Например, подождите 1 секунду
+	                    Thread.sleep(3000); // Например, подождите 1 секунду
 	                } catch (InterruptedException e) {
 	                    e.printStackTrace();
 	                    logErrorDetails(e);
 	                } catch (IOException e) {
 	                    e.printStackTrace(); // Обработка IOException
 	                    logErrorDetails(e);
-	                }*/
+	                }
 	            }
 	        });
 	    }

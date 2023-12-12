@@ -1,4 +1,4 @@
-package com.example.ScadaWebReport.Document.MongoDocument;
+package com.example.ScadaWebReport.Entity.Mongo;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

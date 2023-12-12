@@ -1,4 +1,4 @@
-package com.example.ScadaWebReport.Document.MongoDocument;
+package com.example.ScadaWebReport.Entity.Mongo;
 
 
 

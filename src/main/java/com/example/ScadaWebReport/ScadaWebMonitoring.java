@@ -1,6 +1,6 @@
 package com.example.ScadaWebReport;
 
-import com.example.ScadaWebReport.components.WellMonitoringComponent;
+import com.example.ScadaWebReport.components.AsyncLoopContollComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -20,7 +20,7 @@ import javax.annotation.PreDestroy;
 public class ScadaWebMonitoring {
 
 	@Autowired
-	private WellMonitoringComponent wellMonitoringComponent;
+	private AsyncLoopContollComponent asyncLoopContollComponent;
 
 	public static void main(String[] args) {
 		try {
@@ -35,7 +35,7 @@ public class ScadaWebMonitoring {
 	public void init() {
 		// Запустите асинхронный цикл после инициализации приложения
 		try {
-			wellMonitoringComponent.startAsyncLoop();
+			asyncLoopContollComponent.startAsyncLoop();
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -48,7 +48,7 @@ public class ScadaWebMonitoring {
 	public void stopMonitor() {
 
 		try {
-			wellMonitoringComponent.stopAsyncLoop();
+			asyncLoopContollComponent.stopAsyncLoop();
 		} catch (Exception e) {
 
 			e.printStackTrace();

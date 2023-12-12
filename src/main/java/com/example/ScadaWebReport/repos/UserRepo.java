@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.example.ScadaWebReport.Document.MongoDocument.UserModel;
+import com.example.ScadaWebReport.Entity.Mongo.UserModel;
 
 
 public interface UserRepo extends MongoRepository<UserModel, String> {

@@ -4,6 +4,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,17 +17,23 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+@Service
 public class WellsLoggingService {
 
-	ArrayList<Well> wells;
+	 @Value("${logs.folder.path}")
+	    private String folderPath;
+	
+	
+	List<Well> wells;
 	static boolean fileExist = false;
 
 	@Autowired
-	public WellsLoggingService(ArrayList<Well> wells) {
+	public WellsLoggingService(List<Well> wells) {
 		super();
 		this.wells = wells;
 	}
@@ -33,25 +41,16 @@ public class WellsLoggingService {
 	ArrayList<String> wellNames = new ArrayList<>();
 	ArrayList<String> values = new ArrayList<>();
 
-	public void fillinfLists(ArrayList<Well> wells)
-	{
-		wellNames.add(0, "Dates");
-		values.add(0, getFormattedDate());
-
-		for (Well well : wells) {
-			wellNames.add(well.getName());
-			values.add(well.getTotalFlow());
-		}
-		
-	}
 	
 	public void Logg() throws IOException {
 
+	
+		System.out.println(folderPath);
 		fillinfLists(wells);
 		
 		// Генерация имени файла
 		String fileName = generateFileName();
-		XSSFWorkbook workbook = createWorkbook(fileName);
+		XSSFWorkbook workbook = createWorkbook(folderPath+fileName);
 		XSSFSheet sheet = null;
 		Map<String, ArrayList<String>> NamesMap = new TreeMap<String, ArrayList<String>>();
 		sheet = workbook.getSheetAt(0);
@@ -68,21 +67,36 @@ public class WellsLoggingService {
 		else {
 
 			NamesMap.put("2", values);
-			keySetToCells(sheet, NamesMap, getLastRow(fileName));
+			keySetToCells(sheet, NamesMap, getLastRow(folderPath+fileName));
 		}
 
 		// Запись в файл
 		try {
-			FileOutputStream out = new FileOutputStream(new File(fileName));
+			FileOutputStream out = new FileOutputStream(new File(folderPath+fileName));
 			workbook.write(out);
 			out.close();
-			System.out.println(getFormattedDate()+": "+fileName + " written successfully on disk.");
-			
+			System.out.println(getFormattedDate()+": "+folderPath+fileName + " written successfully on disk.");
+			wellNames = new ArrayList<>();
+			values = new ArrayList<>();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	
+	public void fillinfLists(List<Well> wells)
+	{
+		wellNames.add(0, "Dates");
+		values.add(0, getFormattedDate());
+
+		for (Well well : wells) {
+			wellNames.add(well.getName());
+			values.add(well.getTotalFlow());
+		}
+		
+	}
+	
+	
 	// Разбивка мепа на ячейки(так же откуда начинать запись)
 	private void keySetToCells(Sheet sheet, Map<String, ArrayList<String>> map, int rowNum) {
 
@@ -154,17 +168,28 @@ public class WellsLoggingService {
 	
 	//Создание воркбука
 	private static XSSFWorkbook createWorkbook(String fileName) throws IOException {
+		
+		
+		
 		XSSFWorkbook workbook = null;
-		File f = new File(fileName);
-		long creationTimeMillis = f.lastModified();
+	    File file = new File(fileName);
+
+	    // Создаем директорию, если её нет
+	    File directory = new File(file.getParent());
+	    createDirectoryIfNotExists(directory);
+		
+		long creationTimeMillis = file.lastModified();
 
 		// Преобразуем миллисекунды в объект Date
 		Date creationDate = new Date(creationTimeMillis);
 
-		if (f.exists() && f.length() > 0 && isToday(creationDate)) {
+	
+		
+		
+		if (file.exists() && file.length() > 0 && isToday(creationDate)) {
 			try {
-				FileInputStream file = new FileInputStream(new File(fileName));
-				workbook = new XSSFWorkbook(file);
+				FileInputStream fileStream = new FileInputStream(new File(fileName));
+				workbook = new XSSFWorkbook(fileStream);
 				fileExist = true;
 
 			} catch (IOException e) {
@@ -182,6 +207,20 @@ public class WellsLoggingService {
 
 		return workbook;
 	}
+	
+	private static void createDirectoryIfNotExists(File directory) {
+	    if (!directory.exists()) {
+	        boolean created = directory.mkdirs();
+	        if (created) {
+	            System.out.println("Директория создана: " + directory.getAbsolutePath());
+	        } else {
+	            System.err.println("Не удалось создать директорию: " + directory.getAbsolutePath());
+	        }
+	    }
+	}
+	
+	
+	
    //Проверка, сегодня ли создан файл
 	private static boolean isToday(Date date) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -203,5 +242,9 @@ public class WellsLoggingService {
 		LocalDateTime now = LocalDateTime.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 		return now.format(formatter);
+	}
+
+	public void setWells(List<Well> wells) {
+		this.wells = wells;
 	}
 }

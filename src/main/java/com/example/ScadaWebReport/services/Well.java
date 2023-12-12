@@ -1,9 +1,9 @@
 package com.example.ScadaWebReport.services;
 
+
 public class Well{
 
 	private int Id;
-	
 	private String name;
 	private String coordinates;
 	private String region;

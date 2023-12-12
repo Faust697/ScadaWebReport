@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.example.ScadaWebReport.Document.MongoDocument.UserModel;
+import com.example.ScadaWebReport.Entity.Mongo.UserModel;
 import com.example.ScadaWebReport.repos.UserRepo;
 
 @Service

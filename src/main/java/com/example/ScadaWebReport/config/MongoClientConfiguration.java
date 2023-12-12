@@ -1,4 +1,4 @@
-package com.example.ScadaWebReport.DbConfigurations;
+package com.example.ScadaWebReport.config;
 
 
 import org.springframework.beans.factory.annotation.Value;

@@ -12,8 +12,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.example.ScadaWebReport.Document.MongoDocument.Role;
-import com.example.ScadaWebReport.Document.MongoDocument.UserModel;
+
+import com.example.ScadaWebReport.Entity.Mongo.Role;
+import com.example.ScadaWebReport.Entity.Mongo.UserModel;
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
 import com.example.ScadaWebReport.repos.UserRepo;
