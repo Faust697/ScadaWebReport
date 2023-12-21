@@ -15,6 +15,10 @@
 
 
 <style>
+
+ 
+
+
 h1 {text-align: center;}
 
 #test {
@@ -57,11 +61,11 @@ label {
 }
 
 form { 
-margin: 0 auto; 
+margin: 0 ; 
 justify-content: center;
-width:350px;
+
 height:150%;
-text-align: center;
+text-align: left;
  border-radius: 25px;
 
 }
@@ -108,10 +112,20 @@ html,body{height:100%;}
 
 			<div id="main">
 			
-				<h1 th:text="${pagename}"
-					style="display: flex; justify-content: center;"></h1>
+				
 					
 				<div class="container" id="table-search">
+				<!-- Добавьте кнопку куда-то в ваш HTML-код -->
+				
+				
+
+
+<form method="get"  th:action="@{/user-form}" style="margin-bottom: 10px;">
+                <button class="btn btn-dark btn-lg btn-block shadow btn-hover">
+                    Add User
+                </button>
+                </form>
+				
 					<div class="row justify-content-md-center">
 						<div class="col col-12">
 						
@@ -126,6 +140,7 @@ html,body{height:100%;}
 										<th scope="col">Can see canals</th>
 										<th scope="col">Cans see subartezians</th>
 										<th scope="col">Can change data</th>
+										<th scope="col">Actions</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -148,6 +163,28 @@ html,body{height:100%;}
     <span th:if="${#strings.contains(user.getRoles(), 'DATA_EDITOR')}" style="color: green;">&#10004;</span>
     <span th:unless="${#strings.contains(user.getRoles(), 'DATA_EDITOR')}" style="color: red;">&#10008;</span>
 </td>
+<td>
+ 
+<div style="display: flex; justify-content: space-between; margin: 5px;">
+
+<form id="changePasswordForm" method="get" th:action="@{/edit-user}">
+    <input id="changePasswordUser" type="hidden" name="username" th:value="${user.getUsername()}" />
+    <button class="btn btn-dark btn-md shadow btn-hover" type="submit" id="changePasswordButton">
+        Edit user
+    </button>
+</form>
+
+
+<form id="removeUserForm" method="post" th:if="${user.getUsername != 'admin'}" th:action="@{/remove_user}">
+    <input id="deleteUser" type="hidden" name="username" th:value="${user.getUsername()}" />
+    <button class="btn btn-danger btn-md shadow btn-hover" type="button" id="removeUserButton">
+        Remove User
+    </button>
+</form>
+
+</div>
+
+</td>
 									</tr>
 								</tbody>
 							</table>
@@ -169,7 +206,24 @@ html,body{height:100%;}
 
 <div th:insert="~{parts/footer :: footer}"></div>
             
+
+
+
+
+<script th:inline="javascript">
+    document.getElementById('removeUserButton').addEventListener('click', function () {
+        if (confirm("Are you sure you want to remove the user?")) {
+            var username = document.getElementById('deleteUser').value;
+            window.location.href = '/remove_user?username=' + encodeURIComponent(username);
+        } else {
             
+        }
+    });
+</script>
+
+
+            <!-- Скрипт для открытия и закрытия модального окна -->
+
            <script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
 <script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js}"></script>
 <script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_dataTables.bootstrap5.min.js}"></script>

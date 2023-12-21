@@ -2,6 +2,8 @@ package com.example.ScadaWebReport.Entity.Mongo;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,7 +16,7 @@ public class UserModel {
 
     @org.springframework.data.annotation.Id
     @GeneratedValue(strategy= GenerationType.AUTO)
-    private int Id;
+    private String Id;
 
     @NotNull
     private String username;
@@ -29,7 +31,7 @@ public class UserModel {
     public UserModel() {
     }
 
-    public UserModel(int id, String username, String pass, String email, Set<Role> roles) {
+    public UserModel(String id, String username, String pass, String email, Set<Role> roles) {
         this.Id = id;
         this.username = username;
         this.pass = pass;
@@ -45,10 +47,10 @@ public class UserModel {
         return authorities;
     }
 	
-	public int getId() {
+	public String getId() {
 		return Id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		Id = id;
 	}
 	public String getUsername() {
@@ -60,9 +62,12 @@ public class UserModel {
 	public String getPass() {
 		return pass;
 	}
-	public void setPass(String pass) {
-		this.pass = pass;
-	}
+
+    public void setPass(String pass) {
+        // Хешируем пароль перед сохранением
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        this.pass = passwordEncoder.encode(pass);
+    }
 	public String getEmail() {
 		return email;
 	}

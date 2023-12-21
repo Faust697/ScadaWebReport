@@ -41,6 +41,7 @@ public class dataProcessingService {
 	private final StaticInfoRepo staticInfoRepo;
 	private final StaticInfoWellRepo staticInfoWellRepository;
 	private final VisitorRepo visitorRepo;
+	private final DatabaseConnectionService databaseConnectionService;
 	
 	@Autowired
 	private MongoTemplate mongoTemplate;
@@ -52,11 +53,13 @@ public class dataProcessingService {
 			TaglogRepositoryImpl taglogRepositoryImpl,
 			StaticInfoRepo staticInfoRepo,
 			StaticInfoWellRepo staticInfoWellRepository,
-			VisitorRepo visitorRepo) {
+			VisitorRepo visitorRepo,
+			DatabaseConnectionService databaseConnectionService) {
 		this.taglogRepositoryImpl = taglogRepositoryImpl;
 		this.staticInfoRepo = staticInfoRepo;
 		this.staticInfoWellRepository = staticInfoWellRepository;
 		this.visitorRepo = visitorRepo;
+		this.databaseConnectionService = databaseConnectionService;
 
 	}
 
@@ -149,7 +152,7 @@ public class dataProcessingService {
 	public List<Taglog> getLatestLogsForWells(String typeOfSearch, String additionalFilter) {
 
 		List<String> filteredTagIds = null;
-		List<StaticInfoWellModel> filteredTags = staticInfoWellRepository.findAll();
+		List<StaticInfoWellModel> filteredTags = databaseConnectionService.executeWithRetry(()-> staticInfoWellRepository.findAll());
 
 		//Смотрим, какие данные мы ищем
 		switch (typeOfSearch) {
@@ -172,16 +175,14 @@ public class dataProcessingService {
 			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getMotorStatusId).collect(Collectors.toList());
 		}
 
-		if(filteredTagIds.equals(null))
-			System.out.println("PLOHO");
 		
 		
 		// Преобразуйте список ID тегов в строку с разделителями
 		String tagIdString1 = String.join(",", filteredTagIds);
 
 		// Получите последние записи логов для каждого тега(за последний месяц)
-		List<Taglog> latestLogs = taglogRepositoryImpl
-				.findLatestLogForEachTag("\"tag_log_" + formatCurrentMonth() + "\"", tagIdString1, "");
+		List<Taglog> latestLogs = databaseConnectionService.executeWithRetry(()->taglogRepositoryImpl
+				.findLatestLogForEachTag("\"tag_log_" + formatCurrentMonth() + "\"", tagIdString1, ""));
 
 		// Если в latestLogs меньше строк данных, чем в staticInfoRepo.findAll();,
 		// просто заполняем пустыми полям

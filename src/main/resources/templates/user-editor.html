@@ -1,0 +1,125 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+ xmlns:sec="http://www.thymeleaf.org">
+<head> 
+    <title>Scada Monitoring Service</title> 
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+      <meta name="viewport" content="width=device-width,  initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+
+<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/headers.css}">
+
+
+
+<style>
+
+
+ h1 {
+            text-align: center;
+        }
+
+        form {
+            margin: 0 auto;
+            width: 350px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-control {
+            width: 100% !important;
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        button {
+            width: 100%;
+        }
+
+html,body{min-height:100%;}
+html,body{height:100%;}
+
+
+
+.btn-hover {
+            transition: transform 0.3s ease-in-out; /* Добавляем плавный переход */
+        }
+
+  .btn-hover:hover {
+            transform: scale(1.1); /* Увеличиваем размер на 10% при наведении */
+        }
+
+
+</style>
+ <link rel="stylesheet" type="text/css" href="/styles/style.css">
+
+</head>
+<body >
+
+<div id="forbg" class="bg-white"
+		style="background: url(img/Ming_bg.jpg) no-repeat center center fixed; background-size: cover;">
+
+
+<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
+
+   
+  
+<h1 th:if="${editMode}">Edit User</h1>
+<h1 th:unless="${editMode}">New User</h1>
+
+    <form th:action="${editMode ? '/edit-user' : '/add-user'}" class="bg-white" method="post" th:object="${userModel}">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" class="form-control" th:value="${editMode} ? ${userModel.username} : ''" required/>
+
+        <label for="pass">Password:</label>
+        <input type="password" id="pass" name="pass" class="form-control" required/>
+
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" class="form-control" th:value="${editMode} ? ${userModel.email} : ''" required/>
+
+        <!-- Чекбоксы для выбора ролей -->
+        <label>Roles:</label>
+  <div class="form-check" th:each="role : ${T(com.example.ScadaWebReport.Entity.Mongo.Role).values()}">
+    <input type="checkbox" class="form-check-input" th:id="${role}" th:name="roles" th:value="${role}" 
+        th:checked="${userModel != null && userModel.roles != null && #strings.contains(userModel.roles, role)}" />
+  
+    <label class="form-check-label" th:for="${role}" th:text="${role}"></label>
+</div>
+
+
+
+
+
+
+
+<!--  <div th:each="role : ${T(com.example.ScadaWebReport.Entity.Mongo.Role).values()}">
+    <p th:text="'Role: ' + ${role} + ' Contains: ' + ${userModel.roles.contains(T(com.example.ScadaWebReport.Entity.Mongo.Role).valueOf(role))}"></p>
+</div>-->
+
+
+        <!-- Скрытое поле для идентификации редактируемого пользователя -->
+        <input type="hidden" id="editMode" name="editMode" th:value="${editMode}"/>
+
+        <!-- Кнопка для отправки формы -->
+        <button type="submit" class="btn btn-primary" id="button_login" th:text="${editMode ? 'Update User' : 'Create User'}"></button>
+    </form>
+
+</div>
+
+<div th:insert="~{parts/footer :: footer}"></div>
+            
+            
+            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" ></script>
+            
+</body>

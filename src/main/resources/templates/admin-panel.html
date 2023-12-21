@@ -56,7 +56,7 @@ label {
   justify-content: center;
 }
 
-form { 
+#admin_form { 
 margin: 0 auto; 
 justify-content: center;
 width:350px;
@@ -114,7 +114,7 @@ html,body{height:100%;}
         <div class="row">
        
             <div class="col-md-4 mx-auto mb-4" th:if="${user != null and#strings.contains(userRoles, 'ADMIN')}" >
-             <form method="get" action="/users">
+             <form id="admin_form" method="get" action="/users">
                 <button  class="btn btn-dark btn-lg btn-block shadow btn-hover">
                     İstifadəçilər
                 </button>
@@ -122,16 +122,23 @@ html,body{height:100%;}
             </div>
             
             
-            <div class="col-md-4 mx-auto mb-4">
+          
+            
+        </div>
+        
+        
+         <div class="row"> 
+         <div class="col-md-4 mx-auto mb-4">
             <form method="get" action="/get-upload">
                 <button class="btn btn-dark btn-lg btn-block shadow btn-hover">
                     Kanal cədvəlinin yüklənməsi
                 </button>
                 </form>
             </div>
-            
-            
-            <div class="col-md-4 mx-auto mb-4">
+          </div>
+         <div class="row"> 
+         
+          <div class="col-md-4 mx-auto mb-4">
             <form method="get" action="/get-upload-well">
                 <button class="btn btn-dark btn-lg btn-block shadow btn-hover">
                     Quyular cədvəlinin yüklənməsi
@@ -139,7 +146,22 @@ html,body{height:100%;}
                 </form>
             </div>
             
-        </div>
+             </div>
+         <div class="row"> 
+           
+            
+            
+           
+            
+               <div class="col-md-4 mx-auto mb-4">
+            <form method="get" action="/get-upload-well">
+                <button class="btn btn-dark btn-lg btn-block shadow btn-hover">
+                    Quyular cədvəlinin yüklənməsi
+                </button>
+                </form>
+            </div>
+         
+          </div>
 
     </div> 
      

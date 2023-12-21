@@ -2,37 +2,58 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Scada Monitoring Service</title>
-    
-    
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_1.13.6_css_jquery.dataTables.min.css}">	
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_buttons_2.4.1_css_buttons.dataTables.min.css}">
+
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_1.13.6_css_jquery.dataTables.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_buttons_2.4.1_css_buttons.dataTables.min.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/styles/headers.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_1.13.1_css_jquery.dataTables.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_1.13.6_css_dataTables.bootstrap5.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_buttons_2.4.1_css_buttons.bootstrap5.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_fixedheader_3.4.0_css_fixedHeader.dataTables.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_rowreorder_1.3.1_css_rowReorder.dataTables.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_1.13.1_css_jquery.dataTables.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_1.13.6_css_dataTables.bootstrap5.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_buttons_2.4.1_css_buttons.bootstrap5.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_fixedheader_3.4.0_css_fixedHeader.dataTables.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_rowreorder_1.3.1_css_rowReorder.dataTables.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.css}">
 
 
 
 
 
 <script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_dataTables.bootstrap5.min.js}"></script>
-<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_moment.js_2.29.1_moment.min.js}"></script>
-<script th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
-<script th:src="@{/scripts/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_js_bootstrap.bundle.min.js}"></script>
-<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_jszip_3.10.1_jszip.min.js}"></script>
-<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_pdfmake.min.js}"></script>
-<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_vfs_fonts.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_dataTables.buttons.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.html5.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.print.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_fixedheader_3.4.0_js_dataTables.fixedHeader.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_1.13.6_js_dataTables.bootstrap5.min.js}"></script>
+<script
+	th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_moment.js_2.29.1_moment.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_js_bootstrap.bundle.min.js}"></script>
+<script
+	th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_jszip_3.10.1_jszip.min.js}"></script>
+<script
+	th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_pdfmake.min.js}"></script>
+<script
+	th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_vfs_fonts.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_dataTables.buttons.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.html5.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.print.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_fixedheader_3.4.0_js_dataTables.fixedHeader.min.js}"></script>
 <script th:src="@{/scripts/scada.script.js}"></script>
 
 
@@ -47,29 +68,45 @@
 
 
 	<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
-<div id="forbg" class="test" style="background: rgba(0, 0, 0, 0.5); background-color: rgba(0, 0, 0, 0); background-size: cover;">
-	
+	<div id="forbg" class="test"
+		style="background: rgba(0, 0, 0, 0.5); background-color: rgba(0, 0, 0, 0); background-size: cover;">
+
 		<div th:fragment="table" class="cell-border">
 			<div id="main">
 				<h1 th:text="${pagename != null ? pagename : 'Default Page Name'}"
 					style="display: flex; justify-content: center;"></h1>
-					
-	<div class="container">
-    <div class="row">
-        <div class="col-md-12 status-container">
-        <div th:if="${tagLogPage != null}">
-            <p class="status-label">Onlayn qurğuların sayı: <span th:text="${tagLogPage.content.?[data_value != null].size()}" class="online"></span></p>
-            <p class="status-label">Offlayn qurğuların sayı: <span th:text="${tagLogPage.content.?[data_value == null].size()}" class="offline"></span></p>
-            ___________________________________
-            <p class="status-label">Ümumi qurğuların sayı: <span th:text="${tagLogPage.content.size()}" ></span></p>
-            ___________________________________
-            <p class="advice">Müəyyən vaxt aralığında kanaldan keçən toplam su miqdarına, kameralar və qədərləmə cədvəllərə baxmaq üçün kanal adına klikləyin.</p>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 				<div class="container" id="table-search">
 					<div class="row justify-content-md-center">
+						<div class="container" id = "activity_status_panel">
+							<div class="row">
+								<div class="col-md-12 status-container">
+									<div th:if="${tagLogPage != null}">
+										<p class="status-label">
+											Onlayn qurğuların sayı: <span
+												th:text="${tagLogPage.content.?[data_value != null].size()}"
+												class="online"></span>
+										</p>
+										<p class="status-label">
+											Offlayn qurğuların sayı: <span
+												th:text="${tagLogPage.content.?[data_value == null].size()}"
+												class="offline"></span>
+										</p>
+										___________________________________
+										<p class="status-label">
+											Ümumi qurğuların sayı: <span
+												th:text="${tagLogPage.content.size()}"></span>
+										</p>
+										___________________________________
+										<p class="advice">Müəyyən vaxt aralığında kanaldan keçən
+											toplam su miqdarına, kameralar və qədərləmə cədvəllərə baxmaq
+											üçün kanal adına klikləyin.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+
 						<div class="col col-12">
 							<table id="tagLogTable"
 								class="table display table-striped table-bordered compact bg-white cell-border">
@@ -80,36 +117,35 @@
 										<th th:if="${measurement == 2}">Rayon</th>
 										<th th:if="${measurement == 2}">Su səviyyəsi(sm)</th>
 										<th><span th:if="${measurement == 1}">m<sup>3</sup></span>
-											<span th:if="${measurement == 2}">m<sup>3</sup>/san</span>
-											<span th:if="${measurement == 3}">sm</span>
-										</th>
+											<span th:if="${measurement == 2}">m<sup>3</sup>/san
+										</span> <span th:if="${measurement == 3}">sm</span></th>
 										<th>Ölçmə tarixi</th>
 										<th th:if="${measurement == 2}">Xəta faizi</th>
 										<th th:if="${measurement == 2}">Qədərləmə statusu</th>
 										<th th:if="${measurement == 2}">Açıqlama</th>
-										
+
 									</tr>
 								</thead>
 								<tbody>
-								  <!--  onclick="openModal(this.getAttribute('data-tagname'),this.getAttribute('data-tagid'))"-->
-								
+									<!--  onclick="openModal(this.getAttribute('data-tagname'),this.getAttribute('data-tagid'))"-->
+
 									<tr th:each="tagLog : ${tagLogPage?.content}"
-									th:onclick="openModal(this.getAttribute('data-tagname'),
+										th:onclick="openModal(this.getAttribute('data-tagname'),
 									this.getAttribute('data-tagTotalid'),
 									this.getAttribute('data-tagid'),
 									this.getAttribute('data-camLink'))"
-									 th:attr="data-tagname=${tagLog.tagName},
+										th:attr="data-tagname=${tagLog.tagName},
 									  data-tagTotalid=${tagLog.getTagTotalId},
 									   data-tagid=${tagLog.getTag_id},
 									   data-camLink=${tagLog.tagCamera}"
-    								
 										data-toggle="modal" data-target="#myModal">
 										<td th:text="${tagLogStat.index + 1}"></td>
 										<td th:text="${tagLog.tagName}"></td>
-										<th th:if="${measurement == 2}"th:text="${tagLog.tagRegion}"></th>
-										<td th:text="${measurement == 2 ? (tagLog.tagLevel != null && tagLog.tagLevel != '' ? tagLog.tagLevel : 'offline') : tagLog.tagLevel}"
-  										 th:class="${measurement == 2 && (tagLog.tagLevel == null || tagLog.tagLevel == '') ? 'text-danger fw-bold' : ''}">
-											</td>
+										<th th:if="${measurement == 2}" th:text="${tagLog.tagRegion}"></th>
+										<td
+											th:text="${measurement == 2 ? (tagLog.tagLevel != null && tagLog.tagLevel != '' ? tagLog.tagLevel : 'offline') : tagLog.tagLevel}"
+											th:class="${measurement == 2 && (tagLog.tagLevel == null || tagLog.tagLevel == '') ? 'text-danger fw-bold' : ''}">
+										</td>
 										<td
 											th:text="${tagLog.data_value != null ? tagLog.data_value : 'offline'}"
 											th:class="${tagLog.data_value == null ? 'text-danger fw-bold' : ''}"></td>
@@ -123,9 +159,9 @@
                           tagLog.tagStatus == 'Planlanır' ? 'text-warning fw-bold' : 
                           tagLog.tagStatus == 'Xeyr' ? 'text-danger fw-bold' : ''}"></td>
 										<td th:if="${measurement == 2}" th:text="${tagLog.tagReason}"></td>
-										
-									
-										
+
+
+
 									</tr>
 								</tbody>
 							</table>
@@ -134,14 +170,14 @@
 				</div>
 			</div>
 		</div>
-		 <button id="scrollToTopButton" onclick="scrollToTop()">↑</button>
+		<button id="scrollToTopButton" onclick="scrollToTop()">↑</button>
 	</div>
 
 	<div th:insert="~{parts/footer :: footer}"></div>
 
 	<div th:insert="~{parts/selectDateForm :: dateSelector}"></div>
-	
-	
+
+
 
 
 </body>

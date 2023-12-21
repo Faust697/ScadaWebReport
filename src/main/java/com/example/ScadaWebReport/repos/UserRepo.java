@@ -17,4 +17,6 @@ public interface UserRepo extends MongoRepository<UserModel, String> {
 	UserModel findByUsername(String username);
 
 	boolean existsByUsername(String Username);
+
+	void deleteByUsername(String username);
 }

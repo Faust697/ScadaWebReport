@@ -46,7 +46,7 @@
 				<h1 th:text="${pagename != null ? pagename : 'Default Page Name'}"
 					style="display: flex; justify-content: center;"></h1>
 					
-					<div class="container">
+					<div class="container" id = "activity_status_panel">
     <div class="row">
         <div class="col-md-12 status-container">
             <p class="status-label">Onlayn qurğuların sayı: <span th:text="${tagLogPage.content.?[data_value != null].size()}" class="online"></span></p>

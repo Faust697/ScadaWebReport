@@ -83,7 +83,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	                .and()
 	            .formLogin()
 	                .loginPage("/login")
-	                .defaultSuccessUrl("/get-upload", true)
+	                .defaultSuccessUrl("/admin-panel", true)
 	                .permitAll()
 	                .and()
 	                .logout()

@@ -1,6 +1,9 @@
 package com.example.ScadaWebReport;
 
+import com.example.ScadaWebReport.Entity.Mongo.UserModel;
 import com.example.ScadaWebReport.components.AsyncLoopContollComponent;
+import com.example.ScadaWebReport.repos.UserRepo;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.security.core.userdetails.User;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -18,6 +22,13 @@ import javax.annotation.PreDestroy;
 @EnableAsync
 @EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class })
 public class ScadaWebMonitoring {
+
+	private final UserRepo userRepo;
+	
+	public ScadaWebMonitoring(UserRepo userRepo) {
+		super();
+		this.userRepo = userRepo;
+	}
 
 	@Autowired
 	private AsyncLoopContollComponent asyncLoopContollComponent;
@@ -56,4 +67,7 @@ public class ScadaWebMonitoring {
 
 		}
 	}
+	
+	
+
 }

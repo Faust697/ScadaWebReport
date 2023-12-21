@@ -2,45 +2,68 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <title>Scada Monitoring Service</title>
-    
-    
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_1.13.6_css_jquery.dataTables.min.css}">	
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_buttons_2.4.1_css_buttons.dataTables.min.css}">
+
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_1.13.6_css_jquery.dataTables.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_buttons_2.4.1_css_buttons.dataTables.min.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/styles/headers.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_1.13.1_css_jquery.dataTables.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_1.13.6_css_dataTables.bootstrap5.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_buttons_2.4.1_css_buttons.bootstrap5.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_fixedheader_3.4.0_css_fixedHeader.dataTables.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.datatables.net_rowreorder_1.3.1_css_rowReorder.dataTables.min.css}">
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_1.13.1_css_jquery.dataTables.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_1.13.6_css_dataTables.bootstrap5.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_buttons_2.4.1_css_buttons.bootstrap5.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_fixedheader_3.4.0_css_fixedHeader.dataTables.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_rowreorder_1.3.1_css_rowReorder.dataTables.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.css}">
 
 
 <style>
 .offline-status {
-    color: red !important; /* Используйте желаемый цвет для статуса "оффлайн" */
+	color: red !important;
+	/* Используйте желаемый цвет для статуса "оффлайн" */
 }
 
 .online-status {
-    color: green !important; /* Используйте желаемый цвет для статуса "онлайн" */
+	color: green !important;
+	/* Используйте желаемый цвет для статуса "онлайн" */
 }
 </style>
 
 
 <script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_1.13.6_js_dataTables.bootstrap5.min.js}"></script>
-<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_moment.js_2.29.1_moment.min.js}"></script>
-<script th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
-<script th:src="@{/scripts/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_js_bootstrap.bundle.min.js}"></script>
-<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_jszip_3.10.1_jszip.min.js}"></script>
-<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_pdfmake.min.js}"></script>
-<script th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_vfs_fonts.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_dataTables.buttons.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.html5.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.print.min.js}"></script>
-<script th:src="@{/scripts/cdn.datatables.net_fixedheader_3.4.0_js_dataTables.fixedHeader.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_1.13.6_js_dataTables.bootstrap5.min.js}"></script>
+<script
+	th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_moment.js_2.29.1_moment.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_js_bootstrap.bundle.min.js}"></script>
+<script
+	th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_jszip_3.10.1_jszip.min.js}"></script>
+<script
+	th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_pdfmake.min.js}"></script>
+<script
+	th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_vfs_fonts.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_dataTables.buttons.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.html5.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.print.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_fixedheader_3.4.0_js_dataTables.fixedHeader.min.js}"></script>
 <script th:src="@{/scripts/scada.script.js}"></script>
 
 
@@ -55,16 +78,46 @@
 
 
 	<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
-<div id="forbg" class="test" style="background: rgba(0, 0, 0, 0.5); background-color: rgba(0, 0, 0, 0); background-size: cover;">
-	
+	<div id="forbg" class="test"
+		style="background: rgba(0, 0, 0, 0.5); background-color: rgba(0, 0, 0, 0); background-size: cover;">
+
 		<div th:fragment="table" class="cell-border">
 			<div id="main">
 				<h1 th:text="${pagename != null ? pagename : 'Default Page Name'}"
 					style="display: flex; justify-content: center;"></h1>
-					
+
+
+
+
+
 
 				<div class="container" id="table-search-well">
+
+
+
+
 					<div class="row justify-content-md-center">
+
+						<div class="container" id = "activity_status_panel">
+							<div class="row">
+								<div class="col-md-12 status-container">
+									<div th:if="${wells != null}">
+										<p class="status-label">
+											Onlayn qurğuların sayı: <span
+												th:text="${wells.?[totalFlow != ''].size}" class="online"></span>
+										</p>
+										<p class="status-label">
+											Offlayn qurğuların sayı: <span
+												th:text="${wells.?[totalFlow == ''].size}" class="offline"></span>
+										</p>
+										<p class="status-label">
+											Ümumi qurğuların sayı: <span th:text="${wells.size}"></span>
+										</p>
+
+									</div>
+								</div>
+							</div>
+						</div>
 						<div class="col col-12">
 							<table id="WellTable"
 								class="table display table-striped table-bordered compact bg-white cell-border">
@@ -82,37 +135,38 @@
 										<th>PowerUsageTotal</th>
 										<th>Kamera</th>
 										<th>Açıqlama</th>
-										
+
 									</tr>
 								</thead>
 								<tbody>
-								  <!--  onclick="openModal(this.getAttribute('data-tagname'),this.getAttribute('data-tagid'))"-->
-								
-									  <tr th:each="well, iterStat : ${wells}">
-        								<td th:text="${iterStat.index + 1}"></td>
+									<!--  onclick="openModal(this.getAttribute('data-tagname'),this.getAttribute('data-tagid'))"-->
+
+									<tr th:each="well, iterStat : ${wells}">
+										<td th:text="${iterStat.index + 1}"></td>
 
 										<td th:text="${well.getName()}"></td>
-										<th>
-					<a th:href="'https://www.google.com/maps?q=' + ${well.getCoordinates().replaceAll(' ', '')}" target="_blank" class="btn btn-primary">
-    			<span class="map-button" aria-hidden="true"></span> Map
-			</a>
-										</th>
+										<th><a
+											th:href="'https://www.google.com/maps?q=' + ${well.getCoordinates().replaceAll(' ', '')}"
+											target="_blank" class="btn btn-primary"> <span
+												class="map-button" aria-hidden="true"></span> Map
+										</a></th>
 										<th th:text="${well.getRegion()}"></th>
-			<th th:class="${well.getTotalFlow() == null or well.getTotalFlow().isEmpty()} ? 'offline-status' : 'online-status'"
-th:text="${well.getTotalFlow() == null or well.getTotalFlow().isEmpty()} ? 'offline' : 'online'">
-</th>
+										<th
+											th:class="${well.getTotalFlow() == null or well.getTotalFlow().isEmpty()} ? 'offline-status' : 'online-status'"
+											th:text="${well.getTotalFlow() == null or well.getTotalFlow().isEmpty()} ? 'offline' : 'online'">
+										</th>
 										<th th:text="${well.getMotorStatus()}"></th>
 										<th th:text="${well.getLastRun()}"></th>
 										<th th:text="${well.getCurrentFlow()}"></th>
 										<th th:text="${well.getTotalFlow()}"></th>
 										<th th:text="${well.getPowerUsageTotal}"></th>
-										<th >
-										<a th:href="${well.getCamera()}" target="_blank" class="btn btn-primary">
-										 <span class="cam-button" aria-hidden="true"></span>Cam</a>
-										</th>
+										<th><a th:href="${well.getCamera()}" target="_blank"
+											class="btn btn-primary"> <span class="cam-button"
+												aria-hidden="true"></span>Cam
+										</a></th>
 										<th th:text="${well.getInfo()}"></th>
 
-										
+
 									</tr>
 								</tbody>
 							</table>
@@ -121,7 +175,7 @@ th:text="${well.getTotalFlow() == null or well.getTotalFlow().isEmpty()} ? 'offl
 				</div>
 			</div>
 		</div>
-		 <button id="scrollToTopButton" onclick="scrollToTop()">↑</button>
+		<button id="scrollToTopButton" onclick="scrollToTop()">↑</button>
 	</div>
 
 	<div th:insert="~{parts/footer :: footer}"></div>

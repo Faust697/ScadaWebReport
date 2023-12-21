@@ -1,19 +1,25 @@
 package com.example.ScadaWebReport.controllers;
 
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,9 +28,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -51,8 +57,6 @@ public class DataEditController {
     private final StaticInfoRepo staticInfoRepository;
     private final StaticInfoWellRepo staticInfoWellRepository;
     private final dataProcessingService dps;
-    private final RoleChecker roleChecker;//ввести это в эксплуотацию
-    
     private final UserDetailsServiceImpl uds;
 
     @Autowired
@@ -66,7 +70,6 @@ public class DataEditController {
         this.staticInfoRepository = staticInfoRepository;
         this.staticInfoWellRepository = staticInfoWellRepository;
         this.dps = dataProcessingService;
-        this.roleChecker = roleChecker;
         this.uds = userDetailsService;
     }
     
@@ -207,8 +210,60 @@ public class DataEditController {
     }
     
     
+	@PostMapping("/upload-pdf")
+	public String uploadSchedule(@RequestParam("file") MultipartFile file, Model model) throws IOException {
+
+		try {
+
+			if (file.isEmpty()) {
+				model.addAttribute("message", "Выберите файл для загрузки.");
+				return "upload-result"; // Вернуть страницу результатов с сообщением об ошибке
+			}
+
+			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+	        Path filePath = Paths.get("src/main/resources/monitoring-pdf", fileName);
+
+			// Создание ClassPathResource для проверки существования папки
+			ClassPathResource classPathResource = new ClassPathResource("monitoring-pdf");
+			System.out.println("1 "+classPathResource.toString());
+			
+			
+			if (!classPathResource.exists()) {
+				Files.createDirectories(classPathResource.getFile().toPath());
+			}
+
+				
+				file.transferTo(filePath);
+			
+			
+			model.addAttribute("message", "Данные успешно импортированы в MongoDB.");
+			log.info("Data was successfuly imported to MongoDB.");
+			return "upload-result"; // Вернуть страницу результатов с успешным сообщением
+		}
+
+		catch (IOException e) {
+			e.printStackTrace();
+			model.addAttribute("message", "Произошла ошибка при импорте данных.");
+			log.error("Error: " + e.getMessage());
+			return "upload-result"; // Вернуть страницу результатов с сообщением об ошибке
+		}
+
+	}
     
-    
+	@GetMapping("/upload-schedule")
+	public String getUploadSchedule(Model model) {
+		if (uds.checkForAdmin() || uds.checkForDataEditor()) {
+			return "data-upload-schedule";
+		}
+
+		else
+			model.addAttribute("message", "No access.");
+			return "upload-result";
+	}
+	
+	
+	
+	
     //Скачиваем файл с графиком калибровки
     @GetMapping(
     		  value = "/get-pdf/{id}",
@@ -220,6 +275,21 @@ public class DataEditController {
     	// Путь к файлу в папке ресурсов
     	  String resourcePath = "monitoring-pdf/" + id;
 
+    	  
+			/*
+			 * String directoryPath = "monitoring-pdf";
+			 * 
+			 * // Получаем список файлов в директории Resource[] resources = new
+			 * PathMatchingResourcePatternResolver().getResources("classpath:" +
+			 * directoryPath + "/*");
+			 * 
+			 * // Выводим имена файлов в консоль
+			 * System.out.println("Список файлов в директории " + directoryPath + ":"); for
+			 * (Resource resource : resources) { System.out.println(resource.getFilename());
+			 * }
+			 */
+    	  
+    	  
     	    // Получаем InputStream из файла в ресурсах
     	    ClassPathResource classPathResource = new ClassPathResource(resourcePath);
 
@@ -257,26 +327,7 @@ public class DataEditController {
     
     
     
-    //Логининг
-    @GetMapping("/login")
-    public String login(Model model, HttpServletRequest request) {
-    	
-    	dps.UpdateVisitors(request.getRemoteAddr().toString());
-		model.addAttribute("totalVisitors", dps.totalVisitors());
-		model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
-    	
-        return "login.html"; 
-    }
-    
-    //Логаут
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
-        return "redirect:/"; // Перенаправление на главную страницу после выхода
-    }
+  
     
 
 

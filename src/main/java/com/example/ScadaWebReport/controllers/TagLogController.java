@@ -123,8 +123,7 @@ public class TagLogController {
 	                Date startDate = dateFormat.parse(startDateString);
 	                Date endDate = dateFormat.parse(endDateString);
 	                 
-	                //Для стартовой даты
-	              //Для конечной даты
+	              
 	                Taglog lastTaglog =  taglogRepo.findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(tagLogId,"DESC",
 	                		startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), 
 	                		endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime());

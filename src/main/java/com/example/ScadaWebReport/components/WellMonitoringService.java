@@ -39,7 +39,7 @@ public class WellMonitoringService {
 	                    // Запустите процесс логирования
 	                    wellsLoggingService.Logg();
 
-	                    Thread.sleep(3000); // Например, подождите 1 секунду
+	                    Thread.sleep(300000); // Например, подождите 1 секунду
 	                } catch (InterruptedException e) {
 	                    e.printStackTrace();
 	                    logErrorDetails(e);
