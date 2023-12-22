@@ -78,12 +78,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	        http
 	        	.csrf().disable() // Отключаем CSRF защиту
 	            .authorizeRequests()
-	                .antMatchers("/get-upload","/upload", "/wells","/get-upload-well", "/users").authenticated()
+	                .antMatchers("/get-upload","/upload", "/wells","/get-upload-well", "/users","/admin-panel").authenticated()
 	                .anyRequest().permitAll()
 	                .and()
 	            .formLogin()
 	                .loginPage("/login")
-	                .defaultSuccessUrl("/admin-panel", true)
+	                .defaultSuccessUrl("/", true)
 	                .permitAll()
 	                .and()
 	                .logout()

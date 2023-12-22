@@ -225,7 +225,7 @@ public class DataEditController {
 
 			// Создание ClassPathResource для проверки существования папки
 			ClassPathResource classPathResource = new ClassPathResource("monitoring-pdf");
-			System.out.println("1 "+classPathResource.toString());
+		
 			
 			
 			if (!classPathResource.exists()) {
@@ -276,19 +276,7 @@ public class DataEditController {
     	  String resourcePath = "monitoring-pdf/" + id;
 
     	  
-			/*
-			 * String directoryPath = "monitoring-pdf";
-			 * 
-			 * // Получаем список файлов в директории Resource[] resources = new
-			 * PathMatchingResourcePatternResolver().getResources("classpath:" +
-			 * directoryPath + "/*");
-			 * 
-			 * // Выводим имена файлов в консоль
-			 * System.out.println("Список файлов в директории " + directoryPath + ":"); for
-			 * (Resource resource : resources) { System.out.println(resource.getFilename());
-			 * }
-			 */
-    	  
+		
     	  
     	    // Получаем InputStream из файла в ресурсах
     	    ClassPathResource classPathResource = new ClassPathResource(resourcePath);

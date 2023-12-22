@@ -1,5 +1,6 @@
 package com.example.ScadaWebReport.Entity.Mongo;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -14,9 +15,8 @@ import java.util.Set;
 @Document(collection = "users")
 public class UserModel {
 
-    @org.springframework.data.annotation.Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    private String Id;
+	 @org.springframework.data.annotation.Id
+    private String id;
 
     @NotNull
     private String username;
@@ -32,7 +32,7 @@ public class UserModel {
     }
 
     public UserModel(String id, String username, String pass, String email, Set<Role> roles) {
-        this.Id = id;
+        this.id = id;
         this.username = username;
         this.pass = pass;
         this.email = email;
@@ -48,10 +48,10 @@ public class UserModel {
     }
 	
 	public String getId() {
-		return Id;
+		return id;
 	}
 	public void setId(String id) {
-		Id = id;
+		this.id = id;
 	}
 	public String getUsername() {
 		return username;

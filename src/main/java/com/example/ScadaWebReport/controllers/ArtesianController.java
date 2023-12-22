@@ -59,7 +59,11 @@ public class ArtesianController {
 	    	return "admin-panel";
 	    }
 	    
-	    
+	  else {
+			model.addAttribute("message", "You don't have permissons!");
+			return "upload-result";
+
+		}
 	    // Добавим следующую строку для вывода ролей в консоль
 	  
 	    }

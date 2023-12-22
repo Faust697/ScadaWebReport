@@ -175,9 +175,9 @@ html,body{height:100%;}
 </form>
 
 
-<form id="removeUserForm" method="post" th:if="${user.getUsername != 'admin'}" th:action="@{/remove_user}">
-    <input id="deleteUser" type="hidden" name="username" th:value="${user.getUsername()}" />
-    <button class="btn btn-danger btn-md shadow btn-hover" type="button" id="removeUserButton">
+<form class="removeUserForm" method="post" th:if="${user.getUsername() != 'admin'}">
+    <input class="deleteUser" type="hidden" name="username" th:value="${user.getUsername()}" />
+    <button class="btn btn-danger btn-md shadow btn-hover removeUserButton" type="button">
         Remove User
     </button>
 </form>
@@ -211,13 +211,17 @@ html,body{height:100%;}
 
 
 <script th:inline="javascript">
-    document.getElementById('removeUserButton').addEventListener('click', function () {
-        if (confirm("Are you sure you want to remove the user?")) {
-            var username = document.getElementById('deleteUser').value;
-            window.location.href = '/remove_user?username=' + encodeURIComponent(username);
-        } else {
-            
-        }
+    var removeUserButtons = document.querySelectorAll('.removeUserButton');
+    
+    removeUserButtons.forEach(function(button) {
+        button.addEventListener('click', function () {
+            if (confirm("Are you sure you want to remove the user?")) {
+                var username = button.parentElement.querySelector('.deleteUser').value;
+                window.location.href = '/remove_user?username=' + encodeURIComponent(username);
+            } else {
+             
+            }
+        });
     });
 </script>
 

@@ -77,18 +77,21 @@ html,body{height:100%;}
 <h1 th:unless="${editMode}">New User</h1>
 
     <form th:action="${editMode ? '/edit-user' : '/add-user'}" class="bg-white" method="post" th:object="${userModel}">
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" class="form-control" th:value="${editMode} ? ${userModel.username} : ''" required/>
+    
+     <input  id="id" type="hidden" name="id" class="form-control" th:if="${editMode}" th:value="${userModel.id}" />
+    
+        <label for="username" th:if="${userModel.username != 'admin'}">Username:</label>
+        <input type="text" th:if="${userModel.username != 'admin'}" id="username" name="username" class="form-control" th:value="${editMode} ? ${userModel.username} : ''" required/>
 
         <label for="pass">Password:</label>
-        <input type="password" id="pass" name="pass" class="form-control" required/>
+        <input type="password" id="pass" name="pass" class="form-control" th:required="${editMode} ? false : true"/>
 
         <label for="email">Email:</label>
         <input type="text" id="email" name="email" class="form-control" th:value="${editMode} ? ${userModel.email} : ''" required/>
 
         <!-- Чекбоксы для выбора ролей -->
-        <label>Roles:</label>
-  <div class="form-check" th:each="role : ${T(com.example.ScadaWebReport.Entity.Mongo.Role).values()}">
+        <label th:if="${userModel.username != 'admin'}">Roles:</label>
+  <div class="form-check"th:if="${userModel.username != 'admin'}"  th:each="role : ${T(com.example.ScadaWebReport.Entity.Mongo.Role).values()}">
     <input type="checkbox" class="form-check-input" th:id="${role}" th:name="roles" th:value="${role}" 
         th:checked="${userModel != null && userModel.roles != null && #strings.contains(userModel.roles, role)}" />
   
@@ -98,12 +101,6 @@ html,body{height:100%;}
 
 
 
-
-
-
-<!--  <div th:each="role : ${T(com.example.ScadaWebReport.Entity.Mongo.Role).values()}">
-    <p th:text="'Role: ' + ${role} + ' Contains: ' + ${userModel.roles.contains(T(com.example.ScadaWebReport.Entity.Mongo.Role).valueOf(role))}"></p>
-</div>-->
 
 
         <!-- Скрытое поле для идентификации редактируемого пользователя -->
