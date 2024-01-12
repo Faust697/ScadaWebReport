@@ -113,30 +113,30 @@ public class ExcelService {
 	            try {
 	            	if(cellIterator.hasNext()) {
 	                int id = parseCellValueToInt(getCellValue(cellIterator.next()));
-	                System.out.print(id+" ");
 	                if(id==0)
 	                continue;
 	                String name = getCellValue(cellIterator.next()).toString();
 	                System.out.println(name);
 	                String coordinates = getCellValue(cellIterator.next());
+	                
 	                if(coordinates.equals(""))
 	                	continue;
 	                
 	                String region = getCellValue(cellIterator.next());
 	                String scadaStatus = getCellValue(cellIterator.next());
-	                String motorStatusId = getCellValue(cellIterator.next());
-	                
+	                String motorStatusId = getCellValue(cellIterator.next());     
 	                String lastRunId = getCellValue(cellIterator.next());
 	                String currentFlowId = getCellValue(cellIterator.next());
 	                String totalFlowId = getCellValue(cellIterator.next());
 	                String powerUsageTotalId = getCellValue(cellIterator.next());
 	                String cameraIp = getCellValue(cellIterator.next());
 	                String explanation = getCellValue(cellIterator.next());
-	               
+	                
 
 	                StaticInfoWellModel staticInfoWellModel = new StaticInfoWellModel( id, motorStatusId, lastRunId, currentFlowId,
 	            			totalFlowId, powerUsageTotalId, name, scadaStatus, explanation,
-	            			cameraIp, region, coordinates);
+	            			cameraIp, region, coordinates
+	                		);
 
 	                staticInfoWellList.add(staticInfoWellModel);
 	            	}

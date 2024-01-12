@@ -21,9 +21,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.ScadaWebReport.Entity.Mongo.Role;
+import com.example.ScadaWebReport.Entity.Mongo.TelegramUserModel;
 import com.example.ScadaWebReport.Entity.Mongo.UserModel;
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
+import com.example.ScadaWebReport.repos.TelegramUserRepo;
 import com.example.ScadaWebReport.repos.UserRepo;
 import com.example.ScadaWebReport.services.UserDetailsServiceImpl;
 import com.example.ScadaWebReport.services.UserVerificationService;
@@ -35,17 +37,22 @@ public class AdminController {
 	private final dataProcessingService dps;
 	private final UserDetailsServiceImpl uds;
 	private final UserRepo userRepo;
+	private final TelegramUserRepo tgUserRepo;
 	private final UserVerificationService userVerificationService;
 
 	@Autowired
-	public AdminController(TaglogRepo taglogRepo, TaglogRepositoryImpl taglogRepositoryImpl,
-			dataProcessingService dataProcessingService, UserDetailsServiceImpl uds, UserRepo userRepo,
-			UserVerificationService userVerificationService) {
+	public AdminController(TaglogRepo taglogRepo, 
+			TaglogRepositoryImpl taglogRepositoryImpl,
+			dataProcessingService dataProcessingService,
+			UserDetailsServiceImpl uds, UserRepo userRepo,
+			UserVerificationService userVerificationService,
+			TelegramUserRepo tgUserRepo) {
 
 		this.dps = dataProcessingService;
 		this.uds = uds;
 		this.userRepo = userRepo;
 		this.userVerificationService = userVerificationService;
+		this.tgUserRepo = tgUserRepo;
 	}
 
 	@GetMapping("/users")
@@ -57,6 +64,7 @@ public class AdminController {
 		List<UserModel> users = userRepo.findAll();
 		if (user.getRoles().contains(Role.ADMIN)) {
 
+			
 			// Добавим следующую строку для вывода ролей в консоль
 			System.out.println("User Roles: " + user.getRoles());
 			model.addAttribute("user", user);
@@ -205,5 +213,31 @@ public class AdminController {
 		}
 		return "user-editor"; // Название вашего Thymeleaf шаблона
 	}
+	
+	
+	@GetMapping("/tg-users")
+	public String showEditTgUsersForm(Model model, HttpServletRequest request) {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserModel user = userRepo.findByUsername(authentication.getName());
+
+		List<TelegramUserModel> tgUsers = tgUserRepo.findAll();
+		if (user.getRoles().contains(Role.ADMIN)) {
+
+			// Добавим следующую строку для вывода ролей в консоль
+			System.out.println("User Roles: " + user.getRoles());
+
+			model.addAttribute("tgUsers", tgUsers);
+			model.addAttribute("totalVisitors", dps.totalVisitors());
+			model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+
+			return "tg-users-list";
+		} else {
+			return "tg-users-list";
+
+		}
+		
+	}	
+		
 
 }

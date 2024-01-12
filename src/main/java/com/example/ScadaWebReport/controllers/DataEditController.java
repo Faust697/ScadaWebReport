@@ -221,14 +221,14 @@ public class DataEditController {
 			}
 
 			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-	        Path filePath = Paths.get("src/main/resources/monitoring-pdf", fileName);
+	        Path filePath = Paths.get("src/main/resources/out-monitoring-pdf", fileName);
 
 			// Создание ClassPathResource для проверки существования папки
 			ClassPathResource classPathResource = new ClassPathResource("monitoring-pdf");
 		
 			
 			
-			if (!classPathResource.exists()) {
+			if (!(new ClassPathResource("out-monitoring-pdf").exists())) {
 				Files.createDirectories(classPathResource.getFile().toPath());
 			}
 
@@ -262,58 +262,63 @@ public class DataEditController {
 	}
 	
 	
-	
-	
-    //Скачиваем файл с графиком калибровки
-    @GetMapping(
-    		  value = "/get-pdf/{id}",
-    		  produces = MediaType.APPLICATION_OCTET_STREAM_VALUE
-    		)
-    		public ResponseEntity getFile(@PathVariable("id") String id, Model model) throws IOException {
-    	
-    	
-    	// Путь к файлу в папке ресурсов
-    	  String resourcePath = "monitoring-pdf/" + id;
+	// Скачиваем файл с графиком калибровки
+	@GetMapping(value = "/get-pdf/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public ResponseEntity getFile(@PathVariable("id") String id, Model model) throws IOException {
 
-    	  
-		
-    	  
-    	    // Получаем InputStream из файла в ресурсах
-    	    ClassPathResource classPathResource = new ClassPathResource(resourcePath);
+		// Путь к файлу в папке ресурсов
+		String resourcePath = "monitoring-pdf/" + id;
+		String outResourcePath = "out-monitoring-pdf/" + id;
 
-    	    // Проверяем существование файла
-    	    if (classPathResource.exists()) {
-    	        InputStream inputStream = classPathResource.getInputStream();
+		// Получаем InputStream из файла в ресурсах
+		ClassPathResource classPathResource = new ClassPathResource(resourcePath);
+		ClassPathResource classOutPathResource = new ClassPathResource(outResourcePath);
+		// Проверяем существование файла вначале в добавленных недавно, а потом в заранее добавленных файлах
+		if (classOutPathResource.exists()) {
+			return getPdf(classOutPathResource, model, id);
 
-    	        // Устанавливаем заголовки
-    	        HttpHeaders headers = new HttpHeaders();
-    	        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + classPathResource.getFilename());
-    	        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-    	        headers.add("Pragma", "no-cache");
-    	        headers.add("Expires", "0");
+		}
+		 else if (classPathResource.exists()) {
 
-    	        // Создаем InputStreamResource
-    	        InputStreamResource resource = new InputStreamResource(inputStream);
+				return getPdf(classPathResource, model, id);
+			}
 
-    	        // Возвращаем ResponseEntity с файлом
-    	        headers.setContentDisposition(ContentDisposition.builder("inline").filename(id + ".pdf").build());
-    	        model.addAttribute("fileExists", true);
-    	        return ResponseEntity.ok()
-    	                .headers(headers)
-    	                .contentLength(classPathResource.contentLength())
-    	                .contentType(MediaType.parseMediaType("application/pdf"))
-    	                .body(resource);
-    	    } else {
-    	        // Возвращаем сообщение о том, что файл не найден
-    	    	 model.addAttribute("fileExists", false);
-    	    	 log.error("Error: File not found.");
-    	        return ResponseEntity.badRequest().body("Üzr istəyirik, lakin seçilmiş fayl hələ sistemə əlavə olunmayıb.");
-    	        		//notFound().build();
-    	    }
-    		   
-    		}
+		else {
+			// Возвращаем сообщение о том, что файл не найден
+			model.addAttribute("fileExists", false);
+			log.error("Error: File not found.");
+			return ResponseEntity.badRequest().body("Üzr istəyirik, lakin seçilmiş fayl hələ sistemə əlavə olunmayıb.");
+			// notFound().build();
+		}
+
+	}
     
-    
+    //Вынести это в сервис
+    private ResponseEntity getPdf(ClassPathResource classPathResource, Model model, String id) throws IOException
+    {
+   
+    	InputStream inputStream = classPathResource.getInputStream();
+
+        // Устанавливаем заголовки
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + classPathResource.getFilename());
+        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+        headers.add("Pragma", "no-cache");
+        headers.add("Expires", "0");
+
+        // Создаем InputStreamResource
+        InputStreamResource resource = new InputStreamResource(inputStream);
+
+        // Возвращаем ResponseEntity с файлом
+        headers.setContentDisposition(ContentDisposition.builder("inline").filename(id + ".pdf").build());
+        model.addAttribute("fileExists", true);
+        return ResponseEntity.ok()
+                .headers(headers)
+                .contentLength(classPathResource.contentLength())
+                .contentType(MediaType.parseMediaType("application/pdf"))
+                .body(resource);
+    	
+    }
     
   
     
