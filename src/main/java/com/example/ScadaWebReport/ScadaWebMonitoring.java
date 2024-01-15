@@ -6,6 +6,7 @@ import com.example.ScadaWebReport.repos.UserRepo;
 import com.example.ScadaWebReport.telegramBot.Bot;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -14,6 +15,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
+import org.telegram.telegrambots.meta.generics.LongPollingBot;
 import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 
 import javax.annotation.PostConstruct;
@@ -25,12 +27,17 @@ import javax.annotation.PreDestroy;
 @EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class })
 public class ScadaWebMonitoring {
 
+	
+	@Value("${telegram.bot.token}")
+	private String botToken;
+	
     private final UserRepo userRepo;
     private final TelegramUserRepo tgUsersRepo;
 
     @Autowired
     private AsyncLoopContollComponent asyncLoopContollComponent;
 
+    @Autowired
     public ScadaWebMonitoring(UserRepo userRepo, TelegramUserRepo tgUsersRepo) {
         super();
         this.userRepo = userRepo;
@@ -50,7 +57,7 @@ public class ScadaWebMonitoring {
         // Запустите асинхронный цикл и бота после инициализации приложения
         try {
             asyncLoopContollComponent.startAsyncLoop();
-            startTelegramBot(tgUsersRepo);
+            startTelegramBot(tgUsersRepo, botToken);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,10 +72,11 @@ public class ScadaWebMonitoring {
         }
     }
 
-    private void startTelegramBot(TelegramUserRepo tgUsersRepo) {
+    private void startTelegramBot(TelegramUserRepo tgUsersRepo, String botToken) {
         try {
             TelegramBotsApi telegramBotsApi = new TelegramBotsApi(DefaultBotSession.class);
-            telegramBotsApi.registerBot(new Bot(tgUsersRepo));
+            telegramBotsApi.registerBot(new Bot(tgUsersRepo, botToken.replaceAll("\"", "")));
+ 
             System.out.println("Telegram bot registered successfully!");
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,47 +1,37 @@
 package com.example.ScadaWebReport.telegramBot;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.TelegramBotsApi;
+
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
+
 import com.example.ScadaWebReport.Entity.Mongo.TelegramUserModel;
 import com.example.ScadaWebReport.repos.TelegramUserRepo;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import javax.annotation.PostConstruct;
 
-@Service
 public class Bot extends TelegramLongPollingBot {
 
 
-	
-	   @Autowired
-	    private TelegramUserRepo tgUsers;
 
-	
-	    public Bot() {
-	 
-	    }
+	private String botToken;
+	private TelegramUserRepo tgUsers;
 
-	    // Конструктор, используемый для внедрения зависимости
-	    @Autowired
-	    public Bot(TelegramUserRepo tgUsers) {
+
+	    public Bot(TelegramUserRepo tgUsers,  String botToken) {
 	        super();
 	        this.tgUsers = tgUsers;
+	        this.botToken = botToken;
+	        System.out.println(botToken);
 	
 	    }
 
 
-
-	private String botToken="6955741396:AAGNzDSHDakIKta55N1cUBI3_bU2D7VRkXg";
 
 
 
@@ -60,7 +50,7 @@ public class Bot extends TelegramLongPollingBot {
              {
             	   TelegramUserModel tgUserModel = new TelegramUserModel();
                    
-            
+            	   
             	  
                    // Вызов сеттера
                    tgUserModel.setName(receivedMessage.getFrom().getUserName());
@@ -68,6 +58,8 @@ public class Bot extends TelegramLongPollingBot {
                    tgUserModel.setVerified(false);
                    tgUserModel.setChatId(chatId);
                    tgUsers.save(tgUserModel);
+                   
+                   
                    
                    sendTextMessage(chatId, "New user saved!"); 
              }		 
