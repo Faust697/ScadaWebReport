@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -23,12 +24,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.example.ScadaWebReport.Entity.Mongo.Role;
 import com.example.ScadaWebReport.Entity.Mongo.TelegramUserModel;
 import com.example.ScadaWebReport.Entity.Mongo.UserModel;
+import com.example.ScadaWebReport.repos.NotificationObjectRepo;
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
 import com.example.ScadaWebReport.repos.TelegramUserRepo;
 import com.example.ScadaWebReport.repos.UserRepo;
 import com.example.ScadaWebReport.services.UserDetailsServiceImpl;
 import com.example.ScadaWebReport.services.UserVerificationService;
+import com.example.ScadaWebReport.services.Well;
 import com.example.ScadaWebReport.services.dataProcessingService;
 
 @Controller
@@ -38,13 +41,16 @@ public class AdminController {
 	private final UserDetailsServiceImpl uds;
 	private final UserRepo userRepo;
 	private final TelegramUserRepo tgUserRepo;
+	private final NotificationObjectRepo notificationObjectRepo;
 	private final UserVerificationService userVerificationService;
 
 	@Autowired
 	public AdminController(TaglogRepo taglogRepo, 
 			TaglogRepositoryImpl taglogRepositoryImpl,
 			dataProcessingService dataProcessingService,
-			UserDetailsServiceImpl uds, UserRepo userRepo,
+			UserDetailsServiceImpl uds,
+			UserRepo userRepo,
+			NotificationObjectRepo notificationObjectRepo,
 			UserVerificationService userVerificationService,
 			TelegramUserRepo tgUserRepo) {
 
@@ -53,6 +59,7 @@ public class AdminController {
 		this.userRepo = userRepo;
 		this.userVerificationService = userVerificationService;
 		this.tgUserRepo = tgUserRepo;
+		this.notificationObjectRepo = notificationObjectRepo;
 	}
 
 	@GetMapping("/users")
@@ -102,6 +109,7 @@ public class AdminController {
 		return "redirect:/"; // Перенаправление на главную страницу после выхода
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/user-form")
 	public String showAddUserForm(Model model, HttpServletRequest request) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -126,6 +134,7 @@ public class AdminController {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/add-user")
 	public String addUser(@ModelAttribute UserModel userModel, Model model, HttpServletRequest request) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -155,6 +164,7 @@ public class AdminController {
 		}
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/edit-user")
 	public String editUser(@ModelAttribute UserModel userModel, Model model, HttpServletRequest request) {
 
@@ -184,6 +194,7 @@ public class AdminController {
 
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/remove_user")
 	public String removeUser(@RequestParam String username, Model model, HttpServletRequest request) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -198,6 +209,7 @@ public class AdminController {
 		return "redirect:/users";
 	}
 
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/edit-user")
 	public String showEditUserForm(@RequestParam String username, Model model, HttpServletRequest request) {
 		// Создаем объект UserModel и добавляем его в модель
@@ -214,7 +226,7 @@ public class AdminController {
 		return "user-editor"; // Название вашего Thymeleaf шаблона
 	}
 	
-	
+	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/tg-users")
 	public String showEditTgUsersForm(Model model, HttpServletRequest request) {
 
@@ -224,8 +236,6 @@ public class AdminController {
 		List<TelegramUserModel> tgUsers = tgUserRepo.findAll();
 		if (user.getRoles().contains(Role.ADMIN)) {
 
-			// Добавим следующую строку для вывода ролей в консоль
-			System.out.println("User Roles: " + user.getRoles());
 
 			model.addAttribute("tgUsers", tgUsers);
 			model.addAttribute("totalVisitors", dps.totalVisitors());
@@ -238,6 +248,64 @@ public class AdminController {
 		}
 		
 	}	
+	
+	
+	
+	@PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/updateUserStatus")
+    public String updateUserStatus(@RequestParam String Id) {
+        TelegramUserModel tgUser = tgUserRepo.findById(Id).get();
+        tgUser.setVerified(!tgUser.isVerified());
+        tgUserRepo.save(tgUser);
+        
+        return "redirect:/tg-users";
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/updateUserNotifyStatus")
+    public String updateUserNotifyStatus(@RequestParam String Id) {
+    	TelegramUserModel tgUser = tgUserRepo.findById(Id).get();
+    	tgUser.setNotify(!tgUser.isNotify());
+        tgUserRepo.save(tgUser);
+    	
+        return "redirect:/tg-users";
+    }
 		
+    
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/notofications-list")
+	public String getNotifi( Model model, HttpServletRequest request) {
+	
+    	
+    	
+		List<Well> wells = dps.getWells(null);
+		
+	    model.addAttribute("totalVisitors", dps.totalVisitors());
+	    model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+	    model.addAttribute("pagename", "Subartezian quyuları");
+	    model.addAttribute("wells", wells);
+
+	    return "taglog-list-well";
+ 
+	}
+    
+    
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/recreate-notification-list")
+	public String getWellList( Model model, HttpServletRequest request) {
+	
+    	
+    	
+		List<Well> wells = dps.getWells(null);
+		
+	    model.addAttribute("totalVisitors", dps.totalVisitors());
+	    model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+	    model.addAttribute("pagename", "Subartezian quyuları");
+	    model.addAttribute("wells", wells);
+
+	    return "taglog-list-well";
+ 
+	}
+    
 
 }

@@ -10,9 +10,11 @@ import lombok.Data;
 @AllArgsConstructor
 public class NotificationObjectModel {
 	private String id;
-	private String totalFlowId;
+	private String wellId;
+	private String name;
+	private String region;
 	private String totalFlowValue;
-	private String totalFlowName;
+	
 	private boolean notificationStatus;
 	
 

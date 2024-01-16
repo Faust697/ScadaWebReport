@@ -86,8 +86,7 @@ public class ArtesianController {
 	    model.addAttribute("wells", wells);
 
 	    return "taglog-list-well";
-	 
-	    
+ 
 	}
 	
 	

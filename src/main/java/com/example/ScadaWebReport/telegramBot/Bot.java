@@ -1,7 +1,7 @@
 package com.example.ScadaWebReport.telegramBot;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
@@ -18,13 +18,18 @@ import com.example.ScadaWebReport.repos.TelegramUserRepo;
 public class Bot extends TelegramLongPollingBot {
 
 
-
 	private String botToken;
 	private TelegramUserRepo tgUsers;
 
 
-	    public Bot(TelegramUserRepo tgUsers,  String botToken) {
+	
+	    public Bot(TelegramUserRepo tgUsers,
+	    		 String botToken
+	    		) {
+	    	
+	    	
 	        super();
+	        
 	        this.tgUsers = tgUsers;
 	        this.botToken = botToken;
 	        System.out.println(botToken);
@@ -91,6 +96,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
+        System.out.println(botToken);
         return botToken;
     }
 }

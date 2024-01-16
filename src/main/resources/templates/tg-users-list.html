@@ -131,17 +131,28 @@ html,body{height:100%;}
 										<th scope="col">Chat Id</th>
 										<th scope="col">Name</th>
 										<th scope="col">Verification status</th>
-										<th scope="col">Notification status</th>
-								
+										<th scope="col">Notification status</th>						
 									</tr>
 								</thead>
 								<tbody>
 									<tr th:each="tgUser : ${tgUsers}">
-										<td><span th:text="${tgUser.getId()}">user</span></td>
+										<td><span th:text="${tgUser.getId()}">email</span></td>
 										<td><span th:text="${tgUser.getChatId()}">email</span></td>
 										<td><span th:text="${tgUser.getName()}">email</span></td>
-										<td><span th:text="${tgUser.getVerified()}">email</span></td>
-										<td><span th:text="${tgUser.getNotify()}">email</span></td>
+				<td>
+    <form th:action="@{/updateUserStatus}" method="post">
+        <input type="hidden" name="Id" th:value="${tgUser.getId()}" />
+        <button type="submit" class="btn btn-success" th:if="${tgUser.isVerified()}">Verified</button>
+        <button type="submit" class="btn btn-danger" th:unless="${tgUser.isVerified()}">Not Verified</button>
+    </form>
+</td>
+<td>
+    <form th:action="@{/updateUserNotifyStatus}" method="post">
+        <input type="hidden" name="Id" th:value="${tgUser.getId()}" />
+        <button type="submit" class="btn btn-success" th:if="${tgUser.isNotify()}">Notify Enabled</button>
+        <button type="submit" class="btn btn-danger" th:unless="${tgUser.isNotify()}">Notify Disabled</button>
+    </form>
+</td>
 									</tr>
 								</tbody>
 							</table>
