@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>Scada Monitoring Service</title>
+
+
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_1.13.6_css_jquery.dataTables.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_buttons_2.4.1_css_buttons.dataTables.min.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}">
+<link rel="stylesheet" type="text/css" th:href="@{/styles/headers.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_1.13.1_css_jquery.dataTables.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_1.13.6_css_dataTables.bootstrap5.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_buttons_2.4.1_css_buttons.bootstrap5.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_fixedheader_3.4.0_css_fixedHeader.dataTables.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.datatables.net_rowreorder_1.3.1_css_rowReorder.dataTables.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.css}">
+
+
+<style>
+.offline-status {
+	color: red !important;
+	/* Используйте желаемый цвет для статуса "оффлайн" */
+}
+
+.online-status {
+	color: green !important;
+	/* Используйте желаемый цвет для статуса "онлайн" */
+}
+</style>
+
+
+<script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_1.13.6_js_jquery.dataTables.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_1.13.6_js_dataTables.bootstrap5.min.js}"></script>
+<script
+	th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_moment.js_2.29.1_moment.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_js_bootstrap.bundle.min.js}"></script>
+<script
+	th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_jszip_3.10.1_jszip.min.js}"></script>
+<script
+	th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_pdfmake.min.js}"></script>
+<script
+	th:src="@{/scripts/cdnjs.cloudflare.com_ajax_libs_pdfmake_0.1.53_vfs_fonts.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_dataTables.buttons.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.html5.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_buttons_2.4.1_js_buttons.print.min.js}"></script>
+<script
+	th:src="@{/scripts/cdn.datatables.net_fixedheader_3.4.0_js_dataTables.fixedHeader.min.js}"></script>
+<script th:src="@{/scripts/scada.script.js}"></script>
+
+
+
+</head>
+<body>
+
+
+
+
+
+
+
+	<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
+	<div id="forbg" class="test"
+		style="background: rgba(0, 0, 0, 0.5); background-color: rgba(0, 0, 0, 0); background-size: cover;">
+
+		<div th:fragment="table" class="cell-border">
+			<div id="main">
+				<h1 th:text="${pagename != null ? pagename : 'Default Page Name'}"
+					style="display: flex; justify-content: center;"></h1>
+
+
+
+
+
+
+				<div class="container" id="table-search-well">
+
+
+
+
+					<div class="row justify-content-md-center">
+
+						<div class="container" id="activity_status_panel">
+							<div class="row">
+								<div class="col-md-12 status-container">
+									<div th:if="${notificatonObjectsList != null}">
+
+										Ümumi qurğuların sayı: <span
+											th:text="${notificatonObjectsList.size}"></span>
+										</p>
+
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col col-12">
+							<table id="WellTable"
+								class="table display table-striped table-bordered compact bg-white cell-border">
+								<thead>
+									<tr>
+										<th>№</th>
+										<th>Quyu adı</th>
+										<th>Rayon</th>
+										<th>Quyu İD</th>
+										<th>Notification Status</th>
+
+
+									</tr>
+								</thead>
+								<tbody>
+
+
+									<tr th:each="well, iterStat : ${notificatonObjectsList}">
+										<td th:text="${iterStat.index + 1}"></td>
+
+										<td th:text="${well.getName()}"></td>
+
+										<th th:text="${well.getRegion()}"></th>
+										<th th:text="${well.getWellId()}"></th>
+										<th>
+											<form th:action="@{/change-object-notify-status}" method="post">
+												<input type="hidden" name="Id"
+													th:value="${well.getWellId()}" />
+												<button type="submit" class="btn btn-success"
+													th:if="${well.isNotified()}">Notification Enabled</button>
+												<button type="submit" class="btn btn-danger"
+													th:unless="${well.isNotified()}">Notification
+													Disabled</button>
+											</form>
+										</th>
+
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<button id="scrollToTopButton" onclick="scrollToTop()">↑</button>
+	</div>
+
+	<div th:insert="~{parts/footer :: footer}"></div>
+
+
+
+</body>
+</html>

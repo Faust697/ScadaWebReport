@@ -9,6 +9,11 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class NotificationObjectModel {
+	public NotificationObjectModel() {
+		// TODO Auto-generated constructor stub
+	}
+
+	@org.springframework.data.annotation.Id
 	private String id;
 	private String wellId;
 	private String name;
@@ -16,6 +21,11 @@ public class NotificationObjectModel {
 	private String totalFlowValue;
 	
 	private boolean notificationStatus;
+	
+	public boolean isNotified()
+	{
+		return notificationStatus;
+	}
 	
 
 }

@@ -12,6 +12,7 @@ public interface NotificationObjectRepo extends MongoRepository<NotificationObje
 	List <NotificationObjectModel> findAllById(String Id);
 	//List <NotificationObjectModel> findAllByNotify(boolean notify);
 	Optional<NotificationObjectModel> findById(String Id);
+	Optional<NotificationObjectModel> findByWellId(String Id);
 	
 	
 }

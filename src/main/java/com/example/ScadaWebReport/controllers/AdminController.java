@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.ScadaWebReport.Entity.Mongo.NotificationObjectModel;
 import com.example.ScadaWebReport.Entity.Mongo.Role;
 import com.example.ScadaWebReport.Entity.Mongo.TelegramUserModel;
 import com.example.ScadaWebReport.Entity.Mongo.UserModel;
@@ -271,41 +272,62 @@ public class AdminController {
         return "redirect:/tg-users";
     }
 		
-    
+    //Получаем лист объектов для уведомлений
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/notofications-list")
-	public String getNotifi( Model model, HttpServletRequest request) {
+	public String getNotificationList( Model model, HttpServletRequest request) {
 	
-    	
-    	
-		List<Well> wells = dps.getWells(null);
+    	List <NotificationObjectModel> notificatonObjectsList = notificationObjectRepo.findAll();
 		
 	    model.addAttribute("totalVisitors", dps.totalVisitors());
 	    model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
 	    model.addAttribute("pagename", "Subartezian quyuları");
-	    model.addAttribute("wells", wells);
+	    model.addAttribute("notificatonObjectsList", notificatonObjectsList);
+	    
+	    return "notification-list-well"; 
+ 
+	}
+    
+    
+    //Перезаполняем лист колодцев, если список обновился
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/recreate-notification-list")
+	public String resetNotificationWellsList( Model model, HttpServletRequest request) {
+	
+    	
+    	notificationObjectRepo.deleteAll();
+		List<Well> wells = dps.getWells(null);
+		for(Well well:wells)
+		{
+			NotificationObjectModel nom= new NotificationObjectModel();
+			nom.setName(well.getName());
+			nom.setRegion(well.getRegion());
+			nom.setTotalFlowValue(well.getTotalFlow());
+			nom.setWellId(String.valueOf(well.getId()));
+			nom.setNotificationStatus(false);
+			notificationObjectRepo.save(nom);
+			
+		}
+		
+System.out.println(notificationObjectRepo.findAll());
+	    model.addAttribute("totalVisitors", dps.totalVisitors());
+	    model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+	    model.addAttribute("pagename", "Subartezian quyuları");
 
-	    return "taglog-list-well";
+
+	    return "redirect:/notofications-list";
  
 	}
     
     
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/recreate-notification-list")
-	public String getWellList( Model model, HttpServletRequest request) {
-	
+    @PostMapping("/change-object-notify-status")
+    public String changeObjectNotifyStatus(@RequestParam String Id) {
+    	NotificationObjectModel nom = notificationObjectRepo.findByWellId(Id).get();
+    	nom.setNotificationStatus(!nom.isNotificationStatus());
+    	notificationObjectRepo.save(nom);
     	
-    	
-		List<Well> wells = dps.getWells(null);
-		
-	    model.addAttribute("totalVisitors", dps.totalVisitors());
-	    model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
-	    model.addAttribute("pagename", "Subartezian quyuları");
-	    model.addAttribute("wells", wells);
-
-	    return "taglog-list-well";
- 
-	}
-    
+        return "redirect:/notofications-list";
+    }
 
 }
