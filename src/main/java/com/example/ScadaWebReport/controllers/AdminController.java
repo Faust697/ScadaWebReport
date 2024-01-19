@@ -16,10 +16,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.ScadaWebReport.Entity.Mongo.NotificationObjectModel;
 import com.example.ScadaWebReport.Entity.Mongo.Role;
@@ -275,7 +278,10 @@ public class AdminController {
     //Получаем лист объектов для уведомлений
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/notofications-list")
-	public String getNotificationList( Model model, HttpServletRequest request) {
+	public String getNotificationList( 
+			@RequestParam(required = false) String scrollTop,
+			Model model, 
+			HttpServletRequest request) {
 	
     	List <NotificationObjectModel> notificatonObjectsList = notificationObjectRepo.findAll();
 		
@@ -283,6 +289,8 @@ public class AdminController {
 	    model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
 	    model.addAttribute("pagename", "Subartezian quyuları");
 	    model.addAttribute("notificatonObjectsList", notificatonObjectsList);
+	    model.addAttribute("scrollTop", scrollTop);
+	    
 	    
 	    return "notification-list-well"; 
  
@@ -322,10 +330,16 @@ System.out.println(notificationObjectRepo.findAll());
     
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/change-object-notify-status")
-    public String changeObjectNotifyStatus(@RequestParam String Id) {
+    public String changeObjectNotifyStatus(@RequestParam String Id,
+    		  @RequestParam(required = false) String scrollTop,
+    		RedirectAttributes redirectAttributes) {
     	NotificationObjectModel nom = notificationObjectRepo.findByWellId(Id).get();
     	nom.setNotificationStatus(!nom.isNotificationStatus());
     	notificationObjectRepo.save(nom);
+    
+     
+    	System.out.println("TEST "+scrollTop);
+    	 redirectAttributes.addAttribute("scrollTop", scrollTop);
     	
         return "redirect:/notofications-list";
     }

@@ -26,17 +26,7 @@
 	th:href="@{/styles/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.css}">
 
 
-<style>
-.offline-status {
-	color: red !important;
-	/* Используйте желаемый цвет для статуса "оффлайн" */
-}
 
-.online-status {
-	color: green !important;
-	/* Используйте желаемый цвет для статуса "онлайн" */
-}
-</style>
 
 
 <script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
@@ -136,15 +126,12 @@
 										<th th:text="${well.getRegion()}"></th>
 										<th th:text="${well.getWellId()}"></th>
 										<th>
-											<form th:action="@{/change-object-notify-status}" method="post">
-												<input type="hidden" name="Id"
-													th:value="${well.getWellId()}" />
-												<button type="submit" class="btn btn-success"
-													th:if="${well.isNotified()}">Notification Enabled</button>
-												<button type="submit" class="btn btn-danger"
-													th:unless="${well.isNotified()}">Notification
-													Disabled</button>
-											</form>
+	 <form class="notificationForm" th:action="@{/change-object-notify-status}" method="post">
+            <input type="hidden" name="Id" th:value="${well.getWellId()}" />
+            <input type="hidden" name="scrollTop" class="scrollTopField" />
+            <button type="button" class="btn btn-success" th:if="${well.isNotified()}" onclick="submitForm(this)">Notification Enabled</button>
+            <button type="button" class="btn btn-danger" th:unless="${well.isNotified()}" onclick="submitForm(this)">Notification Disabled</button>
+        </form>
 										</th>
 
 									</tr>
@@ -160,7 +147,46 @@
 
 	<div th:insert="~{parts/footer :: footer}"></div>
 
+<script>
+async function submitForm(button) {
+    var currentScrollTop = $(window).scrollTop();
+    console.log('Current Scroll Top:', currentScrollTop);
 
+    // Найти форму, в пределах которой находится кнопка
+    var form = $(button).closest('.notificationForm');
+
+    // Найти поле scrollTop в пределах найденной формы
+    var scrollTopField = form.find('.scrollTopField');
+
+    console.log('Current Id:', form.find('input[name="Id"]').val());
+
+    scrollTopField.val(currentScrollTop);
+
+
+    await new Promise(resolve => setTimeout(resolve, 10));
+
+    // Отправить форму
+    form.submit();
+}
+
+    
+</script>
+
+
+<script th:inline="javascript">
+    $(document).ready(function() {
+        var scrollTopParameter = /*[[${scrollTop}]]*/ null;
+        if (scrollTopParameter) {
+            scrollToTop(scrollTopParameter);
+        }
+    });
+
+    function scrollToTop(scrollTop) {
+        if (scrollTop) {
+            $(window).scrollTop(parseInt(scrollTop));
+        }
+    }
+</script>
 
 </body>
 </html>
