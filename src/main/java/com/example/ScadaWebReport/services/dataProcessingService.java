@@ -22,10 +22,14 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
+import com.example.ScadaWebReport.Entity.Mongo.NotificationObjectModel;
 import com.example.ScadaWebReport.Entity.Mongo.StaticInfoModel;
 import com.example.ScadaWebReport.Entity.Mongo.StaticInfoWellModel;
+import com.example.ScadaWebReport.Entity.Mongo.Well;
+import com.example.ScadaWebReport.Entity.Taglog.TagLogWithName;
 import com.example.ScadaWebReport.Entity.Taglog.Taglog;
 import com.example.ScadaWebReport.controllers.TagLogController;
+import com.example.ScadaWebReport.repos.NotificationObjectRepo;
 import com.example.ScadaWebReport.repos.StaticInfoRepo;
 import com.example.ScadaWebReport.repos.StaticInfoWellRepo;
 import com.example.ScadaWebReport.repos.TaglogRepo;
@@ -41,6 +45,7 @@ public class dataProcessingService {
 	private final StaticInfoRepo staticInfoRepo;
 	private final StaticInfoWellRepo staticInfoWellRepository;
 	private final VisitorRepo visitorRepo;
+	private final NotificationObjectRepo notificationObjectRepo;
 	private final DatabaseConnectionService databaseConnectionService;
 	
 	@Autowired
@@ -54,12 +59,14 @@ public class dataProcessingService {
 			StaticInfoRepo staticInfoRepo,
 			StaticInfoWellRepo staticInfoWellRepository,
 			VisitorRepo visitorRepo,
+			NotificationObjectRepo notificationObjectRepo,
 			DatabaseConnectionService databaseConnectionService) {
 		this.taglogRepositoryImpl = taglogRepositoryImpl;
 		this.staticInfoRepo = staticInfoRepo;
 		this.staticInfoWellRepository = staticInfoWellRepository;
 		this.visitorRepo = visitorRepo;
 		this.databaseConnectionService = databaseConnectionService;
+		this.notificationObjectRepo = notificationObjectRepo;
 
 	}
 
@@ -307,8 +314,6 @@ public class dataProcessingService {
 		public List<Well> getWells( String additionalFilter) {
 		
 			List<StaticInfoWellModel> filteredTags = staticInfoWellRepository.findAll();// get date from DB
-	
-
 			List<Taglog> MotorStatusTagLogs = getLatestLogsForWells("1", additionalFilter);
 			List<Taglog> LastRunTagLogs = getLatestLogsForWells("2", additionalFilter);
 			List<Taglog> CurrentFlowTagLogs = getLatestLogsForWells("3", additionalFilter);
@@ -368,7 +373,6 @@ public class dataProcessingService {
 				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
 				        .orElse("");
 
-			
 		
 				Well newWll = new Well(
 						Id,
@@ -393,6 +397,75 @@ public class dataProcessingService {
 			return Wells;
 		}
 	
+		
+		
+		public List<Well> getWellsForNotification( String additionalFilter) {
+			
+			//List<StaticInfoWellModel> filteredTags = staticInfoWellRepository.findAll();// get date from DB
+			List<NotificationObjectModel> notificationObjects =  notificationObjectRepo.findAllByNotificationStatus(true);
+			List<Taglog> TotalFlowTagLogs = getLatestLogsForWells("4", additionalFilter);
+		
+			//Строим список для отправления в модель
+			List<Well> Wells = new ArrayList<>();
+			for (NotificationObjectModel notificationObject : notificationObjects) {
+				//Если нулл то ничего не делаем и идём к следующему
+				if (notificationObject.getWellId() == null)
+					continue;
+				
+				//Задаём параметры, которые уже под рукой
+				 int Id=0;
+						 //Integer.valueOf(notificationObject.getId());
+				
+				String name = notificationObject.getName();
+				String coordinates = null;
+				String region= notificationObject.getRegion();
+				String scadaStatus= null;
+				String camera = null;
+				String info = null;
+			 
+				String motorStatus = null;
+				String lastRun = null;
+				String currentFlow = null;
+				String totalFlow = Optional.ofNullable(TotalFlowTagLogs.stream()
+				        .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(notificationObject.getWellId()))
+				        .findFirst()
+				        .orElse(null))
+				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
+				        .orElse("");
+
+				String powerUsageTotal =null;
+
+		
+				Well newWll = new Well(
+						Id,
+						name, 
+						coordinates,
+						region,
+						scadaStatus,
+						motorStatus,
+						lastRun, 
+						currentFlow,
+						totalFlow,
+						powerUsageTotal, 
+						camera,
+						info
+				
+	
+						
+						);
+				Wells.add(newWll);
+
+			}
+		
+			return Wells;
+		}
+		
+		
+		
+		
+		
+		
+		
 	
 	
 	

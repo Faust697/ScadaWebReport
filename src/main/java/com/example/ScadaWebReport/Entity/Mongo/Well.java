@@ -1,6 +1,13 @@
-package com.example.ScadaWebReport.services;
+package com.example.ScadaWebReport.Entity.Mongo;
+
+import com.example.ScadaWebReport.Entity.Taglog.Taglog;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 
+@Data
+@AllArgsConstructor
 public class Well{
 
 	private int Id;
@@ -15,8 +22,10 @@ public class Well{
 	private String powerUsageTotal;
 	private String camera;
 	private String info;
+
 	
 	
+/*
 	public Well(int id, String name, String coordinates, String region, String scadaStatus, String motorStatus,
 			String lastRun, String currentFlow, String totalFlow, String powerUsageTotal, String camera, String info) {
 		super();
@@ -33,8 +42,9 @@ public class Well{
 		this.camera = camera;
 		this.info = info;
 	}
+*/
 
-
+	/*
 	public int getId() {
 		return Id;
 	}
@@ -152,5 +162,5 @@ public class Well{
 
 	public void setInfo(String info) {
 		this.info = info;
-	}
+	}*/
 }

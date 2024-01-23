@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.ScadaWebReport.Entity.Mongo.Role;
 import com.example.ScadaWebReport.Entity.Mongo.UserModel;
+import com.example.ScadaWebReport.Entity.Mongo.Well;
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
 import com.example.ScadaWebReport.repos.UserRepo;
 import com.example.ScadaWebReport.services.UserDetailsServiceImpl;
-import com.example.ScadaWebReport.services.Well;
 import com.example.ScadaWebReport.services.dataProcessingService;
 
 @Controller

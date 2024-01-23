@@ -26,18 +26,23 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.ScadaWebReport.Entity.Mongo.NotificationObjectModel;
 import com.example.ScadaWebReport.Entity.Mongo.Role;
+import com.example.ScadaWebReport.Entity.Mongo.StaticInfoWellModel;
 import com.example.ScadaWebReport.Entity.Mongo.TelegramUserModel;
 import com.example.ScadaWebReport.Entity.Mongo.UserModel;
+import com.example.ScadaWebReport.Entity.Mongo.Well;
 import com.example.ScadaWebReport.repos.NotificationObjectRepo;
+import com.example.ScadaWebReport.repos.StaticInfoWellRepo;
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
 import com.example.ScadaWebReport.repos.TelegramUserRepo;
 import com.example.ScadaWebReport.repos.UserRepo;
 import com.example.ScadaWebReport.services.UserDetailsServiceImpl;
 import com.example.ScadaWebReport.services.UserVerificationService;
-import com.example.ScadaWebReport.services.Well;
 import com.example.ScadaWebReport.services.dataProcessingService;
 
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
 @Controller
 public class AdminController {
 
@@ -46,13 +51,16 @@ public class AdminController {
 	private final UserRepo userRepo;
 	private final TelegramUserRepo tgUserRepo;
 	private final NotificationObjectRepo notificationObjectRepo;
+	private final StaticInfoWellRepo staticInfoWellRepository;
 	private final UserVerificationService userVerificationService;
 
+	/*
 	@Autowired
 	public AdminController(TaglogRepo taglogRepo, 
 			TaglogRepositoryImpl taglogRepositoryImpl,
 			dataProcessingService dataProcessingService,
 			UserDetailsServiceImpl uds,
+			StaticInfoWellRepository staticInfoWellRepository,
 			UserRepo userRepo,
 			NotificationObjectRepo notificationObjectRepo,
 			UserVerificationService userVerificationService,
@@ -65,7 +73,7 @@ public class AdminController {
 		this.tgUserRepo = tgUserRepo;
 		this.notificationObjectRepo = notificationObjectRepo;
 	}
-
+*/
 	@GetMapping("/users")
 	public String getUsersList(@RequestParam(defaultValue = "0") int page, Model model, HttpServletRequest request) {
 
@@ -304,14 +312,15 @@ public class AdminController {
 	
     	
     	notificationObjectRepo.deleteAll();
-		List<Well> wells = dps.getWells(null);
-		for(Well well:wells)
+		List<StaticInfoWellModel> wells = staticInfoWellRepository.findAll();
+		
+		for(StaticInfoWellModel well:wells)
 		{
 			NotificationObjectModel nom= new NotificationObjectModel();
 			nom.setName(well.getName());
 			nom.setRegion(well.getRegion());
-			nom.setTotalFlowValue(well.getTotalFlow());
-			nom.setWellId(String.valueOf(well.getId()));
+			nom.setTotalFlowValue(null);
+			nom.setWellId(String.valueOf(well.getTotalFlowId()));
 			nom.setNotificationStatus(false);
 			notificationObjectRepo.save(nom);
 			

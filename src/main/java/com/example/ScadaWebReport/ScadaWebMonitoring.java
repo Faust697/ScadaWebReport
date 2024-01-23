@@ -12,12 +12,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 @SpringBootApplication(scanBasePackages = "com.example.ScadaWebReport")
 @EntityScan("com.example.ScadaWebReport")
 @EnableAsync
+@EnableScheduling
 @EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class })
 public class ScadaWebMonitoring {
 
@@ -57,7 +60,7 @@ public class ScadaWebMonitoring {
     @PreDestroy
     public void stopMonitor() {
         try {
-            asyncLoopContollComponent.stopAsyncLoop();
+           // asyncLoopContollComponent.stopAsyncLoop();
         } catch (Exception e) {
             e.printStackTrace();
         }

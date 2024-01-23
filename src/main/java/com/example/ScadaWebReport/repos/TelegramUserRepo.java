@@ -15,6 +15,7 @@ public interface TelegramUserRepo extends MongoRepository<TelegramUserModel, Str
 	List <TelegramUserModel> findAllByVerified(boolean verified);
 	List <TelegramUserModel> findAllByNotify(boolean notify);
 	Optional<TelegramUserModel> findByChatId(String chatId);
+	List <TelegramUserModel> findAllByNotifyAndVerified(boolean Notify, boolean Verified);
 	
 	
 

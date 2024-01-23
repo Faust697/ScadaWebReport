@@ -6,8 +6,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import com.example.ScadaWebReport.services.Well;
+
+import com.example.ScadaWebReport.Entity.Mongo.Well;
 import com.example.ScadaWebReport.services.WellsLoggingService;
 import com.example.ScadaWebReport.services.dataProcessingService;
 
@@ -29,33 +31,34 @@ public class WellMonitoringService {
 	        this.wellsLoggingService = wellsLoggingService;
 	    }
 
-	    public void startAsyncLoop() {
-	        executorService.submit(() -> {
-	            while (!stopLoop) {
-	              try {
+	    @Scheduled(fixedRate = 300000)
+	    public void startAsyncLoop() throws IOException {
+	      //  executorService.submit(() -> {
+	            //while (!stopLoop) {
+	             // try {
 	                    List<Well> wells = dps.getWells(null);
 	                    wellsLoggingService.setWells(wells);
 	              
 	                    // Запустите процесс логирования
 	                    wellsLoggingService.Logg();
 
-	                    Thread.sleep(300000); // Например, подождите 1 секунду
+	                  /*  Thread.sleep(300000); // Например, подождите 1 секунду
 	                } catch (InterruptedException e) {
 	                    e.printStackTrace();
 	                    logErrorDetails(e);
 	                } catch (IOException e) {
 	                    e.printStackTrace(); // Обработка IOException
 	                    logErrorDetails(e);
-	                }
-	            }
-	        });
+	                }*/
+	          //  }
+	       // });
 	    }
 	    
-	    public void stopAsyncLoop() {
+	/*    public void stopAsyncLoop() {
 	        stopLoop = true;
 	        executorService.shutdownNow(); // Принудительное завершение потока при остановке
 	    }
-    
+    */
     
     private void logErrorDetails(Exception e) {
         // Вывод информации о причине и времени ошибки

@@ -19,11 +19,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.ScadaWebReport.Entity.Taglog.TagLogWithName;
 import com.example.ScadaWebReport.Entity.Taglog.Taglog;
 import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
-import com.example.ScadaWebReport.services.TagLogWithName;
-
 import com.example.ScadaWebReport.services.dataProcessingService;
 
 @Controller

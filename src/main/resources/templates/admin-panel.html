@@ -136,6 +136,19 @@ html,body{height:100%;}
         </div>
         
         
+            <div class="row">
+       
+            <div class="col-md-4 mx-auto mb-4" th:if="${user != null and#strings.contains(userRoles, 'ADMIN')}" >
+             <form id="admin_form" method="get" action="/notofications-list">
+                <button  class="btn btn-dark btn-lg btn-block shadow btn-hover">
+                   Bildirişlərin göndərilməsi üçün obyektlər
+                </button>
+                </form>
+            </div>
+                 
+        </div>
+        
+        
          <div class="row"> 
          <div class="col-md-4 mx-auto mb-4">
             <form method="get" action="/get-upload">

@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.example.ScadaWebReport.Entity.Mongo.Well;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -149,16 +151,6 @@ public class WellsLoggingService {
 			}
 		}
 
-		// For each row, iterate through all the columns
-		/*
-		 * Iterator<Cell> cellIterator = row.cellIterator();
-		 * 
-		 * while (cellIterator.hasNext()) {
-		 * 
-		 * Cell cell = cellIterator.next();
-		 * 
-		 * }
-		 */
 
 		file.close();
 		return lastColumnNumber;

@@ -15,10 +15,10 @@ public class AsyncLoopContollComponent {
     }
 
     public void startAsyncLoop() {
-        wellMonitoringService.startAsyncLoop();
+      //  wellMonitoringService.startAsyncLoop();
     }
 
-    public void stopAsyncLoop() {
+ /*   public void stopAsyncLoop() {
         wellMonitoringService.stopAsyncLoop();
-    }
+    }*/
 }
