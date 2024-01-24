@@ -30,6 +30,7 @@ import com.example.ScadaWebReport.Entity.Mongo.StaticInfoWellModel;
 import com.example.ScadaWebReport.Entity.Mongo.TelegramUserModel;
 import com.example.ScadaWebReport.Entity.Mongo.UserModel;
 import com.example.ScadaWebReport.Entity.Mongo.Well;
+import com.example.ScadaWebReport.components.RegionsTgUsers;
 import com.example.ScadaWebReport.repos.NotificationObjectRepo;
 import com.example.ScadaWebReport.repos.StaticInfoWellRepo;
 import com.example.ScadaWebReport.repos.TaglogRepo;
@@ -54,26 +55,7 @@ public class AdminController {
 	private final StaticInfoWellRepo staticInfoWellRepository;
 	private final UserVerificationService userVerificationService;
 
-	/*
-	@Autowired
-	public AdminController(TaglogRepo taglogRepo, 
-			TaglogRepositoryImpl taglogRepositoryImpl,
-			dataProcessingService dataProcessingService,
-			UserDetailsServiceImpl uds,
-			StaticInfoWellRepository staticInfoWellRepository,
-			UserRepo userRepo,
-			NotificationObjectRepo notificationObjectRepo,
-			UserVerificationService userVerificationService,
-			TelegramUserRepo tgUserRepo) {
 
-		this.dps = dataProcessingService;
-		this.uds = uds;
-		this.userRepo = userRepo;
-		this.userVerificationService = userVerificationService;
-		this.tgUserRepo = tgUserRepo;
-		this.notificationObjectRepo = notificationObjectRepo;
-	}
-*/
 	@GetMapping("/users")
 	public String getUsersList(@RequestParam(defaultValue = "0") int page, Model model, HttpServletRequest request) {
 
@@ -249,6 +231,7 @@ public class AdminController {
 		if (user.getRoles().contains(Role.ADMIN)) {
 
 
+			model.addAttribute("regions", Arrays.asList(RegionsTgUsers.values()));
 			model.addAttribute("tgUsers", tgUsers);
 			model.addAttribute("totalVisitors", dps.totalVisitors());
 			model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
@@ -260,6 +243,9 @@ public class AdminController {
 		}
 		
 	}	
+	
+	
+	
 	
 	
 	
@@ -282,6 +268,23 @@ public class AdminController {
     	
         return "redirect:/tg-users";
     }
+    
+    
+    
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/change-tg-user-region")
+    public String updateUserRegion(@RequestParam String region, @RequestParam String userId) {
+    	TelegramUserModel tgUser = tgUserRepo.findById(userId).get();
+    	tgUser.setRegion(region);
+    	
+    	System.out.println("Region changed to "+region);
+        tgUserRepo.save(tgUser);
+    	
+        return "redirect:/tg-users";
+    }
+    
+    
+    
 		
     //Получаем лист объектов для уведомлений
     @PreAuthorize("hasRole('ADMIN')")

@@ -1,127 +1,116 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org"
- xmlns:sec="http://www.thymeleaf.org">
-<head> 
-    <title>Scada Monitoring Service</title> 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1, initial-scale=1">
+	xmlns:sec="http://www.thymeleaf.org">
+<head>
+<title>Scada Monitoring Service</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
+<!-- Bootstrap CSS -->
 
-<link rel="stylesheet" type="text/css" th:href="@{/styles/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
+<link rel="stylesheet" type="text/css"
+	th:href="@{/styles/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_css_bootstrap.min.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/styles/style.css}">
 <link rel="stylesheet" type="text/css" th:href="@{/styles/headers.css}">
-
+<link rel="stylesheet" type="text/css" href="style.css">
 
 
 <style>
-h1 {text-align: center;}
+h1 {
+	text-align: center;
+}
 
 #test {
+	width: 450px;
+	clear: both;
+	padding-top: 30px;
+	padding-bottom: 60px;
+}
 
-	
-    width: 450px;
-    clear: both;
-    padding-top: 30px;
-    padding-bottom: 60px;
-    
-   }
-   
-.form-control
-{
-width:250%;
-
+.form-control {
+	width: 250%;
 }
 
 label {
-  display: flex !important;
-  flex-direction: row;
-  justify-content: flex-end;
-  text-align: center;
-  width: 400px !important;
-  line-height: 26px;
-  margin-bottom: 10px;
-  margin-left:-35%;
-
+	display: flex !important;
+	flex-direction: row;
+	justify-content: flex-end;
+	text-align: center;
+	width: 400px !important;
+	line-height: 26px;
+	margin-bottom: 10px;
+	margin-left: -35%;
 }
 
 #button_login {
-
-
-  text-align: center;
-  line-height: 26px;
-  margin-bottom: 10px;
-  margin-left: 0;
-  text-align: center;
-  justify-content: center;
+	text-align: center;
+	line-height: 26px;
+	margin-bottom: 10px;
+	margin-left: 0;
+	text-align: center;
+	justify-content: center;
 }
 
-form { 
-margin: 0 auto; 
-justify-content: center;
-width:350px;
-height:150%;
-text-align: center;
- border-radius: 25px;
-
+form {
+	margin: 0 auto;
+	justify-content: center;
+	width: 350px;
+	height: 150%;
+	text-align: center;
+	border-radius: 25px;
 }
 
-#login_div
-{
- padding-top:10%;
- text-align: center;
-justify-content: center;
- border-radius: 25px;
- 
- border: 3px solid gray;
-  border-radius: 25px;
-  box-shadow: 5px 5px 5px #000000;
-
+#login_div {
+	padding-top: 10%;
+	text-align: center;
+	justify-content: center;
+	border-radius: 25px;
+	border: 3px solid gray;
+	border-radius: 25px;
+	box-shadow: 5px 5px 5px #000000;
 }
 
+html, body {
+	min-height: 100%;
+}
 
-html,body{min-height:100%;}
-html,body{height:100%;}
-
-
+html, body {
+	height: 100%;
+}
 
 #main {
-    margin: 100px;
-   
+	margin: 100px;
 }
-
 </style>
- <link rel="stylesheet" type="text/css" href="style.css">
+
 
 </head>
-<body >
+<body>
 
-<div id="forbg" class="bg-white"
+	<div id="forbg" class="bg-white"
 		style="background: url(img/Ming_bg.jpg) no-repeat center center fixed; background-size: cover;">
-		
-		
 
 
-<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
- <div th:fragment="table" class="cell-border"
+
+	<div th:insert="~{parts/navbar :: nav-bar}" id="nav"></div>
+	
+		<div th:fragment="table" class="cell-border"
 			style="padding-bottom: 5%;">
 
 
 
-
-
-
 			<div id="main">
-			
-				
-					
+
+
+
 				<div class="container" id="table-search">
-				<!-- Добавьте кнопку куда-то в ваш HTML-код -->
-				
-	
+					<!-- Добавьте кнопку куда-то в ваш HTML-код -->
+
+
 					<div class="row justify-content-md-center">
 						<div class="col col-12">
-						
+
 							<table
 								class="table display table-striped table-bordered compact bg-white cell-border"
 								id="userTable">
@@ -130,68 +119,103 @@ html,body{height:100%;}
 										<th scope="col">Id</th>
 										<th scope="col">Chat Id</th>
 										<th scope="col">Name</th>
+										<th scope="col">Region</th>
 										<th scope="col">Verification status</th>
-										<th scope="col">Notification status</th>						
+										<th scope="col">Notification status</th>
 									</tr>
 								</thead>
 								<tbody>
 									<tr th:each="tgUser : ${tgUsers}">
-										<td><span th:text="${tgUser.getId()}">email</span></td>
-										<td><span th:text="${tgUser.getChatId()}">email</span></td>
-										<td><span th:text="${tgUser.getName()}">email</span></td>
-				<td>
-    <form th:action="@{/updateUserStatus}" method="post">
-        <input type="hidden" name="Id" th:value="${tgUser.getId()}" />
-        <button type="submit" class="btn btn-success" th:if="${tgUser.isVerified()}">Verified</button>
-        <button type="submit" class="btn btn-danger" th:unless="${tgUser.isVerified()}">Not Verified</button>
-    </form>
-</td>
-<td>
-    <form th:action="@{/updateUserNotifyStatus}" method="post">
-        <input type="hidden" name="Id" th:value="${tgUser.getId()}" />
-        <button type="submit" class="btn btn-success" th:if="${tgUser.isNotify()}">Notify Enabled</button>
-        <button type="submit" class="btn btn-danger" th:unless="${tgUser.isNotify()}">Notify Disabled</button>
-    </form>
-</td>
+										<td><span th:text="${tgUser.getId()}"></span></td>
+										<td><span th:text="${tgUser.getChatId()}"></span></td>
+										<td><span th:text="${tgUser.getName()}"></span></td>
+
+										<td><select id="regionSelect" name="selectedRegion">
+												<option th:each="region : ${regions}" th:value="${region}"
+													th:text="${region}"
+													th:selected="${region.toString() == tgUser.getRegion()}">
+												</option>
+										</select>
+										<input type="hidden" name="userId" th:value="${tgUser.getId()}" />
+										</td>
+										<td>
+
+											<form th:action="@{/updateUserStatus}" method="post">
+												<input type="hidden" name="Id" th:value="${tgUser.getId()}" />
+												<button type="submit" class="btn btn-success"
+													th:if="${tgUser.isVerified()}">Verified</button>
+												<button type="submit" class="btn btn-danger"
+													th:unless="${tgUser.isVerified()}">Not Verified</button>
+											</form>
+										</td>
+										<td>
+											<form th:action="@{/updateUserNotifyStatus}" method="post">
+												<input type="hidden" name="Id" th:value="${tgUser.getId()}" />
+												<button type="submit" class="btn btn-success"
+													th:if="${tgUser.isNotify()}">Notify Enabled</button>
+												<button type="submit" class="btn btn-danger"
+													th:unless="${tgUser.isNotify()}">Notify Disabled</button>
+											</form>
+										</td>
 									</tr>
 								</tbody>
 							</table>
 						</div>
 					</div>
-				
 
+
+
+				</div>
+
+			</div>
 
 		</div>
-		
-		</div>	
 
-</div>
-      
+	</div>
 
 
 
 
+	<div th:insert="~{parts/footer :: footer}"></div>
 
 
-
-
-
-
-
-
-        
-     
-   </div>       
-
-   
-
-
-<div th:insert="~{parts/footer :: footer}"></div>
-            
-            
-            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
-    <script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
-   	<script th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
+	<script th:src="@{/scripts/code.jquery.com_jquery-3.7.0.min.js}"></script>
+	<script th:src="@{/scripts/cdn.jsdelivr.net_npm_daterangepicker_daterangepicker.min.js}"></script>
 	<script th:src="@{/scripts/cdn.jsdelivr.net_npm_bootstrap@5.1.3_dist_js_bootstrap.bundle.min.js}"></script>
-            
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#regionSelect').change(function() {
+    	
+      var selectedRegion = $(this).val();
+        var userId = $('[name="userId"]').val(); // Define userId here
+
+        $.ajax({
+            type: 'POST',
+            url: '/change-tg-user-region', // Replace with your actual URL
+            data: {
+                region: selectedRegion,
+                userId: userId
+            },
+            success: function(response) {
+                console.log('POST request success:', response);
+                // You can add additional processing for a successful request if needed
+            },
+            error: function(error) {
+                console.error('POST request error:', error);
+                // You can add error handling if needed
+            }
+        });
+    });
+});
+
+</script>
+
+
+
+
+
+
 </body>

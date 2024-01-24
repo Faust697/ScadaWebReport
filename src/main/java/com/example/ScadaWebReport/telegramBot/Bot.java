@@ -11,6 +11,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.example.ScadaWebReport.Entity.Mongo.TelegramUserModel;
+import com.example.ScadaWebReport.components.RegionsTgUsers;
 import com.example.ScadaWebReport.repos.TelegramUserRepo;
 
 
@@ -25,14 +26,12 @@ public class Bot extends TelegramLongPollingBot {
 	
 	    public Bot(TelegramUserRepo tgUsers,
 	    		 String botToken
-	    		) {
-	    	
-	    	
+	    		) {	
 	        super();
 	        
 	        this.tgUsers = tgUsers;
 	        this.botToken = botToken;
-	        System.out.println(botToken);
+
 	
 	    }
 
@@ -57,6 +56,7 @@ public class Bot extends TelegramLongPollingBot {
                    tgUserModel.setNotify(false);
                    tgUserModel.setVerified(false);
                    tgUserModel.setChatId(chatId);
+                   tgUserModel.setRegion((RegionsTgUsers.Deafault).toString());
                    tgUsers.save(tgUserModel);
                    
                    

@@ -20,18 +20,11 @@ public class TelegramUserModel {
 	
 	private String name;
 	private String chatId;
+	private String region;
 	@Getter @Setter
 	private boolean verified;
 	@Getter @Setter
 	private boolean notify;
 	
-	
-	public boolean isVerified() {
-        return verified;
-    }
-	
-	public boolean isNotify() {
-        return notify;
-    }
 
 }
