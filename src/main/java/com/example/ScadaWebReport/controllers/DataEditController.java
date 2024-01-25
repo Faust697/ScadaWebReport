@@ -46,33 +46,22 @@ import com.example.ScadaWebReport.services.RoleChecker;
 import com.example.ScadaWebReport.services.UserDetailsServiceImpl;
 import com.example.ScadaWebReport.services.dataProcessingService;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@AllArgsConstructor
 @Controller
 public class DataEditController {
 	
-	private static final Logger log = LoggerFactory.getLogger(DataEditController.class);
+
     private final ExcelService excelService;
     private final StaticInfoRepo staticInfoRepository;
     private final StaticInfoWellRepo staticInfoWellRepository;
     private final dataProcessingService dps;
     private final UserDetailsServiceImpl uds;
 
-    @Autowired
-    public DataEditController( ExcelService excelService, 
-    		StaticInfoRepo staticInfoRepository, 
-    		StaticInfoWellRepo staticInfoWellRepository,
-    		dataProcessingService dataProcessingService,
-    		RoleChecker roleChecker,
-    		UserDetailsServiceImpl userDetailsService) {
-        this.excelService = excelService;
-        this.staticInfoRepository = staticInfoRepository;
-        this.staticInfoWellRepository = staticInfoWellRepository;
-        this.dps = dataProcessingService;
-        this.uds = userDetailsService;
-    }
-    
+ 
  
 
     

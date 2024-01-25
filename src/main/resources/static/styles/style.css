@@ -76,7 +76,7 @@ h1 {
 	padding-top:2%;
 	padding-bottom:5%;
 }
-#tagLogTable, #tagLogTable-second, #WellTable
+#tagLogTable, #tagLogTable-second, #WellTable, #NotoficationTable
 {
   border: 3px solid gray;
   box-shadow: 5px 5px 5px #000000;
@@ -121,7 +121,9 @@ label > input[type="search"] {
     margin-left: 10px; /* Добавьте отступ между лейблом и инпутом, если необходимо */
 }
 
-#tagLogTable_filter, #tagLogTable-second_filter, #WellTable_filter
+
+/* Рамка */
+#tagLogTable_filter, #tagLogTable-second_filter, #WellTable_filter, #NotificationTable_filter
 {
 	border: 3px solid gray;
 	border-radius:10px;
@@ -129,10 +131,11 @@ label > input[type="search"] {
   	margin-bottom:1%;
   	
 }
-#tagLogTable_filter.label, #tagLogTable-second_filter.label, #WellTable_filter.label
+#tagLogTable_filter.label, #tagLogTable-second_filter.label, #WellTable_filter.label, #NotificationTable_filter.label
 {
 display: block; width: 100px;
 }
+
 #test {
 	width: 450px;
 	clear: both;
@@ -196,7 +199,7 @@ h1
 }
 
 
-#tagLogTable, #tagLogTable-second, #WellTable
+#tagLogTable, #tagLogTable-second, #WellTable, #NotificationTable
 {
 	background: white;
 	margin-top: 3%;
@@ -324,7 +327,7 @@ label {
 }
 
 
-#tagLogTable td , #tagLogTable-second td{
+#tagLogTable td , #tagLogTable-second td, #NotificationTable td {
     height: 40px;
     width: 50px;
     text-align: center; 
@@ -332,7 +335,7 @@ label {
 }
 
 /* Стили для заголовков */
-#tagLogTable th , #tagLogTable-second th{
+#tagLogTable th , #tagLogTable-second th , #NotificationTable th {
     height: 40px;
     width: 50px;
     text-align: center;
@@ -357,14 +360,14 @@ label {
 
 
 
-#tagLogTable td:nth-child(2) , #tagLogTable-second td:nth-child(2){
+#tagLogTable td:nth-child(2) , #tagLogTable-second td:nth-child(2), #NotificationTable td:nth-child(2){
     width: 170px; 
 }
-#tagLogTable td:nth-child(5) , #tagLogTable-second td:nth-child(5){
+#tagLogTable td:nth-child(5) , #tagLogTable-second td:nth-child(5), #NotificationTable td:nth-child(5){
     width: 170px; 
 }
 
-#tagLogTable td:nth-child(6) , #tagLogTable-second td:nth-child(6){
+#tagLogTable td:nth-child(6) , #tagLogTable-second td:nth-child(6), #NotificationTable td:nth-child(6){
     width: 170px; 
 }
 

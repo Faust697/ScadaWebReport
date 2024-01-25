@@ -134,37 +134,7 @@ public class TaglogRepositoryImpl implements TaglogRepo {
 	}
 
 
-    
-    
-	/*
-	 * @Override public Taglog
-	 * findFirstByTagIdAndLogdateBetweenOrderByLogdateDesc(String tagId,
-	 * LocalDateTime startDate, LocalDateTime endDate) { // TODO Auto-generated
-	 * method stub return null; }
-	 */
-
-
-	/*
-	 * @Override
-	 * 
-	 * @SuppressWarnings("unchecked") public List<Taglog>
-	 * findLatestLogForEachTag(String tableName) { String query =
-	 * "SELECT DISTINCT ON (tag_id) tag_id, taglog_id, data_value, logtime, logdate, timesource, qualifier "
-	 * + "FROM logs." + tableName + " where tag_id in ('10935'," + "'10993'," +
-	 * "'12343'," + "'13175'," + "'13143'," + "'13207'," + "'13763'," + "'14207'," +
-	 * "'14367'," + "'14438'," + "'14406'," + "'18469'," + "'18501'," + "'18629'," +
-	 * "'19232'," + "'19264'," + "'19397'," + "'19527'," + "'20851'," + "'11682'," +
-	 * "'12951'," + "'14159'," + "'14175'," + "'19464'," + "'19496'," + "'19682'," +
-	 * "'19807'," + "'20715'," + "'12324'," + "'10883'," + "'10945'," + "'11109'," +
-	 * "'11130'," + "'13111'," + "'13015'," + "'13047'," + "'13736'," + "'13857'," +
-	 * "'18597'," + "'19365'," + "'19558'," + "'19651'," + "'19714'," + "'19934'," +
-	 * "'13335'," + "'13524'," + "'13303'," + "'20181'," + "'12983'" + ")" +
-	 * " ORDER BY tag_id, logdate DESC";
-	 * 
-	 * 
-	 * return entityManager.createNativeQuery(query, Taglog.class).getResultList();
-	 * }
-	 */
+   
 	@Override
 	public List<Taglog> findAll() {
 		// TODO Auto-generated method stub

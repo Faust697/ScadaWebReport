@@ -7,6 +7,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 
 import com.example.ScadaWebReport.Entity.Mongo.TelegramUserModel;
@@ -25,27 +27,22 @@ public class onlineCheckingService {
 	private final dataProcessingService dps;
 	private final BotInitializer botInitializer;
 	
-	 @Scheduled(fixedRate = 300000)
-	private void getWellsForNotification()
-	{
-		 String message; 
-		 List<TelegramUserModel> usersToNotify =  tur.findAllByNotifyAndVerified(true, true);
-		 
-		 if(usersToNotify.size()!=0)
-		 {
-			 for(TelegramUserModel user: usersToNotify)
-			 { 
-				 message = messageTgBuilder(user.getRegion());
-				 if(message!=null) {
-				 if(!message.equals("") )
-				 {
-				 System.out.println(user.getName()); 
-				 botInitializer.getBot().sendTextMessage(user.getChatId(), message);
-				 }
-			 }
-			 }
-		 }
-		
+	@Scheduled(fixedRate = 300000)
+	private void getWellsForNotification() {
+		String message;
+		List<TelegramUserModel> usersToNotify = tur.findAllByNotifyAndVerified(true, true);
+
+		if (usersToNotify.size() != 0) {
+			for (TelegramUserModel user : usersToNotify) {
+				message = messageTgBuilder(user.getRegion());
+				if (message != null) {
+					if (!message.equals("")) {
+						System.out.println(user.getName());
+						botInitializer.getBot().sendTextMessage(user.getChatId(), message);
+					}
+				}
+			}
+		}
 
 	}
 	
@@ -77,10 +74,9 @@ public class onlineCheckingService {
 	        message = message +"-----------------------------\n";
 		for(Well well:wells)
 		{
-			message = message + "Warning! Well "+well.getName()+" is offline now! \n";
-			
+			message = message + "Warning! Well "+well.getName()+" is offline now! \n"; 	
 		}
-		message = message +"-----------------------------\n"+LocalDate.now()+"\n";
+		message = message +"-----------------------------\n"+getCurrentTime()+"\n";
 		
 		return message;
 		 
@@ -89,6 +85,17 @@ public class onlineCheckingService {
 	 
 	 }
 	 
+	 
+	 private String getCurrentTime()
+	 {
+
+	        // Define the format for the string representation
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+	        // Format the current date and time as a string
+	        return LocalDateTime.now().format(formatter);
+		 
+	 }
 	 
 	 
 	

@@ -103,6 +103,8 @@ public class AdminController {
 		return "redirect:/"; // Перенаправление на главную страницу после выхода
 	}
 
+	
+	//Форма для создания пользователя
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/user-form")
 	public String showAddUserForm(Model model, HttpServletRequest request) {
@@ -128,6 +130,7 @@ public class AdminController {
 		}
 	}
 
+	//Создание пользователя
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/add-user")
 	public String addUser(@ModelAttribute UserModel userModel, Model model, HttpServletRequest request) {
@@ -158,6 +161,8 @@ public class AdminController {
 		}
 	}
 
+	
+	//Изменение пользователя
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/edit-user")
 	public String editUser(@ModelAttribute UserModel userModel, Model model, HttpServletRequest request) {
@@ -188,6 +193,8 @@ public class AdminController {
 
 	}
 
+	
+	//Удаление пользователя
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/remove_user")
 	public String removeUser(@RequestParam String username, Model model, HttpServletRequest request) {
@@ -202,7 +209,10 @@ public class AdminController {
 
 		return "redirect:/users";
 	}
+	
+	
 
+	//Форма изменения пользователя
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/edit-user")
 	public String showEditUserForm(@RequestParam String username, Model model, HttpServletRequest request) {
@@ -220,6 +230,8 @@ public class AdminController {
 		return "user-editor"; // Название вашего Thymeleaf шаблона
 	}
 	
+	
+	//Список пользователей Телеграмма
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/tg-users")
 	public String showEditTgUsersForm(Model model, HttpServletRequest request) {
@@ -243,9 +255,6 @@ public class AdminController {
 		}
 		
 	}	
-	
-	
-	
 	
 	
 	
@@ -329,7 +338,7 @@ public class AdminController {
 			
 		}
 		
-System.out.println(notificationObjectRepo.findAll());
+
 	    model.addAttribute("totalVisitors", dps.totalVisitors());
 	    model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
 	    model.addAttribute("pagename", "Subartezian quyuları");

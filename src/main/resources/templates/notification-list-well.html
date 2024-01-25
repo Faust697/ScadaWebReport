@@ -98,11 +98,22 @@
 										</p>
 
 									</div>
+									<div>
+        <form th:action="@{/notifications-list/select-all}" method="get">
+            <input type="hidden" name="action" value="select-all" />
+            <button type="submit" class="btn btn-primary">Select all</button>
+        </form>
+        
+        <form th:action="@{/recreate-notification-list}" method="get">
+            <input type="hidden" name="action" value="cancel-all" />
+            <button type="submit" class="btn btn-danger">Cancel all (reload list)</button>
+        </form>
+    </div>
 								</div>
 							</div>
 						</div>
 						<div class="col col-12">
-							<table id="WellTable"
+							<table id="NotificationTable"
 								class="table display table-striped table-bordered compact bg-white cell-border">
 								<thead>
 									<tr>
@@ -111,7 +122,6 @@
 										<th>Rayon</th>
 										<th>Quyu İD</th>
 										<th>Notification Status</th>
-
 
 									</tr>
 								</thead>

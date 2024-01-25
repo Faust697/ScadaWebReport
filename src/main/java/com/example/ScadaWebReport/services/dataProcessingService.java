@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -36,7 +37,9 @@ import com.example.ScadaWebReport.repos.TaglogRepo;
 import com.example.ScadaWebReport.repos.TaglogRepositoryImpl;
 import com.example.ScadaWebReport.repos.VisitorRepo;
 
+import lombok.AllArgsConstructor;
 
+@AllArgsConstructor
 @Service
 public class dataProcessingService {
 	
@@ -52,23 +55,7 @@ public class dataProcessingService {
 	private MongoTemplate mongoTemplate;
 	
 
-	@Autowired
-	public dataProcessingService(
-			TaglogRepo taglogRepo,
-			TaglogRepositoryImpl taglogRepositoryImpl,
-			StaticInfoRepo staticInfoRepo,
-			StaticInfoWellRepo staticInfoWellRepository,
-			VisitorRepo visitorRepo,
-			NotificationObjectRepo notificationObjectRepo,
-			DatabaseConnectionService databaseConnectionService) {
-		this.taglogRepositoryImpl = taglogRepositoryImpl;
-		this.staticInfoRepo = staticInfoRepo;
-		this.staticInfoWellRepository = staticInfoWellRepository;
-		this.visitorRepo = visitorRepo;
-		this.databaseConnectionService = databaseConnectionService;
-		this.notificationObjectRepo = notificationObjectRepo;
 
-	}
 
 	
 	public void UpdateVisitors(String ip)
@@ -164,22 +151,28 @@ public class dataProcessingService {
 		//Смотрим, какие данные мы ищем
 		switch (typeOfSearch) {
 		case "1":
-			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getMotorStatusId).collect(Collectors.toList());
+			filteredTagIds = getFilteredTagIds(filteredTags,StaticInfoWellModel::getMotorStatusId);
+			//filteredTags.stream().map(StaticInfoWellModel::getMotorStatusId).collect(Collectors.toList());
 			break;
 		case "2":
-			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getLastRunId).collect(Collectors.toList());
+			filteredTagIds = getFilteredTagIds(filteredTags,StaticInfoWellModel::getLastRunId);
+			//filteredTags.stream().map(StaticInfoWellModel::getLastRunId).collect(Collectors.toList());
 			break;
 		case "3":
-			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getCurrentFlowId).collect(Collectors.toList());
+			filteredTagIds =  getFilteredTagIds(filteredTags,StaticInfoWellModel::getCurrentFlowId);
+			//filteredTags.stream().map(StaticInfoWellModel::getCurrentFlowId).collect(Collectors.toList());
 			break;
 		case "4":
-			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getTotalFlowId).collect(Collectors.toList());
+			filteredTagIds = getFilteredTagIds(filteredTags,StaticInfoWellModel::getTotalFlowId);
+			//filteredTags.stream().map(StaticInfoWellModel::getTotalFlowId).collect(Collectors.toList());
 			break;
 		case "5":
-			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getPowerUsageTotalId).collect(Collectors.toList());
+			filteredTagIds = getFilteredTagIds(filteredTags,StaticInfoWellModel::getPowerUsageTotalId);
+			//filteredTags.stream().map(StaticInfoWellModel::getPowerUsageTotalId).collect(Collectors.toList());
 			break;
 		default:
-			filteredTagIds = filteredTags.stream().map(StaticInfoWellModel::getMotorStatusId).collect(Collectors.toList());
+			filteredTagIds = getFilteredTagIds(filteredTags,StaticInfoWellModel::getMotorStatusId);
+			//filteredTags.stream().map(StaticInfoWellModel::getMotorStatusId).collect(Collectors.toList());
 		}
 
 		
@@ -272,6 +265,10 @@ public class dataProcessingService {
 				taglog = latestLogs.stream()
 						.filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(finalRequestColumn)).findFirst()
 						.orElse(null);
+				
+
+
+				
 				//Если нам в этом же месте был нужен ещё и уровень воды
 				if (Level) {
 	
@@ -304,9 +301,7 @@ public class dataProcessingService {
 	
 		return tagLogsWithNames;
 	}
-	
-	
-	
+
 	
 	
 	// Тут мы готовим табилцу для колодцев
@@ -337,41 +332,19 @@ public class dataProcessingService {
 				String camera = filteredTag.getCameraIp();
 				String info = filteredTag.getExplanation();
 				
-				String motorStatus = Optional.ofNullable(MotorStatusTagLogs.stream()
-				        .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(filteredTag.getMotorStatusId()))
-				        .findFirst()
-				        .orElse(null))
-				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
-				        .orElse("");
+				String motorStatus = getValueFromTagLogs(MotorStatusTagLogs, filteredTag.getMotorStatusId());
 
-				String lastRun = Optional.ofNullable(LastRunTagLogs.stream()
-				        .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(filteredTag.getLastRunId()))
-				        .findFirst()
-				        .orElse(null))
-				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
-				        .orElse("");
+				String lastRun = getValueFromTagLogs(LastRunTagLogs, filteredTag.getLastRunId());
 
+	
+				String currentFlow = getValueFromTagLogs(CurrentFlowTagLogs, filteredTag.getCurrentFlowId());
+					
+
+				String totalFlow = getValueFromTagLogs(TotalFlowTagLogs, filteredTag.getTotalFlowId());
+					
+
+				String powerUsageTotal = getValueFromTagLogs(PowerUsageTotalTagLogs, filteredTag.getPowerUsageTotalId());
 				
-				String currentFlow = Optional.ofNullable(CurrentFlowTagLogs.stream()
-				        .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(filteredTag.getCurrentFlowId()))
-				        .findFirst()
-				        .orElse(null))
-				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
-				        .orElse("");
-
-				String totalFlow = Optional.ofNullable(TotalFlowTagLogs.stream()
-				        .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(filteredTag.getTotalFlowId()))
-				        .findFirst()
-				        .orElse(null))
-				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
-				        .orElse("");
-
-				String powerUsageTotal = Optional.ofNullable(PowerUsageTotalTagLogs.stream()
-				        .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(filteredTag.getPowerUsageTotalId()))
-				        .findFirst()
-				        .orElse(null))
-				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
-				        .orElse("");
 
 		
 				Well newWll = new Well(
@@ -398,10 +371,9 @@ public class dataProcessingService {
 		}
 	
 		
-		
+		//Упрощённый вариант для уведомлений
 		public List<Well> getWellsForNotification( String additionalFilter) {
-			
-			//List<StaticInfoWellModel> filteredTags = staticInfoWellRepository.findAll();// get date from DB
+
 			List<NotificationObjectModel> notificationObjects =  notificationObjectRepo.findAllByNotificationStatus(true);
 			List<Taglog> TotalFlowTagLogs = getLatestLogsForWells("4", additionalFilter);
 		
@@ -422,17 +394,10 @@ public class dataProcessingService {
 				String scadaStatus= null;
 				String camera = null;
 				String info = null;
-			 
 				String motorStatus = null;
 				String lastRun = null;
 				String currentFlow = null;
-				String totalFlow = Optional.ofNullable(TotalFlowTagLogs.stream()
-				        .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(notificationObject.getWellId()))
-				        .findFirst()
-				        .orElse(null))
-				        .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
-				        .orElse("");
-
+				String totalFlow = getValueFromTagLogs(TotalFlowTagLogs, notificationObject.getWellId());
 				String powerUsageTotal =null;
 
 		
@@ -483,6 +448,10 @@ public class dataProcessingService {
 		model.addAttribute("measurement", measurement);
 	}
 
+	
+	
+	
+	
 	// Форматирование чисел результатов(слишком длинные)
 	public void formatDataValues(List<TagLogWithName> tagLogsWithNames, boolean forValue, boolean forLevel) {
 		for (TagLogWithName tagLogWithName : tagLogsWithNames) {
@@ -501,28 +470,9 @@ public class dataProcessingService {
 
 	
 	
-	//НЕ АКТУАЛЕН
-	// Проклятый метод, для приравнивания айдишников по проходимости и уровню воды
-	/*public String getLevelTagValue(String mainId, List<TagLogWithName> tagLogsLevel,
-			Map<String, Integer> tagToLevelMap) {
 
-		String levelTagId = String.valueOf(mainId);
-		System.out.println("Level is: " + levelTagId);
-
-		Optional<TagLogWithName> foundTagLog = tagLogsLevel.stream()
-				.filter(tagLogWithName -> tagLogWithName.getTag_id().toString().equals(levelTagId)).findFirst();
-
-		String Level = foundTagLog.map(tagLogWithName -> {
-			Float dataValue = tagLogWithName.getData_value();
-			return dataValue != null ? dataValue.toString() : "";
-		}).orElse("");
-
-		return Level;
-
-	}*/
 	
-	
-	  //Вынести это отсюда
+	  //Подбор актуальной таблицы на этот месяц
 		public String actualTable(int month, int year)
 		{
 			String monthIns=null;
@@ -545,6 +495,33 @@ public class dataProcessingService {
 				return	"logs."+"\"tag_log_"+year+"-"+monthIns+ "\"";
 		}
 
+		
+		
+		
+		
+		//Получаем значения из таблицы в соответствии с имеющимимя для каждого вида значений набором айди
+		private String getValueFromTagLogs(List<Taglog> tagLogs, String tagId) {
+		    return Optional.ofNullable(tagLogs.stream()
+		            .filter(tagLog -> String.valueOf(tagLog.getTag_id()).equals(tagId))
+		            .findFirst()
+		            .orElse(null))
+		            .map(tagLog -> Objects.toString(tagLog.getData_value(), ""))
+		            .orElse("");
+		}
+		
+		private List<String>getFilteredTagIds(List<StaticInfoWellModel> filteredTags, Function<StaticInfoWellModel, String> attributeExtractor)
+		{
+			
+			   return filteredTags.stream()
+		                .map(attributeExtractor)
+		                .collect(Collectors.toList());
+			
+			
+		}
+		
+		
+		
+	//Получение нынешнего месяца	
 	public String formatCurrentMonth() {
 		LocalDate currentDate = LocalDate.now();
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
