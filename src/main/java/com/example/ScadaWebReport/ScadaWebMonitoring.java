@@ -1,7 +1,7 @@
 package com.example.ScadaWebReport;
 
 import com.example.ScadaWebReport.components.AsyncLoopContollComponent;
-
+import com.example.ScadaWebReport.config.RepositoryConfig;
 import com.example.ScadaWebReport.telegramBot.BotInitializer;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import javax.annotation.PreDestroy;
 @EntityScan("com.example.ScadaWebReport")
 @EnableAsync
 @EnableScheduling
-@EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class })
+@EnableAutoConfiguration(exclude = { MongoAutoConfiguration.class }  )
 public class ScadaWebMonitoring {
 
 	@Autowired
@@ -30,7 +30,7 @@ public class ScadaWebMonitoring {
     @Autowired
     private AsyncLoopContollComponent asyncLoopContollComponent;
 
-   // @Autowired
+  
     public ScadaWebMonitoring( BotInitializer botInitializer) {
         super();
    

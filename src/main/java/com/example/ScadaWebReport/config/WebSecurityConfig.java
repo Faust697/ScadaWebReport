@@ -78,7 +78,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	        http
 	        	.csrf().disable() // Отключаем CSRF защиту
 	            .authorizeRequests()
-	                .antMatchers("/get-upload","/upload", "/wells","/get-upload-well", "/users","/admin-panel","/tg-users").authenticated()
+	                .antMatchers("/get-upload","/upload", "/wells","/get-upload-well", "/users",
+	                		"/admin-panel","/tg-users","/notifications-list/select-all",
+	                		"/change-object-notify-status", "/recreate-notification-list",
+	                		"/notofications-list","/change-tg-user-region","/updateUserNotifyStatus","/updateUserStatus",
+	                		"/edit-user")
+	                .authenticated()
 	                .anyRequest().permitAll()
 	                .and()
 	            .formLogin()

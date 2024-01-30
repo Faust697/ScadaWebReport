@@ -45,6 +45,7 @@ import com.example.ScadaWebReport.services.ExcelService;
 import com.example.ScadaWebReport.services.RoleChecker;
 import com.example.ScadaWebReport.services.UserDetailsServiceImpl;
 import com.example.ScadaWebReport.services.dataProcessingService;
+import com.example.ScadaWebReport.services.filesControl;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -60,6 +61,7 @@ public class DataEditController {
     private final StaticInfoWellRepo staticInfoWellRepository;
     private final dataProcessingService dps;
     private final UserDetailsServiceImpl uds;
+    private final filesControl filesControll;
 
  
  
@@ -264,12 +266,12 @@ public class DataEditController {
 		ClassPathResource classOutPathResource = new ClassPathResource(outResourcePath);
 		// Проверяем существование файла вначале в добавленных недавно, а потом в заранее добавленных файлах
 		if (classOutPathResource.exists()) {
-			return getPdf(classOutPathResource, model, id);
+			return filesControll.getPdf(classOutPathResource, model, id);
 
 		}
 		 else if (classPathResource.exists()) {
 
-				return getPdf(classPathResource, model, id);
+				return filesControll.getPdf(classPathResource, model, id);
 			}
 
 		else {
@@ -282,33 +284,7 @@ public class DataEditController {
 
 	}
     
-    //Вынести это в сервис
-    private ResponseEntity getPdf(ClassPathResource classPathResource, Model model, String id) throws IOException
-    {
-   
-    	InputStream inputStream = classPathResource.getInputStream();
 
-        // Устанавливаем заголовки
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + classPathResource.getFilename());
-        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-        headers.add("Pragma", "no-cache");
-        headers.add("Expires", "0");
-
-        // Создаем InputStreamResource
-        InputStreamResource resource = new InputStreamResource(inputStream);
-
-        // Возвращаем ResponseEntity с файлом
-        headers.setContentDisposition(ContentDisposition.builder("inline").filename(id + ".pdf").build());
-        model.addAttribute("fileExists", true);
-        return ResponseEntity.ok()
-                .headers(headers)
-                .contentLength(classPathResource.contentLength())
-                .contentType(MediaType.parseMediaType("application/pdf"))
-                .body(resource);
-    	
-    }
-    
   
     
 

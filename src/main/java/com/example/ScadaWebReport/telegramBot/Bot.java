@@ -61,13 +61,13 @@ public class Bot extends TelegramLongPollingBot {
                    
                    
                    
-                   sendTextMessage(chatId, "New user saved!"); 
+                   sendTextMessage(chatId, "Salam, siz yeni istifadəçi kimi qeydiyyatdan keçmisiniz. Obyektlərin statusu haqqında məlumat almaq üçün administratorun təsdiqini gözləyin."); 
              }		 
             	 
              else {
-             sendTextMessage(chatId, "Hi, old user!");
+             sendTextMessage(chatId, "Siz artıq sistemdəsiniz.");
              }
-             System.out.println(tgUsers.findAll());
+           
              
          }
     }
@@ -91,7 +91,7 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        System.out.println(botToken);
+       
         return botToken;
     }
 }

@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
@@ -49,7 +49,9 @@ public class onlineCheckingService {
 	 
 	 private String messageTgBuilder(String region)
 	 {
+		 try {
 		 List<Well> wells =  dps.getWellsForNotification(null);
+		 
 		 if(!region.equals("Admin"))
 		 {
 			 wells = wells.stream()
@@ -70,7 +72,10 @@ public class onlineCheckingService {
 	                iterator.remove();
 	            }
 	        }
-	        
+	        if(wells.size()==0)
+	        {
+	        	return null;
+	        }
 	        message = message +"-----------------------------\n";
 		for(Well well:wells)
 		{
@@ -78,9 +83,16 @@ public class onlineCheckingService {
 		}
 		message = message +"-----------------------------\n"+getCurrentTime()+"\n";
 		
+		message = message+"Total number of offline wells is "+wells.size()+".";
 		return message;
 		 
 	 }
+		 }
+		 catch(Exception e)
+		 {
+			 return "Error while receiving data";
+			 
+		 }
 		return null;
 	 
 	 }

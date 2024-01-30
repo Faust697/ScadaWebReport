@@ -130,7 +130,8 @@ html, body {
 										<td><span th:text="${tgUser.getChatId()}"></span></td>
 										<td><span th:text="${tgUser.getName()}"></span></td>
 
-										<td><select id="regionSelect" name="selectedRegion">
+										<td>
+										<select id="regionSelect-${tgUser.getId()}" name="selectedRegion">
 												<option th:each="region : ${regions}" th:value="${region}"
 													th:text="${region}"
 													th:selected="${region.toString() == tgUser.getRegion()}">
@@ -138,6 +139,7 @@ html, body {
 										</select>
 										<input type="hidden" name="userId" th:value="${tgUser.getId()}" />
 										</td>
+										
 										<td>
 
 											<form th:action="@{/updateUserStatus}" method="post">
@@ -187,25 +189,24 @@ html, body {
 
 <script type="text/javascript">
 $(document).ready(function() {
-    $('#regionSelect').change(function() {
-    	
-      var selectedRegion = $(this).val();
-        var userId = $('[name="userId"]').val(); // Define userId here
+    $('select[name="selectedRegion"]').change(function() {
+        var selectedRegion = $(this).val();
+        var userId = $(this).siblings('[name="userId"]').val(); // Получаем userId относительно текущего элемента
 
         $.ajax({
             type: 'POST',
-            url: '/change-tg-user-region', // Replace with your actual URL
+            url: '/change-tg-user-region',
             data: {
                 region: selectedRegion,
                 userId: userId
             },
             success: function(response) {
                 console.log('POST request success:', response);
-                // You can add additional processing for a successful request if needed
+                // Дополнительная обработка успешного запроса
             },
             error: function(error) {
                 console.error('POST request error:', error);
-                // You can add error handling if needed
+                // Обработка ошибок
             }
         });
     });

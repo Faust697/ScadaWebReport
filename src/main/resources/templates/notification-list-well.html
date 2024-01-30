@@ -99,15 +99,16 @@
 
 									</div>
 									<div>
-        <form th:action="@{/notifications-list/select-all}" method="get">
-            <input type="hidden" name="action" value="select-all" />
-            <button type="submit" class="btn btn-primary">Select all</button>
-        </form>
-        
-        <form th:action="@{/recreate-notification-list}" method="get">
-            <input type="hidden" name="action" value="cancel-all" />
-            <button type="submit" class="btn btn-danger">Cancel all (reload list)</button>
-        </form>
+       <form th:action="@{/notifications-list/select-all}" method="get" class="form-inline mb-2">
+    <input type="hidden" name="action" value="select-all" />
+    <button type="submit" class="btn btn-primary mr-2">Select all</button>
+</form>
+
+<form th:action="@{/recreate-notification-list}" method="get" class="form-inline">
+    <input type="hidden" name="action" value="cancel-all" />
+    <button type="submit" class="btn btn-danger">Cancel all (reload list)</button>
+</form>
+
     </div>
 								</div>
 							</div>
@@ -139,8 +140,23 @@
 	 <form class="notificationForm" th:action="@{/change-object-notify-status}" method="post">
             <input type="hidden" name="Id" th:value="${well.getWellId()}" />
             <input type="hidden" name="scrollTop" class="scrollTopField" />
-            <button type="button" class="btn btn-success" th:if="${well.isNotified()}" onclick="submitForm(this)">Notification Enabled</button>
-            <button type="button" class="btn btn-danger" th:unless="${well.isNotified()}" onclick="submitForm(this)">Notification Disabled</button>
+            
+            <input th:id="'button-green-' + ${well.name}" 
+       type="button" 
+       class="btn btn-success" 
+       th:if="${well.isNotified()}" 
+       onclick="submitForm(this)"
+       value="Notification Enabled">
+            
+            
+         <input th:id="'button-red-' + ${well.name}" 
+       type="button" 
+       class="btn btn-danger" 
+       th:unless="${well.isNotified()}" 
+       onclick="submitForm(this)"
+       value="Notification Disabled">
+            
+           
         </form>
 										</th>
 
@@ -158,28 +174,57 @@
 	<div th:insert="~{parts/footer :: footer}"></div>
 
 <script>
-async function submitForm(button) {
-    var currentScrollTop = $(window).scrollTop();
-    console.log('Current Scroll Top:', currentScrollTop);
+    async function submitForm(button) {
+        var currentScrollTop = $(window).scrollTop();
+        console.log('Current Scroll Top:', currentScrollTop);
 
-    // Найти форму, в пределах которой находится кнопка
-    var form = $(button).closest('.notificationForm');
+        // Найти форму, в пределах которой находится кнопка
+        var form = $(button).closest('.notificationForm');
 
-    // Найти поле scrollTop в пределах найденной формы
-    var scrollTopField = form.find('.scrollTopField');
+        // Найти поле scrollTop в пределах найденной формы
+        var scrollTopField = form.find('.scrollTopField');
 
-    console.log('Current Id:', form.find('input[name="Id"]').val());
+        console.log('Current Id:', form.find('input[name="Id"]').val());
 
-    scrollTopField.val(currentScrollTop);
+        scrollTopField.val(currentScrollTop);
 
+        await new Promise(resolve => setTimeout(resolve, 10));
 
-    await new Promise(resolve => setTimeout(resolve, 10));
+        var buttonId = $(button).attr('id');
 
-    // Отправить форму
-    form.submit();
-}
+        var buttonName = buttonId.split('-')[2];
+ 
+        $.ajax({
+            type: form.attr('method'),
+            url: form.attr('action'),
+            data: form.serialize(), // Сериализация данных формы
+            success: function(response) {
+                let buttonGreen = $('#button-green-Nadil');
+        		let currentButton=document.getElementById(buttonId);
 
-    
+                if (response === 'enabled'  ) {
+                	
+                	     let newId = '#button-red-'+buttonName;
+                	     currentButton.setAttribute('value','Notification Disabled');
+                	     currentButton.setAttribute('class','btn btn-danger');
+                	     currentButton.setAttribute('id',newId);
+                	
+                	
+                    console.log('Button is green now.');
+                } else {
+                	let newId = '#button-green-'+buttonName;
+                	currentButton.setAttribute('value','Notification Enabled');
+                	currentButton.setAttribute('class','btn btn-success');
+                	currentButton.setAttribute('id','#button-green-Nadil'); 
+
+                }
+            },
+            error: function(error) {
+                console.error('Error submitting form.', error);
+                // Обработка ошибок
+            }
+        });
+    }
 </script>
 
 

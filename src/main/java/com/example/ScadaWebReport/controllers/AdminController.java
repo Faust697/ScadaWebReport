@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -55,7 +56,6 @@ public class AdminController {
 	private final StaticInfoWellRepo staticInfoWellRepository;
 	private final UserVerificationService userVerificationService;
 
-
 	@GetMapping("/users")
 	public String getUsersList(@RequestParam(defaultValue = "0") int page, Model model, HttpServletRequest request) {
 
@@ -65,7 +65,6 @@ public class AdminController {
 		List<UserModel> users = userRepo.findAll();
 		if (user.getRoles().contains(Role.ADMIN)) {
 
-			
 			// Добавим следующую строку для вывода ролей в консоль
 			System.out.println("User Roles: " + user.getRoles());
 			model.addAttribute("user", user);
@@ -103,8 +102,7 @@ public class AdminController {
 		return "redirect:/"; // Перенаправление на главную страницу после выхода
 	}
 
-	
-	//Форма для создания пользователя
+	// Форма для создания пользователя
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/user-form")
 	public String showAddUserForm(Model model, HttpServletRequest request) {
@@ -130,7 +128,7 @@ public class AdminController {
 		}
 	}
 
-	//Создание пользователя
+	// Создание пользователя
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/add-user")
 	public String addUser(@ModelAttribute UserModel userModel, Model model, HttpServletRequest request) {
@@ -161,8 +159,7 @@ public class AdminController {
 		}
 	}
 
-	
-	//Изменение пользователя
+	// Изменение пользователя
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/edit-user")
 	public String editUser(@ModelAttribute UserModel userModel, Model model, HttpServletRequest request) {
@@ -193,8 +190,7 @@ public class AdminController {
 
 	}
 
-	
-	//Удаление пользователя
+	// Удаление пользователя
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/remove_user")
 	public String removeUser(@RequestParam String username, Model model, HttpServletRequest request) {
@@ -204,15 +200,14 @@ public class AdminController {
 		if (user.getRoles().contains(Role.ADMIN)) {
 
 			userRepo.deleteByUsername(username);
-
+			return "redirect:/users";
 		}
 
-		return "redirect:/users";
+		model.addAttribute("message", "You don't have permissons!");
+		return "upload-result";
 	}
-	
-	
 
-	//Форма изменения пользователя
+	// Форма изменения пользователя
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/edit-user")
 	public String showEditUserForm(@RequestParam String username, Model model, HttpServletRequest request) {
@@ -229,9 +224,8 @@ public class AdminController {
 		}
 		return "user-editor"; // Название вашего Thymeleaf шаблона
 	}
-	
-	
-	//Список пользователей Телеграмма
+
+	// Список пользователей Телеграмма
 	@PreAuthorize("hasRole('ADMIN')")
 	@GetMapping("/tg-users")
 	public String showEditTgUsersForm(Model model, HttpServletRequest request) {
@@ -242,127 +236,155 @@ public class AdminController {
 		List<TelegramUserModel> tgUsers = tgUserRepo.findAll();
 		if (user.getRoles().contains(Role.ADMIN)) {
 
-
 			model.addAttribute("regions", Arrays.asList(RegionsTgUsers.values()));
 			model.addAttribute("tgUsers", tgUsers);
 			model.addAttribute("totalVisitors", dps.totalVisitors());
 			model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
 
 			return "tg-users-list";
-		} else {
-			return "tg-users-list";
-
 		}
-		
-	}	
-	
-	
-	
+		model.addAttribute("message", "You don't have permissons!");
+		return "upload-result";
+
+	}
+
 	@PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/updateUserStatus")
-    public String updateUserStatus(@RequestParam String Id) {
-        TelegramUserModel tgUser = tgUserRepo.findById(Id).get();
-        tgUser.setVerified(!tgUser.isVerified());
-        tgUserRepo.save(tgUser);
-        
-        return "redirect:/tg-users";
-    }
+	@PostMapping("/updateUserStatus")
+	public String updateUserStatus(@RequestParam String Id) {
+		TelegramUserModel tgUser = tgUserRepo.findById(Id).get();
+		tgUser.setVerified(!tgUser.isVerified());
+		tgUserRepo.save(tgUser);
 
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/updateUserNotifyStatus")
-    public String updateUserNotifyStatus(@RequestParam String Id) {
-    	TelegramUserModel tgUser = tgUserRepo.findById(Id).get();
-    	tgUser.setNotify(!tgUser.isNotify());
-        tgUserRepo.save(tgUser);
-    	
-        return "redirect:/tg-users";
-    }
-    
-    
-    
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/change-tg-user-region")
-    public String updateUserRegion(@RequestParam String region, @RequestParam String userId) {
-    	TelegramUserModel tgUser = tgUserRepo.findById(userId).get();
-    	tgUser.setRegion(region);
-    	
-    	System.out.println("Region changed to "+region);
-        tgUserRepo.save(tgUser);
-    	
-        return "redirect:/tg-users";
-    }
-    
-    
-    
-		
-    //Получаем лист объектов для уведомлений
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/notofications-list")
-	public String getNotificationList( 
-			@RequestParam(required = false) String scrollTop,
-			Model model, 
+		return "redirect:/tg-users";
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/updateUserNotifyStatus")
+	public String updateUserNotifyStatus(@RequestParam String Id) {
+		TelegramUserModel tgUser = tgUserRepo.findById(Id).get();
+		tgUser.setNotify(!tgUser.isNotify());
+		tgUserRepo.save(tgUser);
+
+		return "redirect:/tg-users";
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/change-tg-user-region")
+	public String updateUserRegion(@RequestParam String region, @RequestParam String userId) {
+		TelegramUserModel tgUser = tgUserRepo.findById(userId).get();
+		tgUser.setRegion(region);
+
+		System.out.println("Region changed to " + region);
+		tgUserRepo.save(tgUser);
+
+		return "redirect:/tg-users";
+	}
+
+	// Получаем лист объектов для уведомлений
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/notofications-list")
+	public String getNotificationList(@RequestParam(required = false) String scrollTop, Model model,
 			HttpServletRequest request) {
-	
-    	List <NotificationObjectModel> notificatonObjectsList = notificationObjectRepo.findAll();
-		
-	    model.addAttribute("totalVisitors", dps.totalVisitors());
-	    model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
-	    model.addAttribute("pagename", "Subartezian quyuları");
-	    model.addAttribute("notificatonObjectsList", notificatonObjectsList);
-	    model.addAttribute("scrollTop", scrollTop);
-	    
-	    
-	    return "notification-list-well"; 
- 
-	}
-    
-    
-    //Перезаполняем лист колодцев, если список обновился
-    @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/recreate-notification-list")
-	public String resetNotificationWellsList( Model model, HttpServletRequest request) {
-	
-    	
-    	notificationObjectRepo.deleteAll();
-		List<StaticInfoWellModel> wells = staticInfoWellRepository.findAll();
-		
-		for(StaticInfoWellModel well:wells)
-		{
-			NotificationObjectModel nom= new NotificationObjectModel();
-			nom.setName(well.getName());
-			nom.setRegion(well.getRegion());
-			nom.setTotalFlowValue(null);
-			nom.setWellId(String.valueOf(well.getTotalFlowId()));
-			nom.setNotificationStatus(false);
-			notificationObjectRepo.save(nom);
-			
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserModel activeUser = userRepo.findByUsername(authentication.getName());
+		if (activeUser != null) {
+			if (activeUser.getRoles().contains(Role.ADMIN)) {
+				List<NotificationObjectModel> notificatonObjectsList = notificationObjectRepo.findAll();
+
+				model.addAttribute("totalVisitors", dps.totalVisitors());
+				model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+				model.addAttribute("pagename", "Subartezian quyuları");
+				model.addAttribute("notificatonObjectsList", notificatonObjectsList);
+				model.addAttribute("scrollTop", scrollTop);
+
+				return "notification-list-well";
+			}
 		}
-		
+		model.addAttribute("message", "You don't have permissons!");
+		return "upload-result";
 
-	    model.addAttribute("totalVisitors", dps.totalVisitors());
-	    model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
-	    model.addAttribute("pagename", "Subartezian quyuları");
-
-
-	    return "redirect:/notofications-list";
- 
 	}
-    
-    
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/change-object-notify-status")
-    public String changeObjectNotifyStatus(@RequestParam String Id,
-    		  @RequestParam(required = false) String scrollTop,
-    		RedirectAttributes redirectAttributes) {
-    	NotificationObjectModel nom = notificationObjectRepo.findByWellId(Id).get();
-    	nom.setNotificationStatus(!nom.isNotificationStatus());
-    	notificationObjectRepo.save(nom);
-    
-     
-    	System.out.println("TEST "+scrollTop);
-    	 redirectAttributes.addAttribute("scrollTop", scrollTop);
-    	
-        return "redirect:/notofications-list";
-    }
+
+	// Перезаполняем лист колодцев, если список обновился
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/recreate-notification-list")
+	public String resetNotificationWellsList(Model model, HttpServletRequest request) {
+
+		UserModel activeUser = userRepo
+				.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+		if (activeUser != null) {
+			if (activeUser.getRoles().contains(Role.ADMIN)) {
+
+				notificationObjectRepo.deleteAll();
+				List<StaticInfoWellModel> wells = staticInfoWellRepository.findAll();
+
+				for (StaticInfoWellModel well : wells) {
+					NotificationObjectModel nom = new NotificationObjectModel();
+					nom.setName(well.getName());
+					nom.setRegion(well.getRegion());
+					nom.setTotalFlowValue(null);
+					nom.setWellId(String.valueOf(well.getTotalFlowId()));
+					nom.setNotificationStatus(false);
+					notificationObjectRepo.save(nom);
+
+				}
+
+				model.addAttribute("totalVisitors", dps.totalVisitors());
+				model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+				model.addAttribute("pagename", "Subartezian quyuları");
+
+				return "redirect:/notofications-list";
+			}
+		}
+		model.addAttribute("message", "You don't have permissons!");
+		return "upload-result";
+
+	}
+
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/change-object-notify-status")
+	public ResponseEntity<String> changeObjectNotifyStatus(@RequestParam String Id,
+			@RequestParam(required = false) String scrollTop, RedirectAttributes redirectAttributes) {
+		NotificationObjectModel nom = notificationObjectRepo.findByWellId(Id).get();
+		nom.setNotificationStatus(!nom.isNotificationStatus());
+		notificationObjectRepo.save(nom);
+
+		redirectAttributes.addAttribute("scrollTop", scrollTop);
+
+		// Отправка ответа с данными о статусе уведомления
+		return ResponseEntity.ok(nom.isNotificationStatus() ? "disabled" : "enabled");
+	}
+
+	// Получаем лист объектов для уведомлений
+	@PreAuthorize("hasRole('ADMIN')")
+	@GetMapping("/notifications-list/select-all")
+	public String selectAllNotificationList(@RequestParam(required = false) String scrollTop, Model model,
+			HttpServletRequest request) {
+
+		UserModel activeUser = userRepo
+				.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+		if (activeUser != null) {
+			if (activeUser.getRoles().contains(Role.ADMIN)) {
+
+				List<NotificationObjectModel> notificatonObjectsList = notificationObjectRepo.findAll();
+
+				for (NotificationObjectModel notObj : notificatonObjectsList) {
+					notObj.setNotificationStatus(true);
+					notificationObjectRepo.save(notObj);
+
+				}
+
+				model.addAttribute("totalVisitors", dps.totalVisitors());
+				model.addAttribute("weeklyVisitors", dps.totalWeekVisitors());
+				model.addAttribute("pagename", "Subartezian quyuları");
+				model.addAttribute("notificatonObjectsList", notificatonObjectsList);
+				model.addAttribute("scrollTop", scrollTop);
+				return "notification-list-well";
+			}
+		}
+		model.addAttribute("message", "You don't have permissons!");
+		return "upload-result";
+	}
 
 }
