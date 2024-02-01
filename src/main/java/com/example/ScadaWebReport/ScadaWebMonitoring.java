@@ -51,7 +51,7 @@ public class ScadaWebMonitoring {
         try {
             asyncLoopContollComponent.startAsyncLoop();
       
-            botInitializer.startTelegramBot();
+           botInitializer.startTelegramBot();
         } catch (Exception e) {
             e.printStackTrace();
         }

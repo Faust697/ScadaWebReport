@@ -200,7 +200,7 @@ public class DataEditController {
         return "data-upload-well.html"; 
     }
     
-    
+  /*  
 	@PostMapping("/upload-pdf")
 	public String uploadSchedule(@RequestParam("file") MultipartFile file, Model model) throws IOException {
 
@@ -212,7 +212,7 @@ public class DataEditController {
 			}
 
 			String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-	        Path filePath = Paths.get("src/main/resources/out-monitoring-pdf", fileName);
+	        Path filePath = Paths.get("/out-monitoring-pdf", fileName);
 
 			// Создание ClassPathResource для проверки существования папки
 			ClassPathResource classPathResource = new ClassPathResource("monitoring-pdf");
@@ -223,9 +223,7 @@ public class DataEditController {
 				Files.createDirectories(classPathResource.getFile().toPath());
 			}
 
-				
-				file.transferTo(filePath);
-			
+				file.transferTo(filePath);	
 			
 			model.addAttribute("message", "Данные успешно импортированы в MongoDB.");
 			log.info("Data was successfuly imported to MongoDB.");
@@ -235,11 +233,57 @@ public class DataEditController {
 		catch (IOException e) {
 			e.printStackTrace();
 			model.addAttribute("message", "Произошла ошибка при импорте данных.");
+			System.out.print(e.getMessage());
 			log.error("Error: " + e.getMessage());
 			return "upload-result"; // Вернуть страницу результатов с сообщением об ошибке
 		}
 
 	}
+	
+	*/
+    
+    
+    
+    
+    @PostMapping("/upload-pdf")
+    public String uploadSchedule(@RequestParam("file") MultipartFile file, Model model) throws IOException {
+
+        try {
+            if (file.isEmpty()) {
+                model.addAttribute("message", "Выберите файл для загрузки.");
+                return "upload-result"; // Вернуть страницу результатов с сообщением об ошибке
+            }
+
+            String fileName = StringUtils.cleanPath(file.getOriginalFilename());
+            Path filePath = Paths.get("out-monitoring-pdf", fileName);
+
+            // Проверка существования директории и ее создание при необходимости
+            if (!Files.exists(filePath.getParent())) {
+                Files.createDirectories(filePath.getParent());
+            }
+
+            // Проверка существования файла с таким же именем и его удаление
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+            }
+
+            String uploadDirectory = System.getProperty("user.dir") + File.separator + "out-monitoring-pdf";
+             filePath = Paths.get(uploadDirectory, fileName);
+
+            // Запись нового файла
+            file.transferTo(filePath.toFile());
+
+            model.addAttribute("message", "Данные успешно импортированы в MongoDB.");
+            log.info("Data was successfully imported to MongoDB.");
+            return "upload-result"; // Вернуть страницу результатов с успешным сообщением
+        } catch (IOException e) {
+            e.printStackTrace();
+            model.addAttribute("message", "Произошла ошибка при импорте данных.");
+            log.error("Error: " + e.getMessage());
+            return "upload-result"; // Вернуть страницу результатов с сообщением об ошибке
+        }
+    }
+	
     
 	@GetMapping("/upload-schedule")
 	public String getUploadSchedule(Model model) {
@@ -253,35 +297,37 @@ public class DataEditController {
 	}
 	
 	
-	// Скачиваем файл с графиком калибровки
+	
+	
 	@GetMapping(value = "/get-pdf/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
 	public ResponseEntity getFile(@PathVariable("id") String id, Model model) throws IOException {
 
-		// Путь к файлу в папке ресурсов
-		String resourcePath = "monitoring-pdf/" + id;
-		String outResourcePath = "out-monitoring-pdf/" + id;
+	    Path outFilePath = Paths.get(System.getProperty("user.dir") + File.separator + "/out-monitoring-pdf/", id);
 
-		// Получаем InputStream из файла в ресурсах
-		ClassPathResource classPathResource = new ClassPathResource(resourcePath);
-		ClassPathResource classOutPathResource = new ClassPathResource(outResourcePath);
-		// Проверяем существование файла вначале в добавленных недавно, а потом в заранее добавленных файлах
-		if (classOutPathResource.exists()) {
-			return filesControll.getPdf(classOutPathResource, model, id);
+		ClassPathResource classPathResource = new ClassPathResource("monitoring-pdf/" + id);
+		
+		System.out.println(outFilePath);
+		System.out.println(classPathResource.getPath());
+		
+	    // Проверяем сначала существование файла в новой папке
+		if (Files.exists(outFilePath)) {
 
+			return filesControll.getPdf(model, id, false);
+	    	
 		}
-		 else if (classPathResource.exists()) {
+		 // Если нет, то ищем в ресурсах
+	    else if (classPathResource.exists()) {
 
-				return filesControll.getPdf(classPathResource, model, id);
-			}
-
-		else {
-			// Возвращаем сообщение о том, что файл не найден
-			model.addAttribute("fileExists", false);
-			log.error("Error: File not found.");
-			return ResponseEntity.badRequest().body("Üzr istəyirik, lakin seçilmiş fayl hələ sistemə əlavə olunmayıb.");
-			// notFound().build();
+			return filesControll.getPdf(model, id, true);
 		}
+	    
 
+	    else {
+	        // Файл не найден ни в одной из папок, возвращаем соответствующий HTTP-ответ
+	        model.addAttribute("fileExists", false);
+	        log.error("Error: File not found.");
+	        return ResponseEntity.badRequest().body("Üzr istəyirik, lakin seçilmiş fayl hələ sistemə əlavə olunmayıb.");
+	    }
 	}
     
 

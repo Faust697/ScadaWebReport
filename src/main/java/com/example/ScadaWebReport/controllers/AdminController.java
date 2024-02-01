@@ -248,6 +248,31 @@ public class AdminController {
 
 	}
 
+	
+	@PreAuthorize("hasRole('ADMIN')")
+	@PostMapping("/delete-tg-user")
+	public String removeTgUser(@RequestParam String Id, Model model) {
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		UserModel activeUser = userRepo.findByUsername(authentication.getName());
+		if (activeUser == null || !(activeUser.getRoles().contains(Role.ADMIN))) 
+		{	
+			model.addAttribute("message", "You don't have permissons!");
+		return "upload-result";
+		}
+		
+		
+		
+		
+		else
+		{
+		
+		 tgUserRepo.deleteById(Id);
+
+		return "redirect:/tg-users";
+		}
+	}
+	
 	@PreAuthorize("hasRole('ADMIN')")
 	@PostMapping("/updateUserStatus")
 	public String updateUserStatus(@RequestParam String Id) {

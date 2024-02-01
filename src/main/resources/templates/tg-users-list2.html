@@ -130,7 +130,7 @@ html, body {
 										<td><span th:text="${tgUser.getName()}"></span></td>
 
 										<td>
-										<select class="form-select" id="regionSelect-${tgUser.getId()}" name="selectedRegion" >
+										<select class="form-select" id="regionSelect-${tgUser.getId()}" name="selectedRegion" multiple>
 												<option th:each="region : ${regions}" th:value="${region}"
 													th:text="${region}"
 													th:selected="${region.toString() == tgUser.getRegion()}">

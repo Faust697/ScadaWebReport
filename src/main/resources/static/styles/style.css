@@ -77,7 +77,7 @@ h1 {
 	padding-top:2%;
 	padding-bottom:5%;
 }
-#tagLogTable, #tagLogTable-second, #WellTable, #NotoficationTable
+#tagLogTable, #tagLogTable-second, #WellTable, #NotoficationTable, #userTable
 {
   position:relative;
   border: 3px solid gray;
@@ -126,7 +126,7 @@ label > input[type="search"] {
 
 
 /* Рамка */
-#tagLogTable_filter, #tagLogTable-second_filter, #WellTable_filter, #NotificationTable_filter
+#tagLogTable_filter, #tagLogTable-second_filter, #WellTable_filter, #NotificationTable_filter, #userTable_filter
 {
 	border: 3px solid gray;
 	border-radius:10px;
@@ -203,10 +203,11 @@ h1
 }
 
 
-#tagLogTable, #tagLogTable-second, #WellTable, #NotificationTable
+#tagLogTable, #tagLogTable-second, #WellTable, #NotificationTable , #userTable
 {
 	background: white;
 	margin-top: 3%;
+	max-width: fit-content;
 }
 
 
@@ -364,14 +365,14 @@ label {
 
 
 
-#tagLogTable td:nth-child(2) , #tagLogTable-second td:nth-child(2), #NotificationTable td:nth-child(2){
+#tagLogTable td:nth-child(2) , #tagLogTable-second td:nth-child(2), #NotificationTable td:nth-child(2),#userTable td:nth-child(2){
     width: 170px; 
 }
-#tagLogTable td:nth-child(5) , #tagLogTable-second td:nth-child(5), #NotificationTable td:nth-child(5){
+#tagLogTable td:nth-child(5) , #tagLogTable-second td:nth-child(5), #NotificationTable td:nth-child(5),#userTable td:nth-child(2){
     width: 170px; 
 }
 
-#tagLogTable td:nth-child(6) , #tagLogTable-second td:nth-child(6), #NotificationTable td:nth-child(6){
+#tagLogTable td:nth-child(6) , #tagLogTable-second td:nth-child(6), #NotificationTable td:nth-child(6),#userTable td:nth-child(2){
     width: 170px; 
 }
 
@@ -406,7 +407,11 @@ label {
     background-color: rgba(0, 0, 0, 0);
 }
 
-
+#table-search-tg
+{
+	
+	max-width: fit-content;
+}
 
 /*Для статус контейнера*/
   .status-container {
@@ -497,6 +502,9 @@ label {
     resize: none;
 }
 
+.custom-select::after {
+    color: #333333; /* Темнее оттенок серого */
+}
 
 #scrollToTopButton {
     display: none;

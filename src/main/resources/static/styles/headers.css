@@ -13,3 +13,12 @@
 .dropdown-toggle {
   outline: 0;
 }
+
+
+.gradient {
+    /* Добавляем градиентный фон */
+    background-image: linear-gradient(to bottom, #000000, #333333);
+    /* Другие стили для вашего элемента */
+    color: white; /* Цвет текста белый */
+    padding: 20px; /* Пример отступов */
+}

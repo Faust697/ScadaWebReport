@@ -1,5 +1,7 @@
 package com.example.ScadaWebReport.telegramBot;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -11,8 +13,10 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import com.example.ScadaWebReport.Entity.Mongo.TelegramUserModel;
+import com.example.ScadaWebReport.Entity.Mongo.TgUserModel;
 import com.example.ScadaWebReport.components.RegionsTgUsers;
 import com.example.ScadaWebReport.repos.TelegramUserRepo;
+import com.example.ScadaWebReport.repos.TgUserRepo;
 
 
 
@@ -21,6 +25,7 @@ public class Bot extends TelegramLongPollingBot {
 
 	private String botToken;
 	private TelegramUserRepo tgUsers;
+	private TgUserRepo tgUsersTest;
 
 
 	
@@ -45,6 +50,29 @@ public class Bot extends TelegramLongPollingBot {
              // Получаем текст сообщения
              String receivedText = receivedMessage.getText();
 
+				/*
+				 * if(!tgUsersTest.findByChatId(chatId).isPresent() &&
+				 * receivedMessage.getText()=="3333") { TgUserModel tgUserModel = new
+				 * TgUserModel();
+				 * 
+				 * 
+				 * ArrayList<String> regions = null;
+				 * 
+				 * regions.add(RegionsTgUsers.Deafault.toString());
+				 * 
+				 * // Вызов сеттера
+				 * tgUserModel.setName(receivedMessage.getFrom().getUserName());
+				 * tgUserModel.setNotify(false); tgUserModel.setVerified(false);
+				 * tgUserModel.setChatId(chatId); tgUserModel.setRegion(regions);
+				 * tgUsersTest.save(tgUserModel);
+				 * 
+				 * 
+				 * 
+				 * sendTextMessage(chatId,
+				 * "Salam, siz yeni istifadəçi kimi qeydiyyatdan keçmisiniz. Obyektlərin statusu haqqında məlumat almaq üçün administratorun təsdiqini gözləyin."
+				 * ); }
+				 */
+             
              if(!tgUsers.findByChatId(chatId).isPresent())
              {
             	   TelegramUserModel tgUserModel = new TelegramUserModel();
