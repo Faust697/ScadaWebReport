@@ -1,6 +1,9 @@
 package com.example.ScadaWebReport.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -9,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.Iterator;
 
 import com.example.ScadaWebReport.Entity.Mongo.TelegramUserModel;
@@ -37,8 +41,9 @@ public class onlineCheckingService {
 				message = messageTgBuilder(user.getRegion());
 				if (message != null) {
 					if (!message.equals("")) {
-						System.out.println(user.getName());
-						botInitializer.getBot().sendTextMessage(user.getChatId(), message);
+						
+					
+					botInitializer.getBot().sendTextMessage(user.getChatId(), message);
 					}
 				}
 			}
@@ -46,21 +51,12 @@ public class onlineCheckingService {
 
 	}
 	
-	 
 	 private String messageTgBuilder(String region)
 	 {
 		 try {
 		 List<Well> wells =  dps.getWellsForNotification(null);
+		   
 		 
-		 if(!region.equals("Admin"))
-		 {
-			 wells = wells.stream()
-               .filter(well -> region.equals(well.getRegion()))
-               .collect(Collectors.toList());
-		 }
-			 
-		 
-		  String message = "";	
 		 
 		 if(!wells.isEmpty())
 		 { 
@@ -72,14 +68,51 @@ public class onlineCheckingService {
 	                iterator.remove();
 	            }
 	        }
+		 
+	        wells = wells.stream()
+	        	    .peek(w -> w.setRegion(w.getRegion().trim())) // Удаляем пробелы из регионов
+	        	    .sorted(Comparator.comparing(Well::getRegion)) // Сортируем по регионам
+	        	    .collect(Collectors.toList()); // Собираем обратно в список
+	        
+	        
+	        
+	       
+
+	       
+	        
+		 if(!region.equals("Admin"))
+		 {
+			 wells = wells.stream()
+               .filter(well -> region.equals(well.getRegion()))
+               .collect(Collectors.toList());
+		 }
+			 
+		 
+		  String message = "";	
+		 
+		
 	        if(wells.size()==0)
 	        {
 	        	return null;
 	        }
 	        message = message +"-----------------------------\n";
+	        
+	        
+	      /*  Map<String, Long> regionCounts = wells.stream()
+	        	    .map(w -> {
+	        	        String trimmedRegion = w.getRegion().trim();
+	        	        w.setRegion(trimmedRegion);
+	        	        return trimmedRegion;
+	        	    })
+	        	    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+	     // Сортировка по ключам (регионам) перед выводом
+	        //  Map<String, Long> sortedRegionCounts = new TreeMap<>(regionCounts);
+	        //   sortedRegionCounts.forEach((regionName, count) -> System.out.println(regionName + ": " + count));*/
+
 		for(Well well:wells)
 		{
-			message = message + "Warning! Well "+well.getName()+" is offline now! \n"; 	
+			message = message + "Warning! Well "+well.getName()+" is offline now! ( "+well.getRegion()+" ) \n"; 	
 		}
 		message = message +"-----------------------------\n"+getCurrentTime()+"\n";
 		

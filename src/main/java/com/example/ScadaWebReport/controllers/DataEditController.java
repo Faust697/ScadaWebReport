@@ -269,7 +269,8 @@ public class DataEditController {
 
             String uploadDirectory = System.getProperty("user.dir") + File.separator + "out-monitoring-pdf";
              filePath = Paths.get(uploadDirectory, fileName);
-
+             
+             System.out.println("Saved file to: "+filePath.toFile().toString());
             // Запись нового файла
             file.transferTo(filePath.toFile());
 

@@ -72,11 +72,6 @@ h1 {
 }
 
 
-#main
-{
-	padding-top:2%;
-	padding-bottom:5%;
-}
 #tagLogTable, #tagLogTable-second, #WellTable, #NotoficationTable, #userTable
 {
   position:relative;
@@ -110,6 +105,7 @@ font-family: Gill Sans;
 font-size: 100%;
     background-color: #6c757d;
     border-color: #6c757d; /*set the color you want here*/
+    transition: transform .2s;
 
 }
 
@@ -265,8 +261,14 @@ div.dt-buttons > div.dt-button-split .dt-button {
 	padding-left:5%;
 	}
 
-li:hover{ background-color: #212529}
-li:active{ background-color: #212529}
+li:hover{ 
+	/*background-color: #212529*/
+	 opacity: 0.6;
+	 transition: 0.3s;
+	}
+li:active{ /*background-color: #212529*/
+transition: 0.3s;
+}
 
 /* ============ For multiple dropdown ============ */
 /* ============ desktop view ============ */
@@ -473,6 +475,7 @@ label {
 .btn-pdf:hover, .btn-camera:hover {
     font-size: 16px !important;
     color: white !important; /* Устанавливаем цвет текста при наведении на кнопку */
+    transition: transform .2s;
 }
 .dropdown-menu a:visited, a:visited {  
     text-decoration: none;
@@ -527,5 +530,8 @@ label {
     fill: currentColor;
     transition: fill 0.2s;
 }
-#scrollToTopButton:hover {background-color: #212121;}
+#scrollToTopButton:hover {
+	background-color: #212121;
+	transition: 0.3s;
+}
 #scrollToTopButton:hover svg {fill: #fff;}

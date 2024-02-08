@@ -41,12 +41,14 @@ public class filesControl {
 		if (inside) {
 			ClassPathResource classPathResource = new ClassPathResource("monitoring-pdf/" + id);
 			inputStream = classPathResource.getInputStream();
+			System.out.println("Searching for (classapth) file in: "+classPathResource.toString());
 			resource = new InputStreamResource(inputStream);
 			length = classPathResource.contentLength();
 		}
 
 		else {
 			Path outFilePath = Paths.get(System.getProperty("user.dir") + File.separator + "out-monitoring-pdf", id);
+			System.out.println("Searching for (outFilePath) file in: "+outFilePath.toString());
 			resource = new InputStreamResource(Files.newInputStream(outFilePath));
 			length = Files.size(outFilePath);
 
